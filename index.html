@@ -25,6 +25,7 @@
             --profit-color: #10b981;
             --loss-color: #ef4444;
             --neutral-color: #718096;
+            --prev-month-color: #a0aec0;
         }
         
         .dark-mode {
@@ -37,6 +38,7 @@
             --profit-color: #48bb78;
             --loss-color: #f56565;
             --neutral-color: #a0aec0;
+            --prev-month-color: #4a5568;
         }
         
         body {
@@ -157,13 +159,27 @@
             color: var(--text-color);
             font-size: 16px;
             line-height: 1.2;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .prev-month-day {
+            color: var(--prev-month-color);
+            opacity: 0.6;
+        }
+        
+        .day-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
         }
         
         .profit {
             color: var(--profit-color);
             font-weight: 600;
             font-size: 14px;
-            margin-top: 4px;
             line-height: 1.2;
         }
         
@@ -171,27 +187,25 @@
             color: var(--loss-color);
             font-weight: 600;
             font-size: 14px;
-            margin-top: 4px;
             line-height: 1.2;
         }
         
         .add-trade-btn {
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
             background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 14px;
-            min-width: 28px;
-            min-height: 28px;
+            font-size: 12px;
+            min-width: 24px;
+            min-height: 24px;
+            flex-shrink: 0;
+            margin-left: 5px;
         }
         
         .modal {
@@ -734,24 +748,26 @@
             }
             
             .add-trade-btn {
-                width: 24px;
-                height: 24px;
-                bottom: 6px;
-                right: 6px;
-                font-size: 12px;
+                width: 22px;
+                height: 22px;
+                font-size: 11px;
             }
             
             .stats {
-                grid-template-columns: 1fr;
-                gap: 12px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
             }
             
             .stat-card {
-                padding: 15px;
+                padding: 15px 10px;
             }
             
             .stat-value {
-                font-size: 18px;
+                font-size: 16px;
+            }
+            
+            .stat-label {
+                font-size: 12px;
             }
             
             .modal-content {
@@ -1194,11 +1210,20 @@
             const firstDay = new Date(currentYear, currentMonth, 1).getDay();
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
             
-            // Add empty cells for days before the first day of the month
-            for (let i = 0; i < firstDay; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'day empty';
-                calendarEl.appendChild(emptyDay);
+            // Get previous month's last days
+            const prevMonthLastDay = new Date(currentYear, currentMonth, 0).getDate();
+            
+            // Add previous month's days
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'day prev-month-day';
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = prevMonthLastDay - i;
+                dayEl.appendChild(dayNumber);
+                
+                calendarEl.appendChild(dayEl);
             }
             
             // Add days of the month
@@ -1208,14 +1233,33 @@
                 
                 const dayNumber = document.createElement('div');
                 dayNumber.className = 'day-number';
-                dayNumber.textContent = day;
+                
+                // Create header row with day number and add button
+                const dayHeaderRow = document.createElement('div');
+                dayHeaderRow.className = 'day-header-row';
+                
+                const dayNumberText = document.createElement('span');
+                dayNumberText.textContent = day;
+                dayHeaderRow.appendChild(dayNumberText);
+                
+                // Add button to add new trade
+                const addBtn = document.createElement('button');
+                addBtn.className = 'add-trade-btn';
+                addBtn.innerHTML = '<i class="fas fa-plus"></i>';
+                addBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    openAddTradeModal(dateStr);
+                });
+                dayHeaderRow.appendChild(addBtn);
+                
+                dayNumber.appendChild(dayHeaderRow);
                 dayEl.appendChild(dayNumber);
                 
                 // Format date for this day
                 const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 
                 // Calculate daily P&L (only for closed trades)
-                // MODIFIED: Trades appear on the day they were closed, not opened
                 const dailyTrades = trades.filter(trade => {
                     if (trade.status === 'open') {
                         // Open trades appear on entry day
@@ -1245,20 +1289,28 @@
                     dayEl.appendChild(tradeCount);
                 }
                 
-                // Add button to add new trade
-                const addBtn = document.createElement('button');
-                addBtn.className = 'add-trade-btn';
-                addBtn.innerHTML = '<i class="fas fa-plus"></i>';
-                addBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    openAddTradeModal(dateStr);
-                });
-                dayEl.appendChild(addBtn);
-                
                 // Click on day to view trades
                 dayEl.addEventListener('click', function() {
                     viewTradesForDay(dateStr);
                 });
+                
+                calendarEl.appendChild(dayEl);
+            }
+            
+            // Calculate remaining cells for next month
+            const totalCells = 42; // 6 rows x 7 days
+            const cellsUsed = firstDay + daysInMonth;
+            const nextMonthDays = totalCells - cellsUsed;
+            
+            // Add next month's first days
+            for (let day = 1; day <= nextMonthDays; day++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'day prev-month-day';
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = day;
+                dayEl.appendChild(dayNumber);
                 
                 calendarEl.appendChild(dayEl);
             }
