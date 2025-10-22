@@ -268,10 +268,10 @@
             padding: 12px;
             border: 1px solid var(--border-color);
             border-radius: 5px;
-            font-size: 16px; /* Better for mobile */
+            font-size: 16px;
             background-color: var(--card-bg);
             color: var(--text-color);
-            -webkit-appearance: none; /* Remove iOS styling */
+            -webkit-appearance: none;
         }
         
         .form-row {
@@ -566,6 +566,14 @@
             padding: 20px;
             margin-bottom: 25px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            position: relative;
+            height: 300px;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 250px;
+            width: 100%;
         }
         
         .chart-title {
@@ -768,7 +776,17 @@
             }
             
             .chart-container {
+                height: 280px;
                 padding: 15px;
+            }
+            
+            .chart-wrapper {
+                height: 230px;
+            }
+            
+            .chart-title {
+                font-size: 16px;
+                margin-bottom: 12px;
             }
             
             header {
@@ -815,6 +833,14 @@
             .day-trade-item {
                 flex-direction: row;
                 align-items: center;
+            }
+            
+            .chart-container {
+                height: 300px;
+            }
+            
+            .chart-wrapper {
+                height: 250px;
             }
         }
         
@@ -909,7 +935,9 @@
         
         <div class="chart-container">
             <h2 class="chart-title">Account Balance Over Time</h2>
-            <canvas id="balance-chart"></canvas>
+            <div class="chart-wrapper">
+                <canvas id="balance-chart"></canvas>
+            </div>
         </div>
         
         <div class="calendar" id="calendar">
@@ -1653,16 +1681,43 @@
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
                         borderWidth: 2,
                         fill: true,
-                        tension: 0.1
+                        tension: 0.1,
+                        pointBackgroundColor: profitColor,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 10,
+                            right: 10,
+                            bottom: 10,
+                            left: 10
+                        }
+                    },
                     plugins: {
                         legend: {
-                            labels: {
-                                color: textColor
+                            display: false,
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: profitColor,
+                            borderWidth: 1,
+                            cornerRadius: 6,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `Balance: $${context.parsed.y.toLocaleString()}`;
+                                }
                             }
                         }
                     },
@@ -1670,22 +1725,46 @@
                         x: {
                             ticks: {
                                 color: textColor,
-                                maxTicksLimit: window.innerWidth < 768 ? 5 : 10
+                                maxTicksLimit: window.innerWidth < 768 ? 5 : 8,
+                                font: {
+                                    size: window.innerWidth < 768 ? 10 : 12
+                                }
                             },
                             grid: {
-                                color: gridColor
+                                color: gridColor,
+                                drawBorder: false
                             }
                         },
                         y: {
+                            beginAtZero: false,
                             ticks: {
                                 color: textColor,
+                                font: {
+                                    size: window.innerWidth < 768 ? 10 : 12
+                                },
                                 callback: function(value) {
+                                    if (value >= 1000000) {
+                                        return '$' + (value / 1000000).toFixed(1) + 'M';
+                                    } else if (value >= 1000) {
+                                        return '$' + (value / 1000).toFixed(1) + 'K';
+                                    }
                                     return '$' + value.toLocaleString();
                                 }
                             },
                             grid: {
-                                color: gridColor
+                                color: gridColor,
+                                drawBorder: false
                             }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    },
+                    elements: {
+                        line: {
+                            tension: 0.4
                         }
                     }
                 }
@@ -1840,8 +1919,15 @@
         });
         
         // Handle window resize for better mobile experience
+        let resizeTimeout;
         window.addEventListener('resize', function() {
-            updateBalanceChart();
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                if (balanceChart) {
+                    balanceChart.destroy();
+                    updateBalanceChart();
+                }
+            }, 250);
         });
     </script>
 </body>
