@@ -719,6 +719,117 @@
             line-height: 1.2;
         }
         
+        /* Bulk Delete Styles */
+        .bulk-delete-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .bulk-delete-section h3 {
+            margin-bottom: 15px;
+            color: var(--text-color);
+            font-size: 18px;
+        }
+        
+        .bulk-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .bulk-actions .btn {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .trades-management-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 10px;
+            background-color: var(--header-bg);
+        }
+        
+        .trade-management-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+            gap: 10px;
+        }
+        
+        .trade-management-item:last-child {
+            border-bottom: none;
+        }
+        
+        .trade-management-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .trade-management-info {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .trade-management-pair {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .trade-management-date {
+            font-size: 12px;
+            color: var(--neutral-color);
+        }
+        
+        .trade-management-profit {
+            font-weight: 600;
+            margin-left: auto;
+        }
+        
+        .trade-management-profit.positive {
+            color: var(--profit-color);
+        }
+        
+        .trade-management-profit.negative {
+            color: var(--loss-color);
+        }
+        
+        .no-trades-message {
+            text-align: center;
+            padding: 20px;
+            color: var(--neutral-color);
+            font-style: italic;
+        }
+        
+        .select-all-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: var(--card-bg);
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .select-all-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .selected-count {
+            font-size: 14px;
+            color: var(--neutral-color);
+        }
+        
         /* Mobile-specific styles */
         @media (max-width: 480px) {
             body {
@@ -825,6 +936,24 @@
                 top: 15px;
                 right: 15px;
                 order: 3;
+            }
+            
+            .bulk-actions {
+                flex-direction: column;
+            }
+            
+            .bulk-actions .btn {
+                width: 100%;
+            }
+            
+            .trade-management-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            
+            .trade-management-profit {
+                margin-left: 0;
             }
         }
         
@@ -1063,6 +1192,35 @@
             </label>
             <input type="file" id="import-excel" class="file-input" accept=".xlsx, .xls">
             <div id="import-status" style="margin-top: 10px; font-size: 14px; color: var(--neutral-color);"></div>
+            
+            <!-- Bulk Delete Section -->
+            <div class="bulk-delete-section">
+                <h3>Manage Trades</h3>
+                <div class="bulk-actions">
+                    <button type="button" class="btn btn-secondary" id="select-all-trades">
+                        <i class="fas fa-check-square"></i> Select All
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="deselect-all-trades">
+                        <i class="fas fa-square"></i> Deselect All
+                    </button>
+                    <button type="button" class="btn btn-danger" id="delete-selected-trades">
+                        <i class="fas fa-trash"></i> Delete Selected
+                    </button>
+                    <button type="button" class="btn btn-danger" id="delete-all-trades">
+                        <i class="fas fa-trash-alt"></i> Delete All
+                    </button>
+                </div>
+                <div class="select-all-row">
+                    <div class="select-all-checkbox">
+                        <input type="checkbox" id="select-all-checkbox">
+                        <label for="select-all-checkbox">Select All</label>
+                    </div>
+                    <div class="selected-count" id="selected-count">0 selected</div>
+                </div>
+                <div class="trades-management-list" id="trades-management-list">
+                    <!-- Trades for management will be populated here -->
+                </div>
+            </div>
         </div>
     </div>
     
@@ -1086,6 +1244,9 @@
         
         // Chart instance
         let balanceChart = null;
+        
+        // Selected trades for bulk operations
+        let selectedTradeIds = new Set();
         
         // DOM Elements
         const calendarEl = document.getElementById('calendar');
@@ -1115,6 +1276,15 @@
         const importExcelInput = document.getElementById('import-excel');
         const importStatus = document.getElementById('import-status');
         const balanceChartCanvas = document.getElementById('balance-chart');
+        
+        // Bulk delete elements
+        const selectAllTradesBtn = document.getElementById('select-all-trades');
+        const deselectAllTradesBtn = document.getElementById('deselect-all-trades');
+        const deleteSelectedTradesBtn = document.getElementById('delete-selected-trades');
+        const deleteAllTradesBtn = document.getElementById('delete-all-trades');
+        const selectAllCheckbox = document.getElementById('select-all-checkbox');
+        const selectedCountEl = document.getElementById('selected-count');
+        const tradesManagementList = document.getElementById('trades-management-list');
         
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
@@ -1161,6 +1331,13 @@
             darkModeToggle.addEventListener('change', toggleDarkMode);
             exportExcelBtn.addEventListener('click', exportToExcel);
             importExcelInput.addEventListener('change', importFromExcel);
+            
+            // Bulk delete event listeners
+            selectAllTradesBtn.addEventListener('click', selectAllTrades);
+            deselectAllTradesBtn.addEventListener('click', deselectAllTrades);
+            deleteSelectedTradesBtn.addEventListener('click', deleteSelectedTrades);
+            deleteAllTradesBtn.addEventListener('click', deleteAllTrades);
+            selectAllCheckbox.addEventListener('change', toggleSelectAll);
             
             // Better touch handling for mobile
             setupTouchEvents();
@@ -1656,6 +1833,10 @@
             initialBalanceInput.value = settings.initialBalance;
             darkModeToggle.checked = settings.darkMode;
             importStatus.textContent = '';
+            
+            // Render the trades management list
+            renderTradesManagementList();
+            
             settingsModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
@@ -1948,6 +2129,183 @@
             };
             
             reader.readAsArrayBuffer(file);
+        }
+        
+        // Bulk Delete Functions
+        function renderTradesManagementList() {
+            tradesManagementList.innerHTML = '';
+            selectedTradeIds.clear();
+            updateSelectedCount();
+            
+            if (trades.length === 0) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'no-trades-message';
+                emptyState.textContent = 'No trades to manage';
+                tradesManagementList.appendChild(emptyState);
+                return;
+            }
+            
+            // Sort trades by date (newest first)
+            const sortedTrades = [...trades].sort((a, b) => {
+                const dateA = a.status === 'closed' && a.closeTime ? new Date(a.closeTime) : new Date(a.entryTime);
+                const dateB = b.status === 'closed' && b.closeTime ? new Date(b.closeTime) : new Date(b.entryTime);
+                return dateB - dateA;
+            });
+            
+            sortedTrades.forEach(trade => {
+                const tradeItem = document.createElement('div');
+                tradeItem.className = 'trade-management-item';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = trade.id;
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        selectedTradeIds.add(trade.id);
+                    } else {
+                        selectedTradeIds.delete(trade.id);
+                    }
+                    updateSelectedCount();
+                    updateSelectAllCheckbox();
+                });
+                
+                const tradeInfo = document.createElement('div');
+                tradeInfo.className = 'trade-management-info';
+                
+                const pairEl = document.createElement('span');
+                pairEl.className = 'trade-management-pair';
+                pairEl.textContent = trade.pair;
+                
+                const typeEl = document.createElement('span');
+                typeEl.className = `trade-type ${trade.type.toLowerCase()}`;
+                typeEl.textContent = trade.type;
+                
+                const dateEl = document.createElement('span');
+                dateEl.className = 'trade-management-date';
+                const tradeDate = trade.status === 'closed' && trade.closeTime ? 
+                    new Date(trade.closeTime) : new Date(trade.entryTime);
+                dateEl.textContent = tradeDate.toLocaleDateString();
+                
+                const statusEl = document.createElement('span');
+                if (trade.status === 'open') {
+                    statusEl.className = 'open-trade-badge';
+                    statusEl.textContent = 'OPEN';
+                }
+                
+                const profitEl = document.createElement('span');
+                profitEl.className = `trade-management-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}`;
+                profitEl.textContent = trade.status === 'open' ? 
+                    'Open' : 
+                    `${trade.profitLoss >= 0 ? '+' : ''}$${trade.profitLoss.toFixed(2)}`;
+                
+                tradeInfo.appendChild(pairEl);
+                tradeInfo.appendChild(typeEl);
+                tradeInfo.appendChild(dateEl);
+                tradeInfo.appendChild(statusEl);
+                tradeInfo.appendChild(profitEl);
+                
+                tradeItem.appendChild(checkbox);
+                tradeItem.appendChild(tradeInfo);
+                
+                tradesManagementList.appendChild(tradeItem);
+            });
+        }
+        
+        function selectAllTrades() {
+            selectedTradeIds.clear();
+            trades.forEach(trade => {
+                selectedTradeIds.add(trade.id);
+            });
+            updateSelectedCount();
+            updateCheckboxes();
+        }
+        
+        function deselectAllTrades() {
+            selectedTradeIds.clear();
+            updateSelectedCount();
+            updateCheckboxes();
+        }
+        
+        function deleteSelectedTrades() {
+            if (selectedTradeIds.size === 0) {
+                alert('Please select at least one trade to delete.');
+                return;
+            }
+            
+            if (confirm(`Are you sure you want to delete ${selectedTradeIds.size} selected trade(s)? This action cannot be undone.`)) {
+                trades = trades.filter(trade => !selectedTradeIds.has(trade.id));
+                
+                // Save to localStorage
+                localStorage.setItem('tradeTrackerTrades', JSON.stringify(trades));
+                
+                // Clear selection
+                selectedTradeIds.clear();
+                updateSelectedCount();
+                
+                // Update UI
+                renderCalendar();
+                updateStats();
+                renderRecentTrades();
+                updateBalanceChart();
+                renderTradesManagementList();
+                
+                alert(`Successfully deleted ${selectedTradeIds.size} trade(s).`);
+            }
+        }
+        
+        function deleteAllTrades() {
+            if (trades.length === 0) {
+                alert('No trades to delete.');
+                return;
+            }
+            
+            if (confirm(`Are you sure you want to delete ALL ${trades.length} trades? This action cannot be undone.`)) {
+                trades = [];
+                
+                // Save to localStorage
+                localStorage.setItem('tradeTrackerTrades', JSON.stringify(trades));
+                
+                // Clear selection
+                selectedTradeIds.clear();
+                updateSelectedCount();
+                
+                // Update UI
+                renderCalendar();
+                updateStats();
+                renderRecentTrades();
+                updateBalanceChart();
+                renderTradesManagementList();
+                
+                alert('All trades have been deleted.');
+            }
+        }
+        
+        function toggleSelectAll() {
+            if (selectAllCheckbox.checked) {
+                selectAllTrades();
+            } else {
+                deselectAllTrades();
+            }
+        }
+        
+        function updateSelectedCount() {
+            selectedCountEl.textContent = `${selectedTradeIds.size} selected`;
+        }
+        
+        function updateCheckboxes() {
+            const checkboxes = tradesManagementList.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectedTradeIds.has(parseInt(checkbox.value));
+            });
+            updateSelectAllCheckbox();
+        }
+        
+        function updateSelectAllCheckbox() {
+            const allSelected = trades.length > 0 && selectedTradeIds.size === trades.length;
+            const someSelected = selectedTradeIds.size > 0 && selectedTradeIds.size < trades.length;
+            
+            selectAllCheckbox.checked = allSelected;
+            selectAllCheckbox.indeterminate = someSelected;
         }
         
         // Utility functions
