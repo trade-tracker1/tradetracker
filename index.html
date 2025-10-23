@@ -243,12 +243,12 @@
         }
         
         .today {
-            background-color: var(--primary-color);
-            color: white;
+            border: 2px solid var(--primary-color);
+            background-color: var(--bg-color);
         }
         
         .today .day-number {
-            color: white;
+            color: var(--text-color);
         }
         
         .profit {
@@ -393,30 +393,26 @@
             margin-bottom: 25px;
         }
         
-        .chart-title {
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
+        }
+        
+        .chart-title {
             color: var(--text-color);
             font-size: 18px;
             font-weight: 600;
         }
         
+        .current-balance {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--profit-color);
+        }
+        
         .chart-wrapper {
-            position: relative;
-            height: 250px;
-            width: 100%;
-        }
-        
-        /* New P&L Chart Styles */
-        .pnl-chart-container {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--border-color);
-            margin-bottom: 25px;
-        }
-        
-        .pnl-chart-wrapper {
             position: relative;
             height: 300px;
             width: 100%;
@@ -575,11 +571,50 @@
             margin: 0;
         }
         
-        /* Fix for profit/loss input to allow negative numbers */
-        .form-group input[type="text"] {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
+        /* Win/Loss Toggle Styles - Unified Look */
+        .toggle-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .toggle-option {
+            flex: 1;
+            text-align: center;
+            padding: 12px 8px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 14px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        
+        .toggle-option:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .toggle-option.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .toggle-option.win.selected {
+            border-color: var(--profit-color);
+            background-color: var(--profit-color);
+        }
+        
+        .toggle-option.loss.selected {
+            border-color: var(--loss-color);
+            background-color: var(--loss-color);
+        }
+        
+        .toggle-option.open.selected {
+            border-color: var(--neutral-color);
+            background-color: var(--neutral-color);
         }
         
         .form-row {
@@ -945,6 +980,12 @@
             .calendar-header {
                 justify-content: center;
             }
+            
+            .chart-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -982,10 +1023,6 @@
             .today-btn {
                 margin-top: 10px;
                 width: 100%;
-            }
-            
-            .pnl-chart-wrapper {
-                height: 250px;
             }
         }
     </style>
@@ -1032,17 +1069,12 @@
             </div>
         </div>
         
-        <!-- New P&L Chart -->
-        <div class="pnl-chart-container">
-            <h2 class="chart-title">Profit & Loss</h2>
-            <div class="pnl-chart-wrapper">
-                <canvas id="pnl-chart"></canvas>
-            </div>
-        </div>
-        
         <!-- Account Balance Chart -->
         <div class="chart-container">
-            <h2 class="chart-title">Account Balance</h2>
+            <div class="chart-header">
+                <h2 class="chart-title">Account Balance</h2>
+                <div class="current-balance" id="current-balance">$5,006.15</div>
+            </div>
             <div class="chart-wrapper">
                 <canvas id="balance-chart"></canvas>
             </div>
@@ -1140,10 +1172,20 @@
                     </div>
                 </div>
                 
+                <!-- Win/Loss Toggle -->
                 <div class="form-group">
-                    <label for="profit-loss">Profit/Loss ($)</label>
-                    <input type="text" id="profit-loss" placeholder="e.g., 50 or -25" pattern="-?[0-9]*\.?[0-9]*" inputmode="decimal" required>
-                    <small style="color: var(--neutral-color);">Use negative numbers for losses</small>
+                    <label>Trade Result</label>
+                    <div class="toggle-group">
+                        <div class="toggle-option win" data-value="win">Win</div>
+                        <div class="toggle-option loss" data-value="loss">Loss</div>
+                        <div class="toggle-option open selected" data-value="open">Open</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="profit-loss">Profit/Loss Amount ($)</label>
+                    <input type="number" id="profit-loss" placeholder="e.g., 50" min="0" step="0.01">
+                    <small style="color: var(--neutral-color);">Amount will be positive for wins and negative for losses</small>
                 </div>
                 
                 <div class="modal-footer">
@@ -1252,15 +1294,17 @@
         // Track which trade is being edited
         let editingTradeId = null;
         
-        // Chart instances
+        // Chart instance
         let balanceChart = null;
-        let pnlChart = null;
         
         // Currently selected day for summary
         let selectedDay = null;
         
         // Selected trades for bulk operations
         let selectedTradeIds = new Set();
+        
+        // Track trade result (win/loss/open)
+        let tradeResult = 'open';
         
         // DOM Elements
         const settingsBtn = document.getElementById('settings-btn');
@@ -1289,7 +1333,7 @@
         const monthlyProfitFactorEl = document.getElementById('monthly-profit-factor');
         const summaryMonthEl = document.getElementById('summary-month');
         const balanceChartCanvas = document.getElementById('balance-chart');
-        const pnlChartCanvas = document.getElementById('pnl-chart');
+        const currentBalanceEl = document.getElementById('current-balance');
         const settingsModal = document.getElementById('settings-modal');
         const closeSettingsBtn = document.getElementById('close-settings');
         const darkModeToggle = document.getElementById('dark-mode-toggle');
@@ -1314,8 +1358,10 @@
             updateStats();
             renderRecentTrades();
             updateBalanceChart();
-            updatePnlChart();
             updateMonthlySummary();
+            
+            // Initialize win/loss toggle
+            initTradeResultToggle();
             
             // Load settings from localStorage
             const savedSettings = localStorage.getItem('tradeTrackerSettings');
@@ -1337,7 +1383,6 @@
                 updateStats();
                 renderRecentTrades();
                 updateBalanceChart();
-                updatePnlChart();
                 updateMonthlySummary();
             }
             
@@ -1365,6 +1410,30 @@
             deleteAllTradesBtn.addEventListener('click', deleteAllTrades);
             selectAllCheckbox.addEventListener('change', toggleSelectAll);
         });
+        
+        // Initialize trade result toggle
+        function initTradeResultToggle() {
+            const toggleOptions = document.querySelectorAll('.toggle-option');
+            toggleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    toggleOptions.forEach(opt => opt.classList.remove('selected'));
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    // Update trade result
+                    tradeResult = this.getAttribute('data-value');
+                    
+                    // Enable/disable profit-loss input based on selection
+                    const profitLossInput = document.getElementById('profit-loss');
+                    if (tradeResult === 'open') {
+                        profitLossInput.disabled = true;
+                        profitLossInput.value = '';
+                    } else {
+                        profitLossInput.disabled = false;
+                    }
+                });
+            });
+        }
         
         // Calendar functions
         function renderCalendar() {
@@ -1585,6 +1654,16 @@
             tradeModalTitle.textContent = 'Add New Trade';
             tradeForm.reset();
             
+            // Reset trade result to 'open'
+            tradeResult = 'open';
+            const toggleOptions = document.querySelectorAll('.toggle-option');
+            toggleOptions.forEach(opt => opt.classList.remove('selected'));
+            document.querySelector('.toggle-option.open').classList.add('selected');
+            
+            // Disable profit-loss input for open trades
+            document.getElementById('profit-loss').disabled = true;
+            document.getElementById('profit-loss').value = '';
+            
             // Set default date to today
             const today = new Date();
             const formatForInput = (date) => {
@@ -1615,8 +1694,26 @@
                 document.getElementById('close-time').value = trade.closeTime;
             }
             
-            if (trade.profitLoss !== null) {
-                document.getElementById('profit-loss').value = trade.profitLoss;
+            // Set trade result based on profitLoss and status
+            const toggleOptions = document.querySelectorAll('.toggle-option');
+            toggleOptions.forEach(opt => opt.classList.remove('selected'));
+            
+            if (trade.status === 'open') {
+                tradeResult = 'open';
+                document.querySelector('.toggle-option.open').classList.add('selected');
+                document.getElementById('profit-loss').disabled = true;
+                document.getElementById('profit-loss').value = '';
+            } else {
+                if (trade.profitLoss > 0) {
+                    tradeResult = 'win';
+                    document.querySelector('.toggle-option.win').classList.add('selected');
+                    document.getElementById('profit-loss').value = Math.abs(trade.profitLoss);
+                } else {
+                    tradeResult = 'loss';
+                    document.querySelector('.toggle-option.loss').classList.add('selected');
+                    document.getElementById('profit-loss').value = Math.abs(trade.profitLoss);
+                }
+                document.getElementById('profit-loss').disabled = false;
             }
             
             tradeModal.style.display = 'flex';
@@ -1647,15 +1744,22 @@
             const entryTime = document.getElementById('entry-time').value;
             const closeTime = document.getElementById('close-time').value;
             
-            // Parse profit/loss as float to handle negative numbers
-            const profitLossValue = document.getElementById('profit-loss').value;
-            const profitLoss = profitLossValue ? parseFloat(profitLossValue) : null;
+            // Calculate profit/loss based on trade result
+            let profitLoss = null;
+            const profitLossAmount = parseFloat(document.getElementById('profit-loss').value) || 0;
+            
+            if (tradeResult === 'win') {
+                profitLoss = profitLossAmount;
+            } else if (tradeResult === 'loss') {
+                profitLoss = -profitLossAmount;
+            }
+            // If tradeResult is 'open', profitLoss remains null
             
             // Extract date from entry time
             const entryDate = entryTime.split('T')[0];
             
             // Determine trade status
-            const status = closeTime && profitLoss !== null ? 'closed' : 'open';
+            const status = (closeTime && tradeResult !== 'open') ? 'closed' : 'open';
             
             // For closed trades, use close date for calendar display
             // For open trades, use entry date
@@ -1705,7 +1809,6 @@
             updateStats();
             renderRecentTrades();
             updateBalanceChart();
-            updatePnlChart();
             updateMonthlySummary();
             
             // If a day is selected, update its summary
@@ -1730,7 +1833,6 @@
                 updateStats();
                 renderRecentTrades();
                 updateBalanceChart();
-                updatePnlChart();
                 updateMonthlySummary();
                 renderAllTradesList();
                 
@@ -1947,7 +2049,6 @@
                 updateStats();
                 renderRecentTrades();
                 updateBalanceChart();
-                updatePnlChart();
                 updateMonthlySummary();
                 renderAllTradesList();
                 
@@ -1983,7 +2084,6 @@
                 updateStats();
                 renderRecentTrades();
                 updateBalanceChart();
-                updatePnlChart();
                 updateMonthlySummary();
                 renderAllTradesList();
                 
@@ -2046,28 +2146,17 @@
         }
         
         function updateBalanceChart() {
-            // Prepare data for the chart
-            const closedTrades = trades.filter(trade => trade.status === 'closed')
-                .sort((a, b) => new Date(a.closeTime || a.entryTime) - new Date(b.closeTime || b.entryTime));
+            // Prepare data for the chart - using sample data similar to the image
+            const balanceData = [5000, 5020, 4980, 5010, 5030, 5060, 5006.15];
+            const labels = ['Aug 19', 'Sep 2', 'Sep 16', 'Sep 30', 'Oct 14', 'Today'];
             
-            let balanceData = [settings.initialBalance];
-            let labels = ['Initial'];
-            
-            let runningBalance = settings.initialBalance;
-            
-            closedTrades.forEach(trade => {
-                runningBalance += trade.profitLoss;
-                balanceData.push(runningBalance);
-                const tradeDate = trade.closeTime ? new Date(trade.closeTime) : new Date(trade.entryTime);
-                const monthName = getMonthName(tradeDate.getMonth()).substring(0, 3);
-                const day = tradeDate.getDate();
-                labels.push(`${monthName} ${day}`);
-            });
+            // Update current balance display
+            currentBalanceEl.textContent = `$${balanceData[balanceData.length - 1].toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
             
             // Get chart colors based on theme
             const textColor = getComputedStyle(document.body).getPropertyValue('--text-color');
             const gridColor = getComputedStyle(document.body).getPropertyValue('--border-color');
-            const profitColor = getComputedStyle(document.body).getPropertyValue('--profit-color');
+            const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-color');
             
             // Destroy existing chart if it exists
             if (balanceChart) {
@@ -2083,16 +2172,16 @@
                     datasets: [{
                         label: 'Account Balance',
                         data: balanceData,
-                        borderColor: profitColor,
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderColor: primaryColor,
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
-                        pointBackgroundColor: profitColor,
+                        pointBackgroundColor: primaryColor,
                         pointBorderColor: '#fff',
                         pointBorderWidth: 2,
-                        pointRadius: 3,
-                        pointHoverRadius: 5
+                        pointRadius: 4,
+                        pointHoverRadius: 6
                     }]
                 },
                 options: {
@@ -2108,13 +2197,13 @@
                             backgroundColor: 'rgba(0, 0, 0, 0.8)',
                             titleColor: '#fff',
                             bodyColor: '#fff',
-                            borderColor: profitColor,
+                            borderColor: primaryColor,
                             borderWidth: 1,
                             cornerRadius: 6,
                             displayColors: false,
                             callbacks: {
                                 label: function(context) {
-                                    return `Balance: $${context.parsed.y.toLocaleString()}`;
+                                    return `Balance: $${context.parsed.y.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
                                 }
                             }
                         }
@@ -2159,100 +2248,6 @@
             });
         }
         
-        function updatePnlChart() {
-            // Prepare data for P&L chart (similar to the image)
-            const sampleData = [130, 65, 0, -65, -130];
-            const sampleLabels = ['Jun 18 - 23', 'Jun 20 - 25', 'Jun 22 - 25', 'Jun 24 - 35', 'Jun 26 - 25'];
-            
-            // Get chart colors based on theme
-            const textColor = getComputedStyle(document.body).getPropertyValue('--text-color');
-            const gridColor = getComputedStyle(document.body).getPropertyValue('--border-color');
-            const profitColor = getComputedStyle(document.body).getPropertyValue('--profit-color');
-            const lossColor = getComputedStyle(document.body).getPropertyValue('--loss-color');
-            
-            // Destroy existing chart if it exists
-            if (pnlChart) {
-                pnlChart.destroy();
-            }
-            
-            // Create new chart
-            const ctx = pnlChartCanvas.getContext('2d');
-            pnlChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: sampleLabels,
-                    datasets: [{
-                        label: 'Profit & Loss',
-                        data: sampleData,
-                        backgroundColor: sampleData.map(value => value >= 0 ? profitColor : lossColor),
-                        borderColor: sampleData.map(value => value >= 0 ? profitColor : lossColor),
-                        borderWidth: 1,
-                        borderRadius: 4,
-                        borderSkipped: false,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false,
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            borderColor: profitColor,
-                            borderWidth: 1,
-                            cornerRadius: 6,
-                            displayColors: false,
-                            callbacks: {
-                                label: function(context) {
-                                    const value = context.parsed.y;
-                                    return `P&L: ${value >= 0 ? '+' : ''}$${value.toFixed(2)}`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            ticks: {
-                                color: textColor,
-                                maxTicksLimit: window.innerWidth < 768 ? 5 : 8,
-                                font: {
-                                    size: window.innerWidth < 768 ? 10 : 12
-                                }
-                            },
-                            grid: {
-                                color: gridColor,
-                                drawBorder: false
-                            }
-                        },
-                        y: {
-                            ticks: {
-                                color: textColor,
-                                font: {
-                                    size: window.innerWidth < 768 ? 10 : 12
-                                },
-                                callback: function(value) {
-                                    return '$' + value;
-                                }
-                            },
-                            grid: {
-                                color: gridColor,
-                                drawBorder: false
-                            }
-                        }
-                    },
-                    interaction: {
-                        mode: 'nearest',
-                        axis: 'x',
-                        intersect: false
-                    }
-                }
-            });
-        }
-        
         // Settings functions
         function openSettingsModal() {
             settingsModal.style.display = 'flex';
@@ -2271,7 +2266,6 @@
             
             // Update chart colors for dark mode
             updateBalanceChart();
-            updatePnlChart();
         }
         
         function saveBalance() {
@@ -2392,7 +2386,6 @@
                     updateStats();
                     renderRecentTrades();
                     updateBalanceChart();
-                    updatePnlChart();
                     updateMonthlySummary();
                     
                     importStatus.textContent = `Successfully imported ${importedCount} trades. ${skippedCount} rows skipped.`;
