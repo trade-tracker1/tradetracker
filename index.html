@@ -986,6 +986,16 @@
                 align-items: flex-start;
                 gap: 10px;
             }
+            
+            /* Fix toggle buttons on mobile */
+            .toggle-group {
+                flex-direction: column;
+            }
+            
+            .toggle-option {
+                padding: 14px 12px;
+                font-size: 16px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -1023,6 +1033,12 @@
             .today-btn {
                 margin-top: 10px;
                 width: 100%;
+            }
+            
+            /* Further improve toggle buttons on very small screens */
+            .toggle-option {
+                padding: 16px 12px;
+                font-size: 15px;
             }
         }
     </style>
@@ -1553,6 +1569,28 @@
             });
         }
         
+        // Function to calculate trade duration
+        function calculateTradeDuration(entryTime, closeTime) {
+            if (!closeTime) return 'Open';
+            
+            const entry = new Date(entryTime);
+            const close = new Date(closeTime);
+            const durationMs = close - entry;
+            
+            // Convert to hours, minutes, days
+            const days = Math.floor(durationMs / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((durationMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
+            
+            if (days > 0) {
+                return `${days}d ${hours}h`;
+            } else if (hours > 0) {
+                return `${hours}h ${minutes}m`;
+            } else {
+                return `${minutes}m`;
+            }
+        }
+        
         function showDaySummary(dateStr, day) {
             selectedDay = dateStr;
             const dailyTrades = getTradesForDay(dateStr);
@@ -1589,17 +1627,25 @@
                     </div>
                     <div class="day-trades-list">
                         ${dailyTrades.length > 0 ? 
-                            dailyTrades.map(trade => `
+                            dailyTrades.map(trade => {
+                                const duration = calculateTradeDuration(trade.entryTime, trade.closeTime);
+                                return `
                                 <div class="trade-item">
                                     <div class="trade-info">
                                         <div class="trade-pair">${trade.pair}</div>
-                                        <div class="trade-date">${formatTime(trade.entryTime)}</div>
+                                        <div class="trade-date">
+                                            ${formatTime(trade.entryTime)} - ${trade.status === 'closed' ? formatTime(trade.closeTime) : 'Open'}
+                                            <div style="font-size: 10px; color: var(--neutral-color); margin-top: 2px;">
+                                                ${duration}
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
                                         ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
                                     </div>
                                 </div>
-                            `).join('') : 
+                                `;
+                            }).join('') : 
                             '<p style="text-align: center; color: var(--neutral-color); padding: 20px;">No trades for this day</p>'
                         }
                     </div>
@@ -2206,11 +2252,11 @@
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
-                        pointBackgroundColor: primaryColor,
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
+                        // Remove individual dots
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        pointBackgroundColor: 'transparent',
+                        pointBorderColor: 'transparent'
                     }]
                 },
                 options: {
