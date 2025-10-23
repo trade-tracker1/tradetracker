@@ -315,6 +315,109 @@
         .dark-mode .category-swing { background: #713f12; color: #fef3c7; }
         .dark-mode .category-position { background: #831843; color: #fce7f3; }
         
+        /* Confluence Styles */
+        .confluence-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: var(--bg-color);
+        }
+        
+        .confluence-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .confluence-checkbox {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .confluence-label {
+            flex: 1;
+            font-size: 14px;
+        }
+        
+        .confluence-score {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .confluence-score.high {
+            background: var(--profit-color);
+        }
+        
+        .confluence-score.medium {
+            background: var(--warning-color);
+        }
+        
+        .confluence-score.low {
+            background: var(--loss-color);
+        }
+        
+        .confluence-management {
+            margin-top: 15px;
+        }
+        
+        .confluence-management-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .confluence-management-item:last-child {
+            border-bottom: none;
+        }
+        
+        .confluence-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* Trade Details Modal */
+        .trade-details {
+            padding: 15px 0;
+        }
+        
+        .trade-detail-item {
+            display: flex;
+            margin-bottom: 12px;
+        }
+        
+        .trade-detail-label {
+            font-weight: 600;
+            min-width: 120px;
+            color: var(--neutral-color);
+        }
+        
+        .trade-detail-value {
+            flex: 1;
+        }
+        
+        .trade-confluences {
+            margin-top: 15px;
+        }
+        
+        .trade-confluence-score {
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 8px;
+            background: var(--bg-color);
+        }
+        
         /* Keyboard Shortcuts Help */
         .keyboard-shortcuts {
             background: var(--bg-color);
@@ -600,6 +703,15 @@
             align-items: center;
             padding: 12px 0;
             border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .trade-item:hover {
+            background-color: var(--bg-color);
+            border-radius: 6px;
+            padding-left: 10px;
+            padding-right: 10px;
         }
         
         .trade-item:last-child {
@@ -1422,6 +1534,18 @@
                     </select>
                 </div>
                 
+                <!-- Confluences Section -->
+                <div class="form-group">
+                    <label>Confluences Met</label>
+                    <div id="confluence-checkboxes">
+                        <!-- Confluence checkboxes will be populated here -->
+                    </div>
+                    <div id="confluence-score-preview" style="margin-top: 10px; display: none;">
+                        <div class="confluence-score" id="confluence-score-value">0%</div>
+                        <small style="color: var(--neutral-color);">Confluence Score</small>
+                    </div>
+                </div>
+                
                 <!-- Win/Loss Toggle -->
                 <div class="form-group">
                     <label>Trade Result</label>
@@ -1494,6 +1618,19 @@
                     <div class="error-message" id="balance-error">Please enter a valid balance</div>
                 </div>
                 <button type="button" class="btn btn-primary" id="save-balance">Save Balance</button>
+            </div>
+            
+            <!-- Confluence Management Section -->
+            <div class="settings-section">
+                <h3>Trade Confluences</h3>
+                <div class="form-group">
+                    <label for="new-confluence">Add New Confluence</label>
+                    <input type="text" id="new-confluence" placeholder="e.g., EMA Cross, RSI Oversold">
+                    <button type="button" class="btn btn-primary" id="add-confluence" style="margin-top: 10px;">Add Confluence</button>
+                </div>
+                <div class="confluence-management" id="confluence-list">
+                    <!-- Confluences will be populated here -->
+                </div>
             </div>
             
             <div class="settings-section">
@@ -1591,6 +1728,19 @@
             
             <div class="trades-list" id="all-trades-list">
                 <!-- All trades will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Trade Details Modal -->
+    <div class="modal" id="trade-details-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="trade-details-title">Trade Details</h2>
+                <button class="close-modal" id="close-trade-details">&times;</button>
+            </div>
+            <div class="trade-details" id="trade-details-content">
+                <!-- Trade details will be populated here -->
             </div>
         </div>
     </div>
@@ -1750,6 +1900,159 @@
             }
         };
 
+        // Confluence Management
+        const ConfluenceManager = {
+            confluences: [],
+            
+            init() {
+                this.loadConfluences();
+            },
+            
+            loadConfluences() {
+                const savedConfluences = localStorage.getItem('tradeTrackerConfluences');
+                if (savedConfluences) {
+                    try {
+                        this.confluences = JSON.parse(savedConfluences);
+                    } catch (error) {
+                        ToastManager.show('Error loading confluences', 'error');
+                    }
+                }
+            },
+            
+            saveConfluences() {
+                try {
+                    localStorage.setItem('tradeTrackerConfluences', JSON.stringify(this.confluences));
+                } catch (error) {
+                    ToastManager.show('Error saving confluences', 'error');
+                }
+            },
+            
+            addConfluence(name) {
+                const newConfluence = {
+                    id: this.confluences.length > 0 ? Math.max(...this.confluences.map(c => c.id)) + 1 : 1,
+                    name: name,
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.confluences.push(newConfluence);
+                this.saveConfluences();
+                return newConfluence;
+            },
+            
+            deleteConfluence(confluenceId) {
+                this.confluences = this.confluences.filter(c => c.id !== confluenceId);
+                this.saveConfluences();
+            },
+            
+            renderConfluenceList() {
+                const confluenceList = document.getElementById('confluence-list');
+                confluenceList.innerHTML = '';
+                
+                if (this.confluences.length === 0) {
+                    confluenceList.innerHTML = '<p style="text-align: center; color: var(--neutral-color); padding: 10px;">No confluences added yet.</p>';
+                    return;
+                }
+                
+                this.confluences.forEach(confluence => {
+                    const confluenceItem = document.createElement('div');
+                    confluenceItem.className = 'confluence-management-item';
+                    confluenceItem.innerHTML = `
+                        <div class="confluence-label">${confluence.name}</div>
+                        <div class="confluence-actions">
+                            <button class="action-btn delete-btn" data-id="${confluence.id}">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    `;
+                    confluenceList.appendChild(confluenceItem);
+                });
+                
+                // Add event listeners to delete buttons
+                confluenceList.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const confluenceId = parseInt(btn.getAttribute('data-id'));
+                        this.deleteConfluence(confluenceId);
+                        this.renderConfluenceList();
+                        ToastManager.show('Confluence deleted successfully', 'success');
+                    });
+                });
+            },
+            
+            renderConfluenceCheckboxes(selectedConfluences = []) {
+                const checkboxesContainer = document.getElementById('confluence-checkboxes');
+                checkboxesContainer.innerHTML = '';
+                
+                if (this.confluences.length === 0) {
+                    checkboxesContainer.innerHTML = '<p style="color: var(--neutral-color); text-align: center; padding: 10px;">No confluences defined. Add them in Settings.</p>';
+                    return;
+                }
+                
+                this.confluences.forEach(confluence => {
+                    const isChecked = selectedConfluences.includes(confluence.id);
+                    const confluenceItem = document.createElement('div');
+                    confluenceItem.className = 'confluence-item';
+                    confluenceItem.innerHTML = `
+                        <input type="checkbox" class="confluence-checkbox" id="confluence-${confluence.id}" value="${confluence.id}" ${isChecked ? 'checked' : ''}>
+                        <label class="confluence-label" for="confluence-${confluence.id}">${confluence.name}</label>
+                    `;
+                    checkboxesContainer.appendChild(confluenceItem);
+                });
+                
+                // Add event listeners to update confluence score
+                checkboxesContainer.querySelectorAll('.confluence-checkbox').forEach(checkbox => {
+                    checkbox.addEventListener('change', () => {
+                        this.updateConfluenceScorePreview();
+                    });
+                });
+                
+                this.updateConfluenceScorePreview();
+            },
+            
+            updateConfluenceScorePreview() {
+                const checkboxes = document.querySelectorAll('.confluence-checkbox');
+                const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+                const totalCount = checkboxes.length;
+                
+                const scorePreview = document.getElementById('confluence-score-preview');
+                const scoreValue = document.getElementById('confluence-score-value');
+                
+                if (totalCount > 0) {
+                    const score = Math.round((checkedCount / totalCount) * 100);
+                    scoreValue.textContent = `${score}%`;
+                    
+                    // Set color based on score
+                    if (score >= 80) {
+                        scoreValue.className = 'confluence-score high';
+                    } else if (score >= 50) {
+                        scoreValue.className = 'confluence-score medium';
+                    } else {
+                        scoreValue.className = 'confluence-score low';
+                    }
+                    
+                    scorePreview.style.display = 'block';
+                } else {
+                    scorePreview.style.display = 'none';
+                }
+            },
+            
+            getSelectedConfluences() {
+                const checkboxes = document.querySelectorAll('.confluence-checkbox:checked');
+                return Array.from(checkboxes).map(cb => parseInt(cb.value));
+            },
+            
+            calculateConfluenceScore(selectedConfluences) {
+                if (this.confluences.length === 0) return 0;
+                return Math.round((selectedConfluences.length / this.confluences.length) * 100);
+            },
+            
+            getConfluenceNames(confluenceIds) {
+                return confluenceIds.map(id => {
+                    const confluence = this.confluences.find(c => c.id === id);
+                    return confluence ? confluence.name : 'Unknown';
+                });
+            }
+        };
+
         // Security and Encryption
         const Security = {
             encrypt(data, password = '') {
@@ -1812,6 +2115,11 @@
                 if (savedTrades) {
                     try {
                         this.trades = JSON.parse(savedTrades);
+                    // Ensure all trades have confluences array
+                        this.trades.forEach(trade => {
+                        if (!trade.confluences) trade.confluences = [];
+                        if (!trade.confluenceScore) trade.confluenceScore = 0;
+                    });
                     } catch (error) {
                         ToastManager.show('Error loading trades data', 'error');
                     }
@@ -2110,6 +2418,7 @@
             ToastManager.init();
             TradeManager.init();
             SettingsManager.init();
+            ConfluenceManager.init();
             ChartManager.init();
             KeyboardManager.init();
             
@@ -2119,6 +2428,7 @@
             renderRecentTrades();
             ChartManager.updateChart();
             updateMonthlySummary();
+            ConfluenceManager.renderConfluenceList();
             
             // Load settings
             const savedSettings = localStorage.getItem('tradeTrackerSettings');
@@ -2151,6 +2461,7 @@
             document.getElementById('close-settings').addEventListener('click', closeSettingsModal);
             document.getElementById('close-all-trades').addEventListener('click', closeAllTradesModal);
             document.getElementById('close-help').addEventListener('click', closeHelpModal);
+            document.getElementById('close-trade-details').addEventListener('click', closeTradeDetailsModal);
             
             // Calendar controls
             document.getElementById('prev-month').addEventListener('click', goToPreviousMonth);
@@ -2160,6 +2471,9 @@
             // Form submissions
             document.getElementById('trade-form').addEventListener('submit', handleTradeSubmit);
             document.getElementById('save-balance').addEventListener('click', handleSaveBalance);
+            
+            // Confluence management
+            document.getElementById('add-confluence').addEventListener('click', handleAddConfluence);
             
             // Data management
             document.getElementById('export-excel').addEventListener('click', handleExportExcel);
@@ -2239,6 +2553,22 @@
             } else {
                 riskMetrics.style.display = 'none';
             }
+        }
+
+        // Confluence management
+        function handleAddConfluence() {
+            const confluenceInput = document.getElementById('new-confluence');
+            const name = confluenceInput.value.trim();
+            
+            if (!name) {
+                ToastManager.show('Please enter a confluence name', 'warning');
+                return;
+            }
+            
+            ConfluenceManager.addConfluence(name);
+            ConfluenceManager.renderConfluenceList();
+            confluenceInput.value = '';
+            ToastManager.show('Confluence added successfully', 'success');
         }
 
         // Calendar functions
@@ -2380,14 +2710,17 @@
                                 const duration = calculateTradeDuration(trade.entryTime, trade.closeTime);
                                 const categoryClass = trade.category ? `category-${trade.category}` : '';
                                 const categoryName = trade.category ? trade.category.charAt(0).toUpperCase() + trade.category.slice(1) : '';
+                                const confluenceScore = trade.confluenceScore || 0;
+                                const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
+                                
                                 return `
-                                <div class="trade-item">
+                                <div class="trade-item" data-trade-id="${trade.id}">
                                     <div class="trade-info">
                                         <div class="trade-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
                                         <div class="trade-date">
                                             ${formatTime(trade.entryTime)} - ${trade.status === 'closed' ? formatTime(trade.closeTime) : 'Open'}
                                             <div style="font-size: 10px; color: var(--neutral-color); margin-top: 2px;">
-                                                ${duration}
+                                                ${duration} <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
                                             </div>
                                         </div>
                                     </div>
@@ -2402,6 +2735,93 @@
                     </div>
                 </div>
             `;
+            
+            // Add click event listeners to trade items
+            document.querySelectorAll('.trade-item[data-trade-id]').forEach(item => {
+                item.addEventListener('click', function() {
+                    const tradeId = parseInt(this.getAttribute('data-trade-id'));
+                    showTradeDetails(tradeId);
+                });
+            });
+        }
+
+        function showTradeDetails(tradeId) {
+            const trade = TradeManager.trades.find(t => t.id === tradeId);
+            if (!trade) return;
+            
+            document.getElementById('trade-details-title').textContent = `Trade Details: ${trade.pair}`;
+            
+            const confluenceNames = ConfluenceManager.getConfluenceNames(trade.confluences || []);
+            const confluenceScore = trade.confluenceScore || 0;
+            const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
+            
+            document.getElementById('trade-details-content').innerHTML = `
+                <div class="trade-detail-item">
+                    <div class="trade-detail-label">Trading Pair:</div>
+                    <div class="trade-detail-value">${trade.pair}</div>
+                </div>
+                <div class="trade-detail-item">
+                    <div class="trade-detail-label">Type:</div>
+                    <div class="trade-detail-value">${trade.type}</div>
+                </div>
+                <div class="trade-detail-item">
+                    <div class="trade-detail-label">Amount Risked:</div>
+                    <div class="trade-detail-value">$${trade.amount.toFixed(2)}</div>
+                </div>
+                <div class="trade-detail-item">
+                    <div class="trade-detail-label">Entry Time:</div>
+                    <div class="trade-detail-value">${formatDateTime(trade.entryTime)}</div>
+                </div>
+                ${trade.closeTime ? `
+                <div class="trade-detail-item">
+                    <div class="trade-detail-label">Close Time:</div>
+                    <div class="trade-detail-value">${formatDateTime(trade.closeTime)}</div>
+                </div>
+                ` : ''}
+                <div class="trade-detail-item">
+                    <div class="trade-detail-label">Status:</div>
+                    <div class="trade-detail-value">${trade.status}</div>
+                </div>
+                ${trade.profitLoss !== null ? `
+                <div class="trade-detail-item">
+                    <div class="trade-detail-label">Profit/Loss:</div>
+                    <div class="trade-detail-value ${trade.profitLoss >= 0 ? 'positive-stat' : 'negative-stat'}">
+                        ${trade.profitLoss >= 0 ? '+' : ''}$${trade.profitLoss.toFixed(2)}
+                    </div>
+                </div>
+                ` : ''}
+                ${trade.category ? `
+                <div class="trade-detail-item">
+                    <div class="trade-detail-label">Category:</div>
+                    <div class="trade-detail-value">${trade.category.charAt(0).toUpperCase() + trade.category.slice(1)}</div>
+                </div>
+                ` : ''}
+                <div class="trade-confluence-score ${scoreClass}">
+                    Confluence Score: ${confluenceScore}%
+                </div>
+                ${confluenceNames.length > 0 ? `
+                <div class="trade-confluences">
+                    <h4 style="margin-bottom: 10px;">Confluences Met:</h4>
+                    <ul style="padding-left: 20px;">
+                        ${confluenceNames.map(name => `<li>${name}</li>`).join('')}
+                    </ul>
+                </div>
+                ` : ''}
+                ${trade.notes ? `
+                <div class="trade-detail-item">
+                    <div class="trade-detail-label">Notes:</div>
+                    <div class="trade-detail-value">${trade.notes}</div>
+                </div>
+                ` : ''}
+            `;
+            
+            document.getElementById('trade-details-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTradeDetailsModal() {
+            document.getElementById('trade-details-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
         function calculateTradeDuration(entryTime, closeTime) {
@@ -2485,6 +2905,9 @@
             
             document.getElementById('entry-time').value = formatForInput(today);
             
+            // Render confluence checkboxes
+            ConfluenceManager.renderConfluenceCheckboxes();
+            
             document.getElementById('trade-modal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
@@ -2529,6 +2952,9 @@
                 }
                 document.getElementById('profit-loss').disabled = false;
             }
+            
+            // Render confluence checkboxes with selected confluences
+            ConfluenceManager.renderConfluenceCheckboxes(trade.confluences || []);
             
             updateRiskMetrics();
             
@@ -2576,6 +3002,8 @@
             const closeTime = document.getElementById('close-time').value;
             const category = document.getElementById('category').value;
             const notes = document.getElementById('notes').value;
+            const selectedConfluences = ConfluenceManager.getSelectedConfluences();
+            const confluenceScore = ConfluenceManager.calculateConfluenceScore(selectedConfluences);
             
             let profitLoss = null;
             const profitLossAmount = parseFloat(document.getElementById('profit-loss').value) || 0;
@@ -2601,7 +3029,9 @@
                 entryDate: entryDate,
                 status,
                 category,
-                notes
+                notes,
+                confluences: selectedConfluences,
+                confluenceScore
             };
             
             if (!Validation.validateTradeForm(tradeData)) {
@@ -2709,6 +3139,7 @@
             sortedTrades.forEach(trade => {
                 const tradeEl = document.createElement('div');
                 tradeEl.className = 'trade-item';
+                tradeEl.setAttribute('data-trade-id', trade.id);
                 
                 const profitLossDisplay = trade.status === 'open' ? 
                     'Open' : 
@@ -2720,11 +3151,13 @@
                 
                 const categoryClass = trade.category ? `category-${trade.category}` : '';
                 const categoryName = trade.category ? trade.category.charAt(0).toUpperCase() + trade.category.slice(1) : '';
+                const confluenceScore = trade.confluenceScore || 0;
+                const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
                 
                 tradeEl.innerHTML = `
                     <div class="trade-info">
                         <div class="trade-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
-                        <div class="trade-date">${formattedDate}</div>
+                        <div class="trade-date">${formattedDate} <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span></div>
                     </div>
                     <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
                         ${profitLossDisplay}
@@ -2732,6 +3165,14 @@
                 `;
                 
                 rightPanelContent.appendChild(tradeEl);
+            });
+            
+            // Add click event listeners to trade items
+            document.querySelectorAll('.trade-item[data-trade-id]').forEach(item => {
+                item.addEventListener('click', function() {
+                    const tradeId = parseInt(this.getAttribute('data-trade-id'));
+                    showTradeDetails(tradeId);
+                });
             });
         }
 
@@ -2770,6 +3211,8 @@
                 
                 const categoryClass = trade.category ? `category-${trade.category}` : '';
                 const categoryName = trade.category ? trade.category.charAt(0).toUpperCase() + trade.category.slice(1) : '';
+                const confluenceScore = trade.confluenceScore || 0;
+                const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
                 
                 tradeEl.innerHTML = `
                     <div class="trade-management-info">
@@ -2780,6 +3223,7 @@
                         <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
                         <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
                             ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                            <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
                         </div>
                     </div>
                     <div class="trade-management-actions">
@@ -2986,6 +3430,11 @@
                 'Profit/Loss': trade.profitLoss || 'Open',
                 'Status': trade.status,
                 'Category': trade.category || '',
+                'Confluences': (trade.confluences || []).map(id => {
+                    const confluence = ConfluenceManager.confluences.find(c => c.id === id);
+                    return confluence ? confluence.name : 'Unknown';
+                }).join(', '),
+                'Confluence Score': trade.confluenceScore || 0,
                 'Notes': trade.notes || '',
                 'Entry Date': trade.entryDate,
                 'Display Date': trade.date
@@ -3045,6 +3494,16 @@
                             displayDate = new Date(row['Entry Time']).toISOString().split('T')[0];
                         }
                         
+                        // Parse confluences from string to array of IDs
+                        let confluences = [];
+                        if (row.Confluences) {
+                            const confluenceNames = row.Confluences.split(', ');
+                            confluences = confluenceNames.map(name => {
+                                const confluence = ConfluenceManager.confluences.find(c => c.name === name);
+                                return confluence ? confluence.id : null;
+                            }).filter(id => id !== null);
+                        }
+                        
                         const trade = {
                             id: TradeManager.trades.length > 0 ? Math.max(...TradeManager.trades.map(t => t.id)) + 1 : 1,
                             pair: row.Pair,
@@ -3057,7 +3516,9 @@
                             entryDate: new Date(row['Entry Time']).toISOString().split('T')[0],
                             status: status,
                             category: row.Category || 'day',
-                            notes: row.Notes || ''
+                            notes: row.Notes || '',
+                            confluences: confluences,
+                            confluenceScore: row['Confluence Score'] || 0
                         };
                         
                         TradeManager.trades.push(trade);
@@ -3105,6 +3566,7 @@
             const encryptedData = Security.encrypt({
                 trades: TradeManager.trades,
                 settings: settings,
+                confluences: ConfluenceManager.confluences,
                 backupDate: new Date().toISOString()
             }, password);
             
@@ -3169,6 +3631,12 @@
             if (!dateTimeStr) return '';
             const date = new Date(dateTimeStr);
             return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function formatDateTime(dateTimeStr) {
+            if (!dateTimeStr) return '';
+            const date = new Date(dateTimeStr);
+            return date.toLocaleString();
         }
 
         // Initialize with recent trades view
