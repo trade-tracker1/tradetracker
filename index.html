@@ -1073,7 +1073,7 @@
         <div class="chart-container">
             <div class="chart-header">
                 <h2 class="chart-title">Account Balance</h2>
-                <div class="current-balance" id="current-balance">$5,006.15</div>
+                <div class="current-balance" id="current-balance">$5,000.00</div>
             </div>
             <div class="chart-wrapper">
                 <canvas id="balance-chart"></canvas>
@@ -2146,12 +2146,41 @@
         }
         
         function updateBalanceChart() {
-            // Prepare data for the chart - using sample data similar to the image
-            const balanceData = [5000, 5020, 4980, 5010, 5030, 5060, 5006.15];
-            const labels = ['Aug 19', 'Sep 2', 'Sep 16', 'Sep 30', 'Oct 14', 'Today'];
+            // Get all closed trades sorted by date
+            const closedTrades = trades
+                .filter(trade => trade.status === 'closed')
+                .sort((a, b) => {
+                    const dateA = new Date(a.closeTime || a.entryTime);
+                    const dateB = new Date(b.closeTime || b.entryTime);
+                    return dateA - dateB;
+                });
+            
+            // Start with initial balance
+            let balanceData = [settings.initialBalance];
+            let labels = ['Initial'];
+            
+            let runningBalance = settings.initialBalance;
+            
+            // Add data points for each closed trade
+            closedTrades.forEach(trade => {
+                runningBalance += trade.profitLoss;
+                balanceData.push(runningBalance);
+                
+                const tradeDate = new Date(trade.closeTime || trade.entryTime);
+                const monthName = getMonthName(tradeDate.getMonth()).substring(0, 3);
+                const day = tradeDate.getDate();
+                labels.push(`${monthName} ${day}`);
+            });
+            
+            // If no trades, just show initial balance
+            if (closedTrades.length === 0) {
+                balanceData = [settings.initialBalance];
+                labels = ['Today'];
+            }
             
             // Update current balance display
-            currentBalanceEl.textContent = `$${balanceData[balanceData.length - 1].toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            const currentBalance = balanceData[balanceData.length - 1];
+            currentBalanceEl.textContent = `$${currentBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
             
             // Get chart colors based on theme
             const textColor = getComputedStyle(document.body).getPropertyValue('--text-color');
