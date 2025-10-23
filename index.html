@@ -315,37 +315,42 @@
         .dark-mode .category-swing { background: #713f12; color: #fef3c7; }
         .dark-mode .category-position { background: #831843; color: #fce7f3; }
         
-        /* Confluence Styles */
+        /* Confluence Styles - Smaller and Neater */
+        .confluence-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
         .confluence-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px;
+            gap: 6px;
+            padding: 6px 8px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            margin-bottom: 8px;
+            border-radius: 6px;
             background: var(--bg-color);
-        }
-        
-        .confluence-item:last-child {
-            margin-bottom: 0;
+            font-size: 12px;
         }
         
         .confluence-checkbox {
-            width: 18px;
-            height: 18px;
+            width: 14px;
+            height: 14px;
+            margin: 0;
         }
         
         .confluence-label {
             flex: 1;
-            font-size: 14px;
+            font-size: 12px;
+            line-height: 1.2;
         }
         
         .confluence-score {
             display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
             font-weight: 600;
             background: var(--primary-color);
             color: white;
@@ -416,6 +421,38 @@
             padding: 10px;
             border-radius: 8px;
             background: var(--bg-color);
+        }
+        
+        /* Screenshot Styles */
+        .screenshot-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .screenshot-thumbnail {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .screenshot-full {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-top: 10px;
+        }
+        
+        .screenshot-modal .modal-content {
+            max-width: 600px;
         }
         
         /* Keyboard Shortcuts Help */
@@ -1248,6 +1285,10 @@
             .stats-cards {
                 grid-template-columns: repeat(3, 1fr);
             }
+            
+            .confluence-grid {
+                grid-template-columns: 1fr;
+            }
         }
         
         @media (max-width: 768px) {
@@ -1534,10 +1575,20 @@
                     </select>
                 </div>
                 
+                <!-- Screenshot Upload -->
+                <div class="form-group">
+                    <label for="screenshot">Trade Screenshot</label>
+                    <input type="file" id="screenshot" class="file-input" accept="image/*">
+                    <label for="screenshot" class="file-input-label" style="margin-top: 8px;">
+                        <i class="fas fa-image"></i> Choose Screenshot
+                    </label>
+                    <img id="screenshot-preview" class="screenshot-preview" alt="Screenshot preview">
+                </div>
+                
                 <!-- Confluences Section -->
                 <div class="form-group">
                     <label>Confluences Met</label>
-                    <div id="confluence-checkboxes">
+                    <div class="confluence-grid" id="confluence-checkboxes">
                         <!-- Confluence checkboxes will be populated here -->
                     </div>
                     <div id="confluence-score-preview" style="margin-top: 10px; display: none;">
@@ -1738,9 +1789,25 @@
             <div class="modal-header">
                 <h2 id="trade-details-title">Trade Details</h2>
                 <button class="close-modal" id="close-trade-details">&times;</button>
+                <button class="btn btn-primary" id="edit-trade-btn" style="margin-left: auto; margin-right: 10px;">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
             </div>
             <div class="trade-details" id="trade-details-content">
                 <!-- Trade details will be populated here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Screenshot Modal -->
+    <div class="modal screenshot-modal" id="screenshot-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Screenshot</h2>
+                <button class="close-modal" id="close-screenshot">&times;</button>
+            </div>
+            <div id="screenshot-full-container">
+                <!-- Full screenshot will be displayed here -->
             </div>
         </div>
     </div>
@@ -1866,12 +1933,6 @@
                 if (formData.closeTime && formData.entryTime) {
                     if (new Date(formData.closeTime) <= new Date(formData.entryTime)) {
                         this.errors.closeTime = 'Close time must be after entry time';
-                    }
-                }
-                
-                if (formData.status !== 'open') {
-                    if (!formData.profitLoss && formData.profitLoss !== 0) {
-                        this.errors.profitLoss = 'Please enter profit/loss amount for closed trades';
                     }
                 }
                 
@@ -2115,11 +2176,12 @@
                 if (savedTrades) {
                     try {
                         this.trades = JSON.parse(savedTrades);
-                    // Ensure all trades have confluences array
+                        // Ensure all trades have confluences array
                         this.trades.forEach(trade => {
-                        if (!trade.confluences) trade.confluences = [];
-                        if (!trade.confluenceScore) trade.confluenceScore = 0;
-                    });
+                            if (!trade.confluences) trade.confluences = [];
+                            if (!trade.confluenceScore) trade.confluenceScore = 0;
+                            if (!trade.screenshots) trade.screenshots = [];
+                        });
                     } catch (error) {
                         ToastManager.show('Error loading trades data', 'error');
                     }
@@ -2411,6 +2473,7 @@
         let selectedTradeIds = new Set();
         let tradeResult = 'open';
         let settings = SettingsManager.settings;
+        let currentScreenshot = null;
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
@@ -2462,6 +2525,8 @@
             document.getElementById('close-all-trades').addEventListener('click', closeAllTradesModal);
             document.getElementById('close-help').addEventListener('click', closeHelpModal);
             document.getElementById('close-trade-details').addEventListener('click', closeTradeDetailsModal);
+            document.getElementById('close-screenshot').addEventListener('click', closeScreenshotModal);
+            document.getElementById('edit-trade-btn').addEventListener('click', handleEditTradeFromDetails);
             
             // Calendar controls
             document.getElementById('prev-month').addEventListener('click', goToPreviousMonth);
@@ -2474,6 +2539,9 @@
             
             // Confluence management
             document.getElementById('add-confluence').addEventListener('click', handleAddConfluence);
+            
+            // Screenshot handling
+            document.getElementById('screenshot').addEventListener('change', handleScreenshotUpload);
             
             // Data management
             document.getElementById('export-excel').addEventListener('click', handleExportExcel);
@@ -2530,6 +2598,11 @@
                         profitLossInput.value = '';
                     } else {
                         profitLossInput.disabled = false;
+                        // Auto-close trade if win/loss is selected
+                        if (!document.getElementById('close-time').value) {
+                            const now = new Date();
+                            document.getElementById('close-time').value = now.toISOString().slice(0, 16);
+                        }
                     }
                     
                     updateRiskMetrics();
@@ -2569,6 +2642,33 @@
             ConfluenceManager.renderConfluenceList();
             confluenceInput.value = '';
             ToastManager.show('Confluence added successfully', 'success');
+        }
+
+        // Screenshot handling
+        function handleScreenshotUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentScreenshot = e.target.result;
+                document.getElementById('screenshot-preview').src = currentScreenshot;
+                document.getElementById('screenshot-preview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function showScreenshotFull(screenshotData) {
+            document.getElementById('screenshot-full-container').innerHTML = `
+                <img src="${screenshotData}" class="screenshot-full" alt="Trade screenshot">
+            `;
+            document.getElementById('screenshot-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeScreenshotModal() {
+            document.getElementById('screenshot-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
         // Calendar functions
@@ -2750,10 +2850,25 @@
             if (!trade) return;
             
             document.getElementById('trade-details-title').textContent = `Trade Details: ${trade.pair}`;
+            document.getElementById('edit-trade-btn').setAttribute('data-trade-id', tradeId);
             
             const confluenceNames = ConfluenceManager.getConfluenceNames(trade.confluences || []);
             const confluenceScore = trade.confluenceScore || 0;
             const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
+            
+            let screenshotsHtml = '';
+            if (trade.screenshots && trade.screenshots.length > 0) {
+                screenshotsHtml = `
+                    <div class="trade-detail-item">
+                        <div class="trade-detail-label">Screenshots:</div>
+                        <div class="trade-detail-value">
+                            ${trade.screenshots.map((screenshot, index) => `
+                                <img src="${screenshot}" class="screenshot-thumbnail" alt="Screenshot ${index + 1}" data-screenshot="${screenshot}">
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
             
             document.getElementById('trade-details-content').innerHTML = `
                 <div class="trade-detail-item">
@@ -2807,6 +2922,7 @@
                     </ul>
                 </div>
                 ` : ''}
+                ${screenshotsHtml}
                 ${trade.notes ? `
                 <div class="trade-detail-item">
                     <div class="trade-detail-label">Notes:</div>
@@ -2815,8 +2931,22 @@
                 ` : ''}
             `;
             
+            // Add click event listeners to screenshot thumbnails
+            document.querySelectorAll('.screenshot-thumbnail').forEach(thumbnail => {
+                thumbnail.addEventListener('click', function() {
+                    const screenshotData = this.getAttribute('data-screenshot');
+                    showScreenshotFull(screenshotData);
+                });
+            });
+            
             document.getElementById('trade-details-modal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
+        }
+
+        function handleEditTradeFromDetails() {
+            const tradeId = parseInt(document.getElementById('edit-trade-btn').getAttribute('data-trade-id'));
+            closeTradeDetailsModal();
+            openEditTradeModal(tradeId);
         }
 
         function closeTradeDetailsModal() {
@@ -2897,6 +3027,8 @@
             document.getElementById('profit-loss').disabled = true;
             document.getElementById('profit-loss').value = '';
             document.getElementById('risk-metrics-preview').style.display = 'none';
+            document.getElementById('screenshot-preview').style.display = 'none';
+            currentScreenshot = null;
             
             const today = new Date();
             const formatForInput = (date) => {
@@ -2951,6 +3083,16 @@
                     document.getElementById('profit-loss').value = Math.abs(trade.profitLoss);
                 }
                 document.getElementById('profit-loss').disabled = false;
+            }
+            
+            // Set screenshot if exists
+            if (trade.screenshots && trade.screenshots.length > 0) {
+                currentScreenshot = trade.screenshots[0];
+                document.getElementById('screenshot-preview').src = currentScreenshot;
+                document.getElementById('screenshot-preview').style.display = 'block';
+            } else {
+                document.getElementById('screenshot-preview').style.display = 'none';
+                currentScreenshot = null;
             }
             
             // Render confluence checkboxes with selected confluences
@@ -3014,8 +3156,10 @@
                 profitLoss = -profitLossAmount;
             }
             
+            // Auto-close trade if win/loss is selected
+            const status = (tradeResult !== 'open') ? 'closed' : 'open';
+            
             const entryDate = entryTime.split('T')[0];
-            const status = (closeTime && tradeResult !== 'open') ? 'closed' : 'open';
             const displayDate = status === 'closed' && closeTime ? closeTime.split('T')[0] : entryDate;
             
             const tradeData = {
@@ -3033,6 +3177,11 @@
                 confluences: selectedConfluences,
                 confluenceScore
             };
+            
+            // Add screenshot if exists
+            if (currentScreenshot) {
+                tradeData.screenshots = [currentScreenshot];
+            }
             
             if (!Validation.validateTradeForm(tradeData)) {
                 Validation.showErrors();
@@ -3195,7 +3344,38 @@
                 return;
             }
             
-            const sortedTrades = [...TradeManager.trades].sort((a, b) => {
+            // Get search and filter values
+            const searchTerm = document.getElementById('trade-search').value.toLowerCase();
+            const filterValue = document.getElementById('trade-filter').value;
+            
+            // Filter trades
+            let filteredTrades = TradeManager.trades;
+            
+            if (searchTerm) {
+                filteredTrades = filteredTrades.filter(trade => 
+                    trade.pair.toLowerCase().includes(searchTerm) ||
+                    (trade.notes && trade.notes.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            if (filterValue !== 'all') {
+                if (filterValue === 'win') {
+                    filteredTrades = filteredTrades.filter(trade => 
+                        trade.status === 'closed' && trade.profitLoss > 0
+                    );
+                } else if (filterValue === 'loss') {
+                    filteredTrades = filteredTrades.filter(trade => 
+                        trade.status === 'closed' && trade.profitLoss < 0
+                    );
+                } else if (filterValue === 'open') {
+                    filteredTrades = filteredTrades.filter(trade => trade.status === 'open');
+                } else {
+                    filteredTrades = filteredTrades.filter(trade => trade.category === filterValue);
+                }
+            }
+            
+            // Sort by date (newest first)
+            const sortedTrades = filteredTrades.sort((a, b) => {
                 const dateA = a.status === 'closed' && a.closeTime ? new Date(a.closeTime) : new Date(a.entryTime);
                 const dateB = b.status === 'closed' && b.closeTime ? new Date(b.closeTime) : new Date(b.entryTime);
                 return dateB - dateA;
@@ -3270,6 +3450,15 @@
             });
             
             document.getElementById('filtered-trade-count').textContent = `Showing ${sortedTrades.length} of ${TradeManager.trades.length} trades`;
+        }
+
+        // Search and filter functions
+        function handleTradeSearch() {
+            renderAllTradesList();
+        }
+
+        function handleTradeFilter() {
+            renderAllTradesList();
         }
 
         // Bulk selection functions
@@ -3518,7 +3707,8 @@
                             category: row.Category || 'day',
                             notes: row.Notes || '',
                             confluences: confluences,
-                            confluenceScore: row['Confluence Score'] || 0
+                            confluenceScore: row['Confluence Score'] || 0,
+                            screenshots: []
                         };
                         
                         TradeManager.trades.push(trade);
@@ -3581,49 +3771,6 @@
             URL.revokeObjectURL(url);
             
             ToastManager.show('Backup created successfully!', 'success');
-        }
-
-        // Search and filter functions
-        function handleTradeSearch() {
-            const searchTerm = document.getElementById('trade-search').value.toLowerCase();
-            filterTrades();
-        }
-
-        function handleTradeFilter() {
-            filterTrades();
-        }
-
-        function filterTrades() {
-            const searchTerm = document.getElementById('trade-search').value.toLowerCase();
-            const filterValue = document.getElementById('trade-filter').value;
-            
-            const filteredTrades = TradeManager.trades.filter(trade => {
-                // Search filter
-                const matchesSearch = trade.pair.toLowerCase().includes(searchTerm) || 
-                                    (trade.notes && trade.notes.toLowerCase().includes(searchTerm));
-                
-                // Category/status filter
-                let matchesFilter = true;
-                if (filterValue !== 'all') {
-                    if (filterValue === 'win') {
-                        matchesFilter = trade.status === 'closed' && trade.profitLoss > 0;
-                    } else if (filterValue === 'loss') {
-                        matchesFilter = trade.status === 'closed' && trade.profitLoss < 0;
-                    } else if (filterValue === 'open') {
-                        matchesFilter = trade.status === 'open';
-                    } else {
-                        matchesFilter = trade.category === filterValue;
-                    }
-                }
-                
-                return matchesSearch && matchesFilter;
-            });
-            
-            // Update the display with filtered trades
-            document.getElementById('filtered-trade-count').textContent = `Showing ${filteredTrades.length} of ${TradeManager.trades.length} trades`;
-            
-            // Note: In a full implementation, we would update the trades list display
-            // This is a simplified version for demonstration
         }
 
         // Utility functions
