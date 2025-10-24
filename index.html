@@ -738,7 +738,7 @@
             cursor: pointer;
         }
         
-        /* Improved Trade Item Layout - Narrower P&L Box */
+        /* Optimized Trade Item Layout */
         .trade-item {
             display: flex;
             justify-content: space-between;
@@ -760,24 +760,66 @@
             border-bottom: none;
         }
         
-        .trade-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex: 1;
+        .trade-info-compact {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            align-items: start;
+            width: 100%;
         }
         
-        .trade-pair {
+        .trade-main-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .trade-pair-compact {
             font-weight: 600;
             color: var(--text-color);
             font-size: 14px;
-            min-width: 90px;
         }
         
-        .trade-date {
-            color: var(--neutral-color);
+        .trade-dates-compact {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-size: 12px;
-            flex: 1;
+            color: var(--neutral-color);
+            margin-top: 4px;
+        }
+        
+        .trade-date-separator {
+            color: var(--border-color);
+        }
+        
+        .trade-right-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        
+        .trade-confluence-score-compact {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .trade-confluence-score-compact.high {
+            background: var(--profit-color);
+        }
+        
+        .trade-confluence-score-compact.medium {
+            background: var(--warning-color);
+        }
+        
+        .trade-confluence-score-compact.low {
+            background: var(--loss-color);
         }
         
         .trade-profit {
@@ -1488,16 +1530,26 @@
                 padding: 10px 0;
             }
             
-            .trade-info {
-                gap: 8px;
+            .trade-info-compact {
+                grid-template-columns: 1fr;
+                gap: 6px;
             }
             
-            .trade-pair {
+            .trade-right-info {
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
+            }
+            
+            .trade-main-info {
+                justify-content: space-between;
+            }
+            
+            .trade-pair-compact {
                 font-size: 13px;
-                min-width: 80px;
             }
             
-            .trade-date {
+            .trade-dates-compact {
                 font-size: 11px;
             }
             
@@ -2264,9 +2316,6 @@
             }
         };
 
-        // Rest of the JavaScript code remains the same as in the previous version
-        // Only the ChartManager has been updated to fix the chart display issue
-        
         // Toast Notification System
         const ToastManager = {
             container: null,
@@ -2932,9 +2981,6 @@
             });
         }
 
-        // Rest of the JavaScript functions remain the same as in the previous version
-        // Only the initialization order and ChartManager have been updated
-        
         // Initialize trade result toggle
         function initTradeResultToggle() {
             const toggleOptions = document.querySelectorAll('.toggle-option');
@@ -3167,17 +3213,28 @@
                                 
                                 return `
                                 <div class="trade-item" data-trade-id="${trade.id}">
-                                    <div class="trade-info">
-                                        <div class="trade-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
-                                        <div class="trade-date">
-                                            ${formatTime(trade.entryTime)} - ${trade.status === 'closed' ? formatTime(trade.closeTime) : 'Open'}
-                                            <div style="font-size: 10px; color: var(--neutral-color); margin-top: 2px;">
-                                                ${duration} <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
+                                    <div class="trade-info-compact">
+                                        <div class="trade-main-info">
+                                            <div class="trade-pair-compact">
+                                                ${trade.pair} 
+                                                ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}
+                                            </div>
+                                            <div class="trade-dates-compact">
+                                                <span class="open-date">${formatTime(trade.entryTime)}</span>
+                                                ${trade.closeTime ? `
+                                                    <span class="trade-date-separator">→</span>
+                                                    <span class="close-date">${formatTime(trade.closeTime)}</span>
+                                                ` : ''}
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
-                                        ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                                        <div class="trade-right-info">
+                                            <span class="trade-confluence-score-compact ${scoreClass}">
+                                                ${confluenceScore}%
+                                            </span>
+                                            <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                                                ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 `;
@@ -3651,9 +3708,14 @@
                     'Open' : 
                     `${trade.profitLoss >= 0 ? '+' : ''}$${trade.profitLoss.toFixed(2)}`;
                 
-                const tradeDate = trade.status === 'closed' && trade.closeTime ? 
-                    new Date(trade.closeTime) : new Date(trade.entryTime);
-                const formattedDate = `${tradeDate.getMonth() + 1}/${tradeDate.getDate()}/${tradeDate.getFullYear()}`;
+                const entryDate = new Date(trade.entryTime);
+                const formattedEntryDate = `${entryDate.getMonth() + 1}/${entryDate.getDate()}`;
+                
+                let formattedCloseDate = '';
+                if (trade.closeTime) {
+                    const closeDate = new Date(trade.closeTime);
+                    formattedCloseDate = `${closeDate.getMonth() + 1}/${closeDate.getDate()}`;
+                }
                 
                 const categoryClass = trade.category ? `category-${trade.category}` : '';
                 const categoryName = trade.category ? trade.category.charAt(0).toUpperCase() + trade.category.slice(1) : '';
@@ -3661,12 +3723,28 @@
                 const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
                 
                 tradeEl.innerHTML = `
-                    <div class="trade-info">
-                        <div class="trade-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
-                        <div class="trade-date">${formattedDate} <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span></div>
-                    </div>
-                    <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
-                        ${profitLossDisplay}
+                    <div class="trade-info-compact">
+                        <div class="trade-main-info">
+                            <div class="trade-pair-compact">
+                                ${trade.pair} 
+                                ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}
+                            </div>
+                            <div class="trade-dates-compact">
+                                <span class="open-date">${formattedEntryDate}</span>
+                                ${trade.closeTime ? `
+                                    <span class="trade-date-separator">→</span>
+                                    <span class="close-date">${formattedCloseDate}</span>
+                                ` : ''}
+                            </div>
+                        </div>
+                        <div class="trade-right-info">
+                            <span class="trade-confluence-score-compact ${scoreClass}">
+                                ${confluenceScore}%
+                            </span>
+                            <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                                ${profitLossDisplay}
+                            </div>
+                        </div>
                     </div>
                 `;
                 
@@ -3742,9 +3820,14 @@
                 const tradeEl = document.createElement('div');
                 tradeEl.className = 'trade-management-item';
                 
-                const tradeDate = trade.status === 'closed' && trade.closeTime ? 
-                    new Date(trade.closeTime) : new Date(trade.entryTime);
-                const formattedDate = `${tradeDate.getMonth() + 1}/${tradeDate.getDate()}/${tradeDate.getFullYear()}`;
+                const entryDate = new Date(trade.entryTime);
+                const formattedEntryDate = `${entryDate.getMonth() + 1}/${entryDate.getDate()}`;
+                
+                let formattedCloseDate = '';
+                if (trade.closeTime) {
+                    const closeDate = new Date(trade.closeTime);
+                    formattedCloseDate = `${closeDate.getMonth() + 1}/${closeDate.getDate()}`;
+                }
                 
                 const categoryClass = trade.category ? `category-${trade.category}` : '';
                 const categoryName = trade.category ? trade.category.charAt(0).toUpperCase() + trade.category.slice(1) : '';
@@ -3754,14 +3837,30 @@
                 tradeEl.innerHTML = `
                     <div class="trade-management-info">
                         <input type="checkbox" class="trade-checkbox" value="${trade.id}">
-                        <div class="trade-management-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
-                        <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
-                        <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
-                            ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                        <div class="trade-info-compact" style="grid-column: 2 / -1;">
+                            <div class="trade-main-info">
+                                <div class="trade-pair-compact">
+                                    ${trade.pair} 
+                                    ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}
+                                    <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
+                                </div>
+                                <div class="trade-dates-compact">
+                                    <span class="open-date">${formattedEntryDate}</span>
+                                    ${trade.closeTime ? `
+                                        <span class="trade-date-separator">→</span>
+                                        <span class="close-date">${formattedCloseDate}</span>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            <div class="trade-right-info">
+                                <span class="trade-confluence-score-compact ${scoreClass}">
+                                    ${confluenceScore}%
+                                </span>
+                                <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                                    ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                                </div>
+                            </div>
                         </div>
-                        <div class="trade-management-date">${formattedDate}</div>
-                        <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
-                        <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
                     </div>
                     <div class="trade-management-actions">
                         <button class="action-btn edit-btn" data-id="${trade.id}">
