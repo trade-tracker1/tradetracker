@@ -1558,6 +1558,128 @@
                 font-size: 14px;
             }
             
+            /* Mobile Layout for All Trades Modal */
+            .trade-management-info.mobile-layout {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+            }
+            
+            .trade-row-first {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                width: 100%;
+            }
+            
+            .trade-row-second {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                width: 100%;
+            }
+            
+            .trade-type-badge {
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 11px;
+                font-weight: 600;
+                text-align: center;
+                min-width: 45px;
+            }
+            
+            .trade-type-badge.buy {
+                background-color: #d1fae5;
+                color: #065f46;
+            }
+            
+            .trade-type-badge.sell {
+                background-color: #fee2e2;
+                color: #991b1b;
+            }
+            
+            .dark-mode .trade-type-badge.buy {
+                background-color: #064e3b;
+                color: #a7f3d0;
+            }
+            
+            .dark-mode .trade-type-badge.sell {
+                background-color: #7f1d1d;
+                color: #fecaca;
+            }
+            
+            .trade-category-badge {
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 11px;
+                font-weight: 600;
+                text-align: center;
+                min-width: 60px;
+            }
+            
+            .trade-date-info,
+            .trade-amount-info,
+            .trade-pnl-info {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }
+            
+            .date-label,
+            .amount-label,
+            .pnl-label {
+                font-size: 10px;
+                color: var(--neutral-color);
+                font-weight: 500;
+            }
+            
+            .date-value,
+            .amount-value,
+            .pnl-value {
+                font-size: 11px;
+                font-weight: 600;
+            }
+            
+            .trade-pnl-info.positive .pnl-value {
+                color: var(--profit-color);
+            }
+            
+            .trade-pnl-info.negative .pnl-value {
+                color: var(--loss-color);
+            }
+            
+            /* Ensure actions stay in the same position */
+            .trade-management-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                padding: 12px;
+                border-bottom: 1px solid var(--border-color);
+                gap: 10px;
+            }
+            
+            .trade-management-actions {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                flex-shrink: 0;
+            }
+            
+            .action-btn {
+                padding: 6px 8px;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                min-width: 60px;
+            }
+            
+            .action-btn i {
+                font-size: 12px;
+            }
+            
             /* All Trades Modal - Mobile Optimized Layout */
             .trade-management-item {
                 flex-direction: column;
@@ -1682,6 +1804,13 @@
             
             .today-btn {
                 margin-top: 0;
+            }
+        }
+        
+        /* Keep desktop layout unchanged */
+        @media (min-width: 481px) {
+            .trade-management-info.mobile-layout {
+                display: none;
             }
         }
     </style>
@@ -2264,9 +2393,6 @@
             }
         };
 
-        // Rest of the JavaScript code remains the same as in the previous version
-        // Only the ChartManager has been updated to fix the chart display issue
-        
         // Toast Notification System
         const ToastManager = {
             container: null,
@@ -2932,9 +3058,6 @@
             });
         }
 
-        // Rest of the JavaScript functions remain the same as in the previous version
-        // Only the initialization order and ChartManager have been updated
-        
         // Initialize trade result toggle
         function initTradeResultToggle() {
             const toggleOptions = document.querySelectorAll('.toggle-option');
@@ -3751,27 +3874,80 @@
                 const confluenceScore = trade.confluenceScore || 0;
                 const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
                 
-                tradeEl.innerHTML = `
-                    <div class="trade-management-info">
-                        <input type="checkbox" class="trade-checkbox" value="${trade.id}">
-                        <div class="trade-management-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
-                        <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
-                        <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
-                            ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                // Check if we're on mobile
+                const isMobile = window.innerWidth <= 480;
+                
+                if (isMobile) {
+                    // Mobile layout - new structure
+                    const entryDate = new Date(trade.entryTime);
+                    const closeDate = trade.closeTime ? new Date(trade.closeTime) : null;
+                    const formattedEntry = `${entryDate.getMonth()+1}/${entryDate.getDate()}`;
+                    const formattedClose = closeDate ? `${closeDate.getMonth()+1}/${closeDate.getDate()}` : 'Open';
+                    
+                    tradeEl.innerHTML = `
+                        <div class="trade-management-info mobile-layout">
+                            <!-- First Row -->
+                            <div class="trade-row-first">
+                                <input type="checkbox" class="trade-checkbox" value="${trade.id}">
+                                <div class="trade-type-badge ${trade.type.toLowerCase()}">${trade.type}</div>
+                                <div class="trade-category-badge ${categoryClass}">${categoryName}</div>
+                                <span class="confluence-score ${scoreClass}">${confluenceScore}%</span>
+                            </div>
+                            <!-- Second Row -->
+                            <div class="trade-row-second">
+                                <div class="trade-date-info">
+                                    <span class="date-label">Entry:</span>
+                                    <span class="date-value">${formattedEntry}</span>
+                                </div>
+                                <div class="trade-date-info">
+                                    <span class="date-label">Close:</span>
+                                    <span class="date-value">${formattedClose}</span>
+                                </div>
+                                <div class="trade-amount-info">
+                                    <span class="amount-label">Risk:</span>
+                                    <span class="amount-value">$${trade.amount.toFixed(2)}</span>
+                                </div>
+                                <div class="trade-pnl-info ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                                    <span class="pnl-label">P&L:</span>
+                                    <span class="pnl-value">
+                                        ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="trade-management-date">${formattedDate}</div>
-                        <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
-                        <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
-                    </div>
-                    <div class="trade-management-actions">
-                        <button class="action-btn edit-btn" data-id="${trade.id}">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="action-btn delete-btn" data-id="${trade.id}">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </div>
-                `;
+                        <div class="trade-management-actions">
+                            <button class="action-btn edit-btn" data-id="${trade.id}">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="action-btn delete-btn" data-id="${trade.id}">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    // Desktop layout - keep original structure
+                    tradeEl.innerHTML = `
+                        <div class="trade-management-info">
+                            <input type="checkbox" class="trade-checkbox" value="${trade.id}">
+                            <div class="trade-management-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
+                            <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
+                            <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                                ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                            </div>
+                            <div class="trade-management-date">${formattedDate}</div>
+                            <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
+                            <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
+                        </div>
+                        <div class="trade-management-actions">
+                            <button class="action-btn edit-btn" data-id="${trade.id}">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="action-btn delete-btn" data-id="${trade.id}">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    `;
+                }
                 
                 allTradesList.appendChild(tradeEl);
             });
