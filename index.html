@@ -738,6 +738,7 @@
             cursor: pointer;
         }
         
+        /* Improved Trade Item Layout - Narrower P&L Box */
         .trade-item {
             display: flex;
             justify-content: space-between;
@@ -763,22 +764,27 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            flex: 1;
         }
         
         .trade-pair {
             font-weight: 600;
             color: var(--text-color);
             font-size: 14px;
+            min-width: 90px;
         }
         
         .trade-date {
             color: var(--neutral-color);
             font-size: 12px;
+            flex: 1;
         }
         
         .trade-profit {
             font-weight: 600;
             font-size: 14px;
+            min-width: 80px;
+            text-align: right;
         }
         
         .trade-profit.positive {
@@ -1059,11 +1065,12 @@
             display: none;
         }
         
+        /* Fixed Screenshot Button - Better Readability */
         .file-input-label {
             display: block;
             padding: 12px 16px;
             background-color: var(--primary-color);
-            color: white;
+            color: white !important;
             border-radius: 8px;
             cursor: pointer;
             text-align: center;
@@ -1100,6 +1107,7 @@
             overflow-y: auto;
         }
         
+        /* Improved Trade Management Item Layout */
         .trade-management-item {
             display: flex;
             justify-content: space-between;
@@ -1230,17 +1238,17 @@
             font-weight: 500;
         }
         
-        /* Bulk Selection Styles */
+        /* Improved Bulk Actions - 2x2 Grid */
         .bulk-actions {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-bottom: 15px;
-            flex-wrap: wrap;
         }
         
         .bulk-actions .btn {
-            flex: 1;
-            min-width: 120px;
+            width: 100%;
+            min-width: auto;
         }
         
         .select-all-row {
@@ -1328,14 +1336,6 @@
             
             .trade-management-actions {
                 align-self: flex-end;
-            }
-            
-            .bulk-actions {
-                flex-direction: column;
-            }
-            
-            .bulk-actions .btn {
-                width: 100%;
             }
             
             /* Remove calendar label on mobile */
@@ -1494,6 +1494,7 @@
             
             .trade-pair {
                 font-size: 13px;
+                min-width: 80px;
             }
             
             .trade-date {
@@ -1502,6 +1503,7 @@
             
             .trade-profit {
                 font-size: 13px;
+                min-width: 70px;
             }
             
             /* Monthly Summary - 3x3 grid with better spacing */
@@ -1567,8 +1569,8 @@
             .trade-management-info {
                 width: 100%;
                 display: grid;
-                grid-template-columns: auto 1fr auto;
-                grid-template-rows: auto auto;
+                grid-template-columns: auto 1fr auto auto;
+                grid-template-rows: auto;
                 gap: 6px;
                 align-items: center;
             }
@@ -1594,6 +1596,20 @@
                 padding: 2px 6px;
             }
             
+            /* P&L inline with pair and type */
+            .trade-profit {
+                grid-column: 4;
+                grid-row: 1;
+                font-size: 13px;
+                font-weight: 600;
+                margin-top: 0;
+                width: auto;
+                text-align: right;
+                padding: 4px 0;
+                border-radius: 4px;
+                background: transparent;
+            }
+            
             .trade-management-date {
                 grid-column: 1 / 3;
                 grid-row: 2;
@@ -1603,23 +1619,10 @@
             }
             
             .trade-management-amount {
-                grid-column: 3;
+                grid-column: 3 / 5;
                 grid-row: 2;
                 font-size: 11px;
                 text-align: right;
-            }
-            
-            .trade-profit {
-                grid-column: 1 / 4;
-                grid-row: 3;
-                font-size: 13px;
-                font-weight: 600;
-                margin-top: 4px;
-                width: 100%;
-                text-align: center;
-                padding: 4px 0;
-                border-radius: 4px;
-                background: var(--bg-color);
             }
             
             .trade-management-actions {
@@ -1644,7 +1647,12 @@
                 font-size: 12px;
             }
             
-            /* Bulk Actions */
+            /* Bulk Actions - 2x2 Grid */
+            .bulk-actions {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            
             .bulk-actions .btn {
                 min-width: auto;
                 font-size: 12px;
@@ -2040,7 +2048,7 @@
                 </div>
             </div>
             
-            <!-- Bulk Actions -->
+            <!-- Bulk Actions - Updated to 2x2 Grid -->
             <div class="bulk-actions">
                 <button type="button" class="btn btn-secondary" id="select-all-trades">
                     <i class="fas fa-check-square"></i> Select All
@@ -2137,6 +2145,128 @@
     </div>
 
     <script>
+        // Chart Management
+        const ChartManager = {
+            chart: null,
+            
+            init() {
+                // Initialize with empty data, but ensure theme colors are set
+                this.renderChart([], []);
+            },
+            
+            renderChart(labels, data) {
+                const ctx = document.getElementById('balance-chart').getContext('2d');
+                const textColor = getComputedStyle(document.body).getPropertyValue('--text-color');
+                const gridColor = getComputedStyle(document.body).getPropertyValue('--border-color');
+                const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-color');
+                
+                if (this.chart) {
+                    this.chart.destroy();
+                }
+                
+                this.chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Account Balance',
+                            data: data,
+                            borderColor: primaryColor,
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                            pointBackgroundColor: primaryColor,
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { 
+                            legend: { 
+                                display: false 
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                borderColor: primaryColor,
+                                borderWidth: 1
+                            }
+                        },
+                        scales: {
+                            x: { 
+                                ticks: { 
+                                    color: textColor,
+                                    maxTicksLimit: 8
+                                },
+                                grid: { 
+                                    color: gridColor,
+                                    drawBorder: false
+                                }
+                            },
+                            y: {
+                                ticks: { 
+                                    color: textColor,
+                                    callback: value => '$' + value.toLocaleString()
+                                },
+                                grid: { 
+                                    color: gridColor,
+                                    drawBorder: false
+                                }
+                            }
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'nearest'
+                        },
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeOutQuart'
+                        }
+                    }
+                });
+            },
+            
+            updateChart() {
+                const closedTrades = TradeManager.trades
+                    .filter(t => t.status === 'closed')
+                    .sort((a, b) => new Date(a.closeTime) - new Date(b.closeTime));
+                
+                let balanceData = [SettingsManager.settings.initialBalance];
+                let labels = ['Initial'];
+                let runningBalance = SettingsManager.settings.initialBalance;
+                
+                closedTrades.forEach(trade => {
+                    runningBalance += trade.profitLoss;
+                    balanceData.push(runningBalance);
+                    const date = new Date(trade.closeTime);
+                    labels.push(`${date.getMonth()+1}/${date.getDate()}`);
+                });
+                
+                // If no trades, show initial balance only
+                if (closedTrades.length === 0) {
+                    balanceData = [SettingsManager.settings.initialBalance];
+                    labels = ['Initial'];
+                }
+                
+                this.renderChart(labels, balanceData);
+                
+                const currentBalance = balanceData[balanceData.length - 1];
+                document.getElementById('current-balance').textContent = 
+                    `$${currentBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            }
+        };
+
+        // Rest of the JavaScript code remains the same as in the previous version
+        // Only the ChartManager has been updated to fix the chart display issue
+        
         // Toast Notification System
         const ToastManager = {
             container: null,
@@ -2609,85 +2739,6 @@
             }
         };
 
-        // Chart Management
-        const ChartManager = {
-            chart: null,
-            
-            init() {
-                this.renderChart([], []);
-            },
-            
-            renderChart(labels, data) {
-                const ctx = document.getElementById('balance-chart').getContext('2d');
-                const textColor = getComputedStyle(document.body).getPropertyValue('--text-color');
-                const gridColor = getComputedStyle(document.body).getPropertyValue('--border-color');
-                const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-color');
-                
-                if (this.chart) {
-                    this.chart.destroy();
-                }
-                
-                this.chart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Account Balance',
-                            data: data,
-                            borderColor: primaryColor,
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            borderWidth: 2,
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 0,
-                            pointHoverRadius: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            x: { 
-                                ticks: { color: textColor },
-                                grid: { color: gridColor }
-                            },
-                            y: {
-                                ticks: { 
-                                    color: textColor,
-                                    callback: value => '$' + value.toLocaleString()
-                                },
-                                grid: { color: gridColor }
-                            }
-                        }
-                    }
-                });
-            },
-            
-            updateChart() {
-                const closedTrades = TradeManager.trades
-                    .filter(t => t.status === 'closed')
-                    .sort((a, b) => new Date(a.closeTime) - new Date(b.closeTime));
-                
-                let balanceData = [SettingsManager.settings.initialBalance];
-                let labels = ['Initial'];
-                let runningBalance = SettingsManager.settings.initialBalance;
-                
-                closedTrades.forEach(trade => {
-                    runningBalance += trade.profitLoss;
-                    balanceData.push(runningBalance);
-                    const date = new Date(trade.closeTime);
-                    labels.push(`${date.getMonth()+1}/${date.getDate()}`);
-                });
-                
-                this.renderChart(labels, balanceData);
-                
-                const currentBalance = balanceData[balanceData.length - 1];
-                document.getElementById('current-balance').textContent = 
-                    `$${currentBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            }
-        };
-
         // Keyboard Shortcuts
         const KeyboardManager = {
             init() {
@@ -2774,18 +2825,9 @@
             TradeManager.init();
             SettingsManager.init();
             ConfluenceManager.init();
-            ChartManager.init();
             KeyboardManager.init();
             
-            // Set up UI
-            renderCalendar();
-            updateStats();
-            renderRecentTrades();
-            ChartManager.updateChart();
-            updateMonthlySummary();
-            ConfluenceManager.renderConfluenceList();
-            
-            // Load settings
+            // Load settings first to ensure theme is set before rendering chart
             const savedSettings = localStorage.getItem('tradeTrackerSettings');
             if (savedSettings) {
                 settings = JSON.parse(savedSettings);
@@ -2795,6 +2837,15 @@
                     document.body.classList.add('dark-mode');
                 }
             }
+            
+            // Set up UI - initialize chart AFTER theme is set
+            renderCalendar();
+            updateStats();
+            renderRecentTrades();
+            ChartManager.init(); // Initialize chart with empty data
+            ChartManager.updateChart(); // Update with actual data after theme is set
+            updateMonthlySummary();
+            ConfluenceManager.renderConfluenceList();
             
             // Set up event listeners
             setupEventListeners();
@@ -2841,8 +2892,14 @@
             document.getElementById('create-backup').addEventListener('click', handleCreateBackup);
             document.getElementById('view-all-trades').addEventListener('click', openAllTradesModal);
             
-            // Theme toggle
-            document.getElementById('dark-mode-toggle').addEventListener('change', toggleDarkMode);
+            // Theme toggle - update chart when theme changes
+            document.getElementById('dark-mode-toggle').addEventListener('change', function() {
+                toggleDarkMode();
+                // Force chart update after theme change
+                setTimeout(() => {
+                    ChartManager.updateChart();
+                }, 100);
+            });
             
             // Trade result toggle
             initTradeResultToggle();
@@ -2875,6 +2932,9 @@
             });
         }
 
+        // Rest of the JavaScript functions remain the same as in the previous version
+        // Only the initialization order and ChartManager have been updated
+        
         // Initialize trade result toggle
         function initTradeResultToggle() {
             const toggleOptions = document.querySelectorAll('.toggle-option');
@@ -3696,12 +3756,12 @@
                         <input type="checkbox" class="trade-checkbox" value="${trade.id}">
                         <div class="trade-management-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
                         <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
-                        <div class="trade-management-date">${formattedDate}</div>
-                        <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
                         <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
                             ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
-                            <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
                         </div>
+                        <div class="trade-management-date">${formattedDate}</div>
+                        <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
+                        <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
                     </div>
                     <div class="trade-management-actions">
                         <button class="action-btn edit-btn" data-id="${trade.id}">
@@ -3890,6 +3950,7 @@
                 document.body.classList.remove('dark-mode');
             }
             
+            // Update chart with new theme
             ChartManager.updateChart();
         }
 
