@@ -1684,6 +1684,86 @@
                 margin-top: 0;
             }
         }
+
+        /* ========== REQUESTED CHANGES ========== */
+        
+        /* All Trades Modal - Remove amount risked and improve layout */
+        .trade-management-info-compact {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .trade-main-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        
+        .trade-top-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        
+        .trade-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .trade-management-date-compact {
+            color: var(--neutral-color);
+            font-size: 11px;
+        }
+        
+        /* Reduce padding between search and filter */
+        .all-trades-modal .form-row {
+            margin-bottom: 10px;
+            gap: 8px;
+        }
+        
+        /* Settings Modal Improvements */
+        .settings-form-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        
+        .settings-form-row .form-group {
+            flex: 1;
+        }
+        
+        .settings-form-row .btn {
+            margin-bottom: 5px;
+            white-space: nowrap;
+        }
+        
+        .data-management-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .confluence-grid-management {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .confluence-grid-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-color);
+        }
     </style>
 </head>
 <body>
@@ -1896,7 +1976,7 @@
                 <!-- Win/Loss Toggle -->
                 <div class="form-group">
                     <label>Trade Result</label>
-                    <div class="toggle-group">
+                    <div class="toggle-group" id="trade-result-toggle">
                         <div class="toggle-option win" data-value="win">Win</div>
                         <div class="toggle-option loss" data-value="loss">Loss</div>
                         <div class="toggle-option open selected" data-value="open">Open</div>
@@ -1938,7 +2018,7 @@
         </div>
     </div>
     
-    <!-- Settings Modal -->
+    <!-- Settings Modal - Updated with requested changes -->
     <div class="modal" id="settings-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1959,43 +2039,48 @@
             
             <div class="settings-section">
                 <h3>Account Balance</h3>
-                <div class="form-group">
-                    <label for="initial-balance">Initial Account Balance ($)</label>
-                    <input type="number" id="initial-balance" placeholder="e.g., 5000" min="0" step="0.01">
-                    <div class="error-message" id="balance-error">Please enter a valid balance</div>
+                <div class="settings-form-row">
+                    <div class="form-group">
+                        <label for="initial-balance">Initial Account Balance ($)</label>
+                        <input type="number" id="initial-balance" placeholder="e.g., 5000" min="0" step="0.01">
+                        <div class="error-message" id="balance-error">Please enter a valid balance</div>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="save-balance">Save Balance</button>
                 </div>
-                <button type="button" class="btn btn-primary" id="save-balance">Save Balance</button>
             </div>
             
-            <!-- Confluence Management Section -->
+            <!-- Confluence Management Section - Updated to grid layout -->
             <div class="settings-section">
                 <h3>Trade Confluences</h3>
-                <div class="form-group">
-                    <label for="new-confluence">Add New Confluence</label>
-                    <input type="text" id="new-confluence" placeholder="e.g., EMA Cross, RSI Oversold">
-                    <button type="button" class="btn btn-primary" id="add-confluence" style="margin-top: 10px;">Add Confluence</button>
+                <div class="settings-form-row">
+                    <div class="form-group">
+                        <label for="new-confluence">Add New Confluence</label>
+                        <input type="text" id="new-confluence" placeholder="e.g., EMA Cross, RSI Oversold">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="add-confluence">Add</button>
                 </div>
-                <div class="confluence-management" id="confluence-list">
+                <div class="confluence-grid-management" id="confluence-list">
                     <!-- Confluences will be populated here -->
                 </div>
             </div>
             
             <div class="settings-section">
                 <h3>Data Management</h3>
-                <button type="button" class="btn export-btn" id="export-excel">
-                    <i class="fas fa-file-export"></i> Export to Excel
-                </button>
-                <label for="import-excel" class="file-input-label">
-                    <i class="fas fa-file-import"></i> Import from Excel
-                </label>
-                <input type="file" id="import-excel" class="file-input" accept=".xlsx, .xls">
-                <div class="form-group">
-                    <label for="backup-file">Backup File Password (Optional)</label>
-                    <input type="password" id="backup-password" placeholder="Enter password for encryption">
+                <div class="data-management-grid">
+                    <button type="button" class="btn export-btn" id="export-excel">
+                        <i class="fas fa-file-export"></i> Export to Excel
+                    </button>
+                    <label for="import-excel" class="file-input-label">
+                        <i class="fas fa-file-import"></i> Import from Excel
+                    </label>
+                    <button type="button" class="btn btn-secondary" id="create-backup">
+                        <i class="fas fa-download"></i> Create Backup
+                    </button>
+                    <div class="form-group">
+                        <label for="backup-file">Backup Password (Optional)</label>
+                        <input type="password" id="backup-password" placeholder="Enter password for encryption">
+                    </div>
                 </div>
-                <button type="button" class="btn btn-secondary" id="create-backup">
-                    <i class="fas fa-download"></i> Create Encrypted Backup
-                </button>
                 <div id="import-status" style="margin-top: 10px; font-size: 14px; color: var(--neutral-color);"></div>
             </div>
             
@@ -2021,7 +2106,7 @@
         </div>
     </div>
     
-    <!-- All Trades Modal -->
+    <!-- All Trades Modal - Updated with requested changes -->
     <div class="modal all-trades-modal" id="all-trades-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -2029,8 +2114,8 @@
                 <button class="close-modal" id="close-all-trades">&times;</button>
             </div>
             
-            <!-- Search and Filter -->
-            <div class="form-row" style="margin-bottom: 15px;">
+            <!-- Search and Filter - Reduced padding -->
+            <div class="form-row" style="margin-bottom: 10px; gap: 8px;">
                 <div class="form-group">
                     <input type="text" id="trade-search" placeholder="Search trades...">
                 </div>
@@ -2145,7 +2230,7 @@
     </div>
 
     <script>
-        // Chart Management
+        // Chart Management - Updated to remove data points
         const ChartManager = {
             chart: null,
             
@@ -2176,11 +2261,9 @@
                             borderWidth: 2,
                             fill: true,
                             tension: 0.4,
-                            pointRadius: 3,
-                            pointHoverRadius: 5,
-                            pointBackgroundColor: primaryColor,
-                            pointBorderColor: '#fff',
-                            pointBorderWidth: 2
+                            // Remove data points
+                            pointRadius: 0,
+                            pointHoverRadius: 0
                         }]
                     },
                     options: {
@@ -2264,9 +2347,6 @@
             }
         };
 
-        // Rest of the JavaScript code remains the same as in the previous version
-        // Only the ChartManager has been updated to fix the chart display issue
-        
         // Toast Notification System
         const ToastManager = {
             container: null,
@@ -2434,14 +2514,12 @@
                 
                 this.confluences.forEach(confluence => {
                     const confluenceItem = document.createElement('div');
-                    confluenceItem.className = 'confluence-management-item';
+                    confluenceItem.className = 'confluence-grid-item';
                     confluenceItem.innerHTML = `
                         <div class="confluence-label">${confluence.name}</div>
-                        <div class="confluence-actions">
-                            <button class="action-btn delete-btn" data-id="${confluence.id}">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
+                        <button class="action-btn delete-btn" data-id="${confluence.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     `;
                     confluenceList.appendChild(confluenceItem);
                 });
@@ -2901,8 +2979,30 @@
                 }, 100);
             });
             
-            // Trade result toggle
-            initTradeResultToggle();
+            // Trade result toggle - FIXED: Add event delegation for toggle options
+            document.getElementById('trade-result-toggle').addEventListener('click', function(e) {
+                if (e.target.classList.contains('toggle-option')) {
+                    const toggleOptions = document.querySelectorAll('.toggle-option');
+                    toggleOptions.forEach(opt => opt.classList.remove('selected'));
+                    e.target.classList.add('selected');
+                    tradeResult = e.target.getAttribute('data-value');
+                    
+                    const profitLossInput = document.getElementById('profit-loss');
+                    if (tradeResult === 'open') {
+                        profitLossInput.disabled = true;
+                        profitLossInput.value = '';
+                    } else {
+                        profitLossInput.disabled = false;
+                        // Auto-close trade if win/loss is selected
+                        if (!document.getElementById('close-time').value) {
+                            const now = new Date();
+                            document.getElementById('close-time').value = now.toISOString().slice(0, 16);
+                        }
+                    }
+                    
+                    updateRiskMetrics();
+                }
+            });
             
             // Real-time validation
             document.getElementById('amount').addEventListener('input', updateRiskMetrics);
@@ -2929,36 +3029,6 @@
                     e.target.style.display = 'none';
                     document.body.style.overflow = 'auto';
                 }
-            });
-        }
-
-        // Rest of the JavaScript functions remain the same as in the previous version
-        // Only the initialization order and ChartManager have been updated
-        
-        // Initialize trade result toggle
-        function initTradeResultToggle() {
-            const toggleOptions = document.querySelectorAll('.toggle-option');
-            toggleOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    toggleOptions.forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                    tradeResult = this.getAttribute('data-value');
-                    
-                    const profitLossInput = document.getElementById('profit-loss');
-                    if (tradeResult === 'open') {
-                        profitLossInput.disabled = true;
-                        profitLossInput.value = '';
-                    } else {
-                        profitLossInput.disabled = false;
-                        // Auto-close trade if win/loss is selected
-                        if (!document.getElementById('close-time').value) {
-                            const now = new Date();
-                            document.getElementById('close-time').value = now.toISOString().slice(0, 16);
-                        }
-                    }
-                    
-                    updateRiskMetrics();
-                });
             });
         }
 
@@ -3653,7 +3723,7 @@
                 
                 const tradeDate = trade.status === 'closed' && trade.closeTime ? 
                     new Date(trade.closeTime) : new Date(trade.entryTime);
-                const formattedDate = `${tradeDate.getMonth() + 1}/${tradeDate.getDate()}/${tradeDate.getFullYear()}`;
+                const formattedDate = `${tradeDate.getMonth() + 1}/${tradeDate.getDate()}/${tradeDate.getFullYear().toString().slice(-2)}`;
                 
                 const categoryClass = trade.category ? `category-${trade.category}` : '';
                 const categoryName = trade.category ? trade.category.charAt(0).toUpperCase() + trade.category.slice(1) : '';
@@ -3682,7 +3752,7 @@
             });
         }
 
-        // All trades functions
+        // All trades functions - Updated with requested changes
         function openAllTradesModal() {
             renderAllTradesList();
             document.getElementById('all-trades-modal').style.display = 'flex';
@@ -3744,7 +3814,7 @@
                 
                 const tradeDate = trade.status === 'closed' && trade.closeTime ? 
                     new Date(trade.closeTime) : new Date(trade.entryTime);
-                const formattedDate = `${tradeDate.getMonth() + 1}/${tradeDate.getDate()}/${tradeDate.getFullYear()}`;
+                const formattedDate = `${tradeDate.getMonth() + 1}/${tradeDate.getDate()}/${tradeDate.getFullYear().toString().slice(-2)}`;
                 
                 const categoryClass = trade.category ? `category-${trade.category}` : '';
                 const categoryName = trade.category ? trade.category.charAt(0).toUpperCase() + trade.category.slice(1) : '';
@@ -3752,16 +3822,22 @@
                 const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
                 
                 tradeEl.innerHTML = `
-                    <div class="trade-management-info">
+                    <div class="trade-management-info-compact">
                         <input type="checkbox" class="trade-checkbox" value="${trade.id}">
-                        <div class="trade-management-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
-                        <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
-                        <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
-                            ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                        <div class="trade-main-info">
+                            <div class="trade-top-row">
+                                <div class="trade-management-pair">${trade.pair}</div>
+                                ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}
+                                <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
+                                <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                                    ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                                </div>
+                            </div>
+                            <div class="trade-bottom-row">
+                                <div class="trade-management-date-compact">${formattedDate}</div>
+                                <span class="confluence-score ${scoreClass}">${confluenceScore}%</span>
+                            </div>
                         </div>
-                        <div class="trade-management-date">${formattedDate}</div>
-                        <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
-                        <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
                     </div>
                     <div class="trade-management-actions">
                         <button class="action-btn edit-btn" data-id="${trade.id}">
