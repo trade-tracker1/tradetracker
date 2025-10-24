@@ -529,9 +529,10 @@
             align-items: center;
         }
         
+        /* Updated Stats Cards with P&L Percentage */
         .stats-cards {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             gap: 20px;
             margin-bottom: 25px;
         }
@@ -1356,6 +1357,113 @@
                 padding: 14px 12px;
                 font-size: 16px;
             }
+            
+            /* Mobile Optimization for All Trades Modal */
+            .trade-management-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 12px;
+                gap: 8px;
+            }
+            
+            .trade-management-info {
+                width: 100%;
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                grid-template-rows: auto auto;
+                gap: 8px;
+                align-items: center;
+            }
+            
+            .trade-management-info .trade-checkbox {
+                grid-column: 1;
+                grid-row: 1;
+                margin-right: 8px;
+            }
+            
+            .trade-management-pair {
+                grid-column: 2;
+                grid-row: 1;
+                font-weight: 600;
+                font-size: 14px;
+                min-width: auto;
+            }
+            
+            .trade-management-type {
+                grid-column: 3;
+                grid-row: 1;
+                font-size: 11px;
+                padding: 2px 6px;
+            }
+            
+            .trade-management-date {
+                grid-column: 1 / 3;
+                grid-row: 2;
+                font-size: 12px;
+                color: var(--neutral-color);
+                min-width: auto;
+            }
+            
+            .trade-management-amount {
+                grid-column: 3;
+                grid-row: 2;
+                font-size: 12px;
+                text-align: right;
+            }
+            
+            .trade-profit {
+                grid-column: 1 / 4;
+                grid-row: 3;
+                font-size: 14px;
+                font-weight: 600;
+                margin-top: 4px;
+                width: 100%;
+                text-align: center;
+                padding: 4px 0;
+                border-radius: 4px;
+                background: var(--bg-color);
+            }
+            
+            .trade-management-actions {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                gap: 8px;
+                margin-top: 8px;
+            }
+            
+            .action-btn {
+                flex: 1;
+                padding: 6px 8px;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+            }
+            
+            .action-btn i {
+                font-size: 12px;
+            }
+            
+            /* Monthly Summary Mobile Optimization */
+            .summary-stats {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+            
+            .summary-stat {
+                padding: 12px 8px;
+            }
+            
+            .summary-value {
+                font-size: 16px;
+            }
+            
+            .summary-label {
+                font-size: 11px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -1363,42 +1471,25 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             
-            .calendar {
-                gap: 4px;
+            .summary-stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
             }
             
-            .day {
-                min-height: 70px;
-                padding: 8px 6px;
+            .summary-stat {
+                padding: 10px 6px;
             }
             
-            .day-header {
-                padding: 8px 4px;
-                font-size: 11px;
+            .summary-value {
+                font-size: 14px;
             }
             
-            .day-number {
-                font-size: 12px;
-            }
-            
-            .profit, .loss {
+            .summary-label {
                 font-size: 10px;
             }
             
-            .month-nav {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .today-btn {
-                margin-top: 10px;
-                width: 100%;
-            }
-            
-            /* Further improve toggle buttons on very small screens */
-            .toggle-option {
-                padding: 16px 12px;
-                font-size: 15px;
+            .trade-management-info {
+                grid-template-columns: auto 1fr auto;
             }
         }
     </style>
@@ -1431,11 +1522,15 @@
             </div>
         </div>
         
-        <!-- Stats Cards -->
+        <!-- Stats Cards - Updated with P&L Percentage -->
         <div class="stats-cards">
             <div class="stat-card">
                 <div class="stat-value positive-stat" id="total-profit">+$0.00</div>
                 <div class="stat-label">P&L</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value neutral-stat" id="total-profit-percent">+0.00%</div>
+                <div class="stat-label">P&L %</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value neutral-stat" id="total-trades">0</div>
@@ -1496,7 +1591,7 @@
             </div>
         </div>
         
-        <!-- Monthly Summary -->
+        <!-- Monthly Summary - Updated for Mobile with 3x3 Grid -->
         <div class="monthly-summary">
             <h2>Summary: <span id="summary-month">June 2025</span></h2>
             <div class="summary-stats">
@@ -1509,6 +1604,10 @@
                     <div class="summary-label">Total P&L</div>
                 </div>
                 <div class="summary-stat">
+                    <div class="summary-value positive-stat" id="monthly-profit-percent">+0.00%</div>
+                    <div class="summary-label">P&L %</div>
+                </div>
+                <div class="summary-stat">
                     <div class="summary-value" id="monthly-win-rate">0%</div>
                     <div class="summary-label">Win Rate</div>
                 </div>
@@ -1516,10 +1615,15 @@
                     <div class="summary-value" id="monthly-profit-factor">0.00</div>
                     <div class="summary-label">Profit Factor</div>
                 </div>
+                <div class="summary-stat">
+                    <div class="summary-value" id="monthly-closed-trades">0</div>
+                    <div class="summary-label">Closed Trades</div>
+                </div>
             </div>
         </div>
     </div>
     
+    <!-- All the modals remain the same as in your original code -->
     <!-- Add Trade Modal -->
     <div class="modal" id="trade-modal">
         <div class="modal-content">
@@ -2267,8 +2371,12 @@
                         return sum + (metrics ? parseFloat(metrics.riskReward) : 0);
                     }, 0) / closedTrades.length).toFixed(2) : '0.00';
                 
+                // Calculate profit percentage
+                const profitPercent = (totalProfit / settings.initialBalance) * 100;
+                
                 return {
                     totalProfit,
+                    profitPercent,
                     totalTrades: this.trades.length,
                     winRate,
                     profitFactor,
@@ -3134,6 +3242,24 @@
             document.body.style.overflow = 'hidden';
         }
 
+        // Update the stats function to include P&L percentage
+        function updateStats() {
+            const stats = TradeManager.getTradeStats();
+            
+            document.getElementById('total-profit').textContent = `${stats.totalProfit >= 0 ? '+' : ''}$${stats.totalProfit.toFixed(2)}`;
+            document.getElementById('total-profit').className = `stat-value ${stats.totalProfit >= 0 ? 'positive-stat' : 'negative-stat'}`;
+            
+            // Calculate P&L percentage
+            const profitPercent = (stats.totalProfit / settings.initialBalance) * 100;
+            document.getElementById('total-profit-percent').textContent = `${profitPercent >= 0 ? '+' : ''}${profitPercent.toFixed(2)}%`;
+            document.getElementById('total-profit-percent').className = `stat-value ${profitPercent >= 0 ? 'positive-stat' : 'negative-stat'}`;
+            
+            document.getElementById('win-rate').textContent = `${stats.winRate}%`;
+            document.getElementById('total-trades').textContent = stats.totalTrades;
+            document.getElementById('profit-factor').textContent = stats.profitFactor;
+            document.getElementById('risk-reward').textContent = stats.avgRiskReward;
+        }
+
         function handleTradeSubmit(e) {
             e.preventDefault();
             
@@ -3242,19 +3368,6 @@
                     showDaySummary(selectedDay, day);
                 }
             }
-        }
-
-        // Stats functions
-        function updateStats() {
-            const stats = TradeManager.getTradeStats();
-            
-            document.getElementById('total-profit').textContent = `${stats.totalProfit >= 0 ? '+' : ''}$${stats.totalProfit.toFixed(2)}`;
-            document.getElementById('total-profit').className = `stat-value ${stats.totalProfit >= 0 ? 'positive-stat' : 'negative-stat'}`;
-            
-            document.getElementById('win-rate').textContent = `${stats.winRate}%`;
-            document.getElementById('total-trades').textContent = stats.totalTrades;
-            document.getElementById('profit-factor').textContent = stats.profitFactor;
-            document.getElementById('risk-reward').textContent = stats.avgRiskReward;
         }
 
         // Recent trades functions
@@ -3551,7 +3664,7 @@
             document.getElementById('select-all-checkbox').indeterminate = someSelected;
         }
 
-        // Monthly summary functions
+        // Update the monthly summary function
         function updateMonthlySummary() {
             const monthTrades = TradeManager.trades.filter(trade => {
                 const tradeDate = new Date(trade.status === 'closed' && trade.closeTime ? trade.closeTime : trade.entryTime);
@@ -3567,12 +3680,19 @@
             const monthlyLosses = Math.abs(closedMonthTrades.filter(t => t.profitLoss < 0).reduce((sum, t) => sum + t.profitLoss, 0));
             const monthlyProfitFactor = monthlyLosses > 0 ? (monthlyWins / monthlyLosses).toFixed(2) : monthlyWins > 0 ? '∞' : '0.00';
             
+            // Calculate monthly P&L percentage
+            const monthlyProfitPercent = (monthlyProfit / settings.initialBalance) * 100;
+            
             document.getElementById('monthly-profit').textContent = `${monthlyProfit >= 0 ? '+' : ''}$${monthlyProfit.toFixed(2)}`;
             document.getElementById('monthly-profit').className = `summary-value ${monthlyProfit >= 0 ? 'positive-stat' : 'negative-stat'}`;
+            
+            document.getElementById('monthly-profit-percent').textContent = `${monthlyProfitPercent >= 0 ? '+' : ''}${monthlyProfitPercent.toFixed(2)}%`;
+            document.getElementById('monthly-profit-percent').className = `summary-value ${monthlyProfitPercent >= 0 ? 'positive-stat' : 'negative-stat'}`;
             
             document.getElementById('monthly-trades').textContent = monthTrades.length;
             document.getElementById('monthly-win-rate').textContent = `${monthlyWinRate}%`;
             document.getElementById('monthly-profit-factor').textContent = monthlyProfitFactor;
+            document.getElementById('monthly-closed-trades').textContent = closedMonthTrades.length;
         }
 
         // Settings functions
