@@ -1558,7 +1558,7 @@
                 font-size: 14px;
             }
             
-            /* All Trades Modal - Mobile Optimized Layout */
+            /* All Trades Modal - Mobile Optimized Layout - UPDATED */
             .trade-management-item {
                 flex-direction: column;
                 align-items: flex-start;
@@ -1568,61 +1568,69 @@
             
             .trade-management-info {
                 width: 100%;
-                display: grid;
-                grid-template-columns: auto 1fr auto auto;
-                grid-template-rows: auto;
-                gap: 6px;
-                align-items: center;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
             }
             
-            .trade-management-info .trade-checkbox {
-                grid-column: 1;
-                grid-row: 1;
+            .trade-row-1 {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                width: 100%;
+            }
+            
+            .trade-row-2 {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                font-size: 12px;
+                color: var(--neutral-color);
+            }
+            
+            .trade-checkbox {
                 margin-right: 6px;
             }
             
             .trade-management-pair {
-                grid-column: 2;
-                grid-row: 1;
                 font-weight: 600;
                 font-size: 13px;
                 min-width: auto;
             }
             
             .trade-management-type {
-                grid-column: 3;
-                grid-row: 1;
                 font-size: 10px;
                 padding: 2px 6px;
             }
             
-            /* P&L inline with pair and type */
-            .trade-profit {
-                grid-column: 4;
-                grid-row: 1;
-                font-size: 13px;
-                font-weight: 600;
-                margin-top: 0;
-                width: auto;
-                text-align: right;
-                padding: 4px 0;
-                border-radius: 4px;
-                background: transparent;
+            .trade-dates {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
             }
             
-            .trade-management-date {
-                grid-column: 1 / 3;
-                grid-row: 2;
-                font-size: 11px;
+            .trade-date-label {
+                font-size: 10px;
                 color: var(--neutral-color);
-                min-width: auto;
+            }
+            
+            .trade-metrics {
+                display: flex;
+                align-items: center;
+                gap: 8px;
             }
             
             .trade-management-amount {
-                grid-column: 3 / 5;
-                grid-row: 2;
                 font-size: 11px;
-                text-align: right;
+            }
+            
+            .trade-profit {
+                font-size: 12px;
+                font-weight: 600;
+                padding: 2px 6px;
+                border-radius: 4px;
+                background: transparent;
             }
             
             .trade-management-actions {
@@ -2145,7 +2153,7 @@
     </div>
 
     <script>
-        // Chart Management
+        // Chart Management - UPDATED: Remove data points
         const ChartManager = {
             chart: null,
             
@@ -2176,11 +2184,12 @@
                             borderWidth: 2,
                             fill: true,
                             tension: 0.4,
-                            pointRadius: 3,
-                            pointHoverRadius: 5,
-                            pointBackgroundColor: primaryColor,
-                            pointBorderColor: '#fff',
-                            pointBorderWidth: 2
+                            // REMOVED DATA POINTS
+                            pointRadius: 0,
+                            pointHoverRadius: 0,
+                            pointBackgroundColor: 'transparent',
+                            pointBorderColor: 'transparent',
+                            pointBorderWidth: 0
                         }]
                     },
                     options: {
@@ -2264,9 +2273,6 @@
             }
         };
 
-        // Rest of the JavaScript code remains the same as in the previous version
-        // Only the ChartManager has been updated to fix the chart display issue
-        
         // Toast Notification System
         const ToastManager = {
             container: null,
@@ -2932,9 +2938,6 @@
             });
         }
 
-        // Rest of the JavaScript functions remain the same as in the previous version
-        // Only the initialization order and ChartManager have been updated
-        
         // Initialize trade result toggle
         function initTradeResultToggle() {
             const toggleOptions = document.querySelectorAll('.toggle-option');
@@ -3682,7 +3685,7 @@
             });
         }
 
-        // All trades functions
+        // All trades functions - UPDATED for mobile layout
         function openAllTradesModal() {
             renderAllTradesList();
             document.getElementById('all-trades-modal').style.display = 'flex';
@@ -3742,26 +3745,38 @@
                 const tradeEl = document.createElement('div');
                 tradeEl.className = 'trade-management-item';
                 
-                const tradeDate = trade.status === 'closed' && trade.closeTime ? 
-                    new Date(trade.closeTime) : new Date(trade.entryTime);
-                const formattedDate = `${tradeDate.getMonth() + 1}/${tradeDate.getDate()}/${tradeDate.getFullYear()}`;
+                const entryDate = new Date(trade.entryTime);
+                const closeDate = trade.closeTime ? new Date(trade.closeTime) : null;
+                const formattedEntryDate = `${entryDate.getMonth() + 1}/${entryDate.getDate()}/${entryDate.getFullYear()}`;
+                const formattedCloseDate = closeDate ? `${closeDate.getMonth() + 1}/${closeDate.getDate()}/${closeDate.getFullYear()}` : 'Open';
                 
                 const categoryClass = trade.category ? `category-${trade.category}` : '';
                 const categoryName = trade.category ? trade.category.charAt(0).toUpperCase() + trade.category.slice(1) : '';
                 const confluenceScore = trade.confluenceScore || 0;
                 const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
                 
+                // UPDATED: Two-row layout for mobile
                 tradeEl.innerHTML = `
                     <div class="trade-management-info">
-                        <input type="checkbox" class="trade-checkbox" value="${trade.id}">
-                        <div class="trade-management-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
-                        <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
-                        <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
-                            ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                        <div class="trade-row-1">
+                            <input type="checkbox" class="trade-checkbox" value="${trade.id}">
+                            <div class="trade-management-pair">${trade.pair}</div>
+                            <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
+                            ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}
                         </div>
-                        <div class="trade-management-date">${formattedDate}</div>
-                        <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
-                        <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
+                        <div class="trade-row-2">
+                            <div class="trade-dates">
+                                <div class="trade-date-label">Entry: ${formattedEntryDate}</div>
+                                <div class="trade-date-label">Close: ${formattedCloseDate}</div>
+                            </div>
+                            <div class="trade-metrics">
+                                <span class="confluence-score ${scoreClass}">${confluenceScore}%</span>
+                                <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
+                                <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                                    ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="trade-management-actions">
                         <button class="action-btn edit-btn" data-id="${trade.id}">
