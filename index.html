@@ -315,13 +315,13 @@
         .dark-mode .category-swing { background: #713f12; color: #fef3c7; }
         .dark-mode .category-position { background: #831843; color: #fce7f3; }
         
-        /* Confluence Styles - Smaller and Neater */
-        .confluence-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-top: 8px;
-        }
+       /* Update the confluence grid from 2x2 to 3x3 */
+.confluence-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Changed from 2 to 3 */
+    gap: 8px;
+    margin-top: 8px;
+}
         
         .confluence-item {
             display: flex;
@@ -2011,12 +2011,13 @@
             }
         }
         
-        /* Very small screens optimization */
-        @media (max-width: 360px) {
-            .stats-cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
+        /*
+@media (max-width: 768px) {
+    .confluence-grid {
+        grid-template-columns: 1fr;
+    }
+}
+*/
             .summary-stats {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -2607,7 +2608,7 @@ renderChart(labels, data) {
     });
 },
     
-    // In the ChartManager.updateChart function, update to include trading pairs:
+   // In the ChartManager.updateChart function, update the axis label format:
 updateChart() {
     const closedTrades = TradeManager.trades
         .filter(t => t.status === 'closed')
@@ -2615,29 +2616,137 @@ updateChart() {
     
     let balanceData = [SettingsManager.settings.initialBalance];
     let labels = ['Initial'];
-    let tradePairs = ['']; // Store trading pairs for tooltips
+    let tooltipLabels = ['Initial']; // Separate labels for tooltip with full year
+    let tradePairs = [''];
     let runningBalance = SettingsManager.settings.initialBalance;
     
     closedTrades.forEach(trade => {
         runningBalance += trade.profitLoss;
         balanceData.push(runningBalance);
         const date = new Date(trade.closeTime);
-        // Change date format to dd/mm/yyyy
+        
+        // Short format for axis: dd/mm/yy
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        labels.push(`${day}/${month}/${year}`);
-        tradePairs.push(trade.pair); // Store the trading pair
+        const shortYear = date.getFullYear().toString().slice(-2);
+        labels.push(`${day}/${month}/${shortYear}`);
+        
+        // Full format for tooltip: dd/mm/yyyy
+        const fullYear = date.getFullYear();
+        tooltipLabels.push(`${day}/${month}/${fullYear}`);
+        tradePairs.push(trade.pair);
     });
     
     // If no trades, show initial balance only
     if (closedTrades.length === 0) {
         balanceData = [SettingsManager.settings.initialBalance];
         labels = ['Initial'];
+        tooltipLabels = ['Initial'];
         tradePairs = [''];
     }
     
-    this.renderChart(labels, balanceData, tradePairs);
+    this.renderChart(labels, balanceData, tooltipLabels, tradePairs);
+},
+
+// Update the renderChart function to accept tooltipLabels parameter
+renderChart(labels, data, tooltipLabels = [], tradePairs = []) {
+    const ctx = document.getElementById('balance-chart').getContext('2d');
+    const textColor = getComputedStyle(document.body).getPropertyValue('--text-color');
+    const gridColor = getComputedStyle(document.body).getPropertyValue('--border-color');
+    const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-color');
+    
+    if (this.chart) {
+        this.chart.destroy();
+    }
+    
+    this.chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels, // Short format for axis
+            datasets: [{
+                label: 'Account Balance',
+                data: data,
+                borderColor: primaryColor,
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 5,
+                pointBackgroundColor: primaryColor,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { 
+                    display: false 
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: primaryColor,
+                    borderWidth: 1,
+                    callbacks: {
+                        // Customize the tooltip title to show the full date and pair
+                        title: function(tooltipItems) {
+                            const index = tooltipItems[0].dataIndex;
+                            const date = tooltipLabels[index] || labels[index];
+                            const pair = tradePairs[index] || '';
+                            if (index === 0) {
+                                return 'Initial Balance';
+                            }
+                            return `${date} ${pair ? `- ${pair}` : ''}`;
+                        },
+                        // Customize the tooltip label to show only the balance
+                        label: function(context) {
+                            const value = context.parsed.y;
+                            return `Balance: $${value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { 
+                    ticks: { 
+                        color: textColor,
+                        maxTicksLimit: 8,
+                        // Arrange labels diagonally
+                        maxRotation: 45,
+                        minRotation: 45
+                    },
+                    grid: { 
+                        color: gridColor,
+                        drawBorder: false
+                    }
+                },
+                y: {
+                    ticks: { 
+                        color: textColor,
+                        callback: value => '$' + value.toLocaleString()
+                    },
+                    grid: { 
+                        color: gridColor,
+                        drawBorder: false
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'nearest'
+            },
+            animation: {
+                duration: 1000,
+                easing: 'easeOutQuart'
+            }
+        }
+    });
 },
 
 // Update the renderChart function to accept tradePairs parameter
