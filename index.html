@@ -738,7 +738,7 @@
             cursor: pointer;
         }
         
-        /* Improved Trade Item Layout - Narrower P&L Box */
+        /* Improved Trade Item Layout - Single Row */
         .trade-item {
             display: flex;
             justify-content: space-between;
@@ -763,7 +763,7 @@
         .trade-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             flex: 1;
         }
         
@@ -771,13 +771,51 @@
             font-weight: 600;
             color: var(--text-color);
             font-size: 14px;
-            min-width: 90px;
+            min-width: 80px;
+        }
+        
+        .trade-type {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .trade-type.buy {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .trade-type.sell {
+            background-color: #fee2e2;
+            color: #991b1b;
         }
         
         .trade-date {
             color: var(--neutral-color);
             font-size: 12px;
-            flex: 1;
+            min-width: 80px;
+        }
+        
+        .trade-score {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .trade-score.high {
+            background: var(--profit-color);
+        }
+        
+        .trade-score.medium {
+            background: var(--warning-color);
+        }
+        
+        .trade-score.low {
+            background: var(--loss-color);
         }
         
         .trade-profit {
@@ -1238,7 +1276,101 @@
             font-weight: 500;
         }
         
-        /* Improved Bulk Actions - 2x2 Grid */
+        /* Improved Day Trade Item - Single Row */
+        .day-trade-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .day-trade-item:hover {
+            background-color: var(--bg-color);
+            border-radius: 6px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        
+        .day-trade-item:last-child {
+            border-bottom: none;
+        }
+        
+        .day-trade-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .day-trade-pair {
+            font-weight: 600;
+            color: var(--text-color);
+            min-width: 80px;
+        }
+        
+        .day-trade-type {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .day-trade-type.buy {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .day-trade-type.sell {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .day-trade-score {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .day-trade-score.high {
+            background: var(--profit-color);
+        }
+        
+        .day-trade-score.medium {
+            background: var(--warning-color);
+        }
+        
+        .day-trade-score.low {
+            background: var(--loss-color);
+        }
+        
+        .day-trade-date {
+            color: var(--neutral-color);
+            font-size: 12px;
+            min-width: 80px;
+        }
+        
+        .day-trade-profit {
+            font-weight: 600;
+            font-size: 14px;
+            min-width: 80px;
+            text-align: right;
+        }
+        
+        .day-trade-profit.positive {
+            color: var(--profit-color);
+        }
+        
+        .day-trade-profit.negative {
+            color: var(--loss-color);
+        }
+        
+        /* Bulk Actions - 2x2 Grid */
         .bulk-actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1387,30 +1519,26 @@
                 display: none;
             }
             
-            /* Recent trades - new layout */
+            /* Recent trades - single row layout */
             .trade-item {
-                display: grid;
-                grid-template-columns: 1fr auto;
-                gap: 8px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 padding: 12px 0;
                 border-bottom: 1px solid var(--border-color);
             }
             
             .trade-info {
                 display: flex;
-                flex-direction: column;
-                gap: 4px;
-            }
-            
-            .trade-main-info {
-                display: flex;
-                justify-content: space-between;
                 align-items: center;
+                gap: 10px;
+                flex: 1;
             }
             
             .trade-pair {
                 font-weight: 600;
                 font-size: 14px;
+                min-width: 70px;
             }
             
             .trade-type {
@@ -1420,80 +1548,65 @@
                 font-weight: 600;
             }
             
-            .trade-type.buy {
-                background-color: #d1fae5;
-                color: #065f46;
-            }
-            
-            .trade-type.sell {
-                background-color: #fee2e2;
-                color: #991b1b;
-            }
-            
-            .trade-secondary-info {
-                display: flex;
-                justify-content: space-between;
-                font-size: 12px;
+            .trade-date {
+                font-size: 11px;
                 color: var(--neutral-color);
+                min-width: 60px;
             }
             
             .trade-score {
-                font-size: 11px;
-                font-weight: 600;
-                padding: 2px 6px;
-                border-radius: 10px;
-                background: var(--primary-color);
-                color: white;
-            }
-            
-            .trade-score.high {
-                background: var(--profit-color);
-            }
-            
-            .trade-score.medium {
-                background: var(--warning-color);
-            }
-            
-            .trade-score.low {
-                background: var(--loss-color);
+                font-size: 10px;
+                padding: 2px 5px;
             }
             
             .trade-profit {
-                font-weight: 600;
-                font-size: 14px;
-                text-align: right;
-                align-self: center;
+                font-size: 13px;
+                min-width: 70px;
             }
             
-            /* Day summary - new layout */
+            /* Day summary - single row layout */
             .day-trade-item {
-                display: grid;
-                grid-template-columns: 1fr auto;
-                gap: 8px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 padding: 12px 0;
                 border-bottom: 1px solid var(--border-color);
             }
             
-            .day-trade-main-info {
+            .day-trade-info {
                 display: flex;
-                justify-content: space-between;
                 align-items: center;
+                gap: 10px;
+                flex: 1;
             }
             
-            .day-trade-secondary-info {
-                display: flex;
-                justify-content: space-between;
-                font-size: 12px;
-                color: var(--neutral-color);
+            .day-trade-pair {
+                font-weight: 600;
+                font-size: 14px;
+                min-width: 70px;
             }
             
-            .trade-duration {
-                font-size: 11px;
-            }
-            
-            .risk-reward {
+            .day-trade-type {
+                padding: 2px 6px;
+                border-radius: 4px;
                 font-size: 11px;
                 font-weight: 600;
+            }
+            
+            .day-trade-score {
+                font-size: 10px;
+                padding: 2px 5px;
+            }
+            
+            .day-trade-date {
+                font-size: 11px;
+                color: var(--neutral-color);
+                min-width: 60px;
+            }
+            
+            .day-trade-profit {
+                font-size: 13px;
+                min-width: 70px;
             }
             
             /* All trades modal - mobile layout */
@@ -1566,11 +1679,6 @@
                 background: var(--loss-color);
             }
             
-            .mobile-trade-rr {
-                font-size: 11px;
-                font-weight: 600;
-            }
-            
             .mobile-trade-date {
                 font-size: 11px;
                 color: var(--neutral-color);
@@ -1589,9 +1697,19 @@
                 color: var(--loss-color);
             }
             
-            /* Remove checkboxes and bulk actions on mobile */
-            .bulk-actions, .select-all-row {
-                display: none;
+            /* Mobile bulk actions - 2x2 grid */
+            .mobile-bulk-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+            
+            .mobile-bulk-actions .btn {
+                width: 100%;
+                min-width: auto;
+                font-size: 12px;
+                padding: 8px;
             }
             
             /* Edit/Delete buttons in 2x2 grid */
@@ -1721,16 +1839,17 @@
             
             .trade-pair {
                 font-size: 13px;
-                min-width: 80px;
+                min-width: 65px;
             }
             
             .trade-date {
-                font-size: 11px;
+                font-size: 10px;
+                min-width: 50px;
             }
             
             .trade-profit {
-                font-size: 13px;
-                min-width: 70px;
+                font-size: 12px;
+                min-width: 60px;
             }
             
             /* Monthly Summary - 3x3 grid with better spacing */
@@ -2041,7 +2160,8 @@
             </div>
         </div>
     </div>
-        <!-- All the modals -->
+    
+    <!-- All the modals -->
     <!-- Add Trade Modal -->
     <div class="modal" id="trade-modal">
         <div class="modal-content">
@@ -2248,6 +2368,45 @@
                 <button class="close-modal" id="close-all-trades">&times;</button>
             </div>
             
+            <!-- Bulk Actions - Desktop -->
+            <div class="bulk-actions" id="desktop-bulk-actions">
+                <button class="btn btn-secondary" id="select-all-desktop">
+                    <i class="fas fa-check-square"></i> Select All
+                </button>
+                <button class="btn btn-secondary" id="deselect-all-desktop">
+                    <i class="fas fa-square"></i> Deselect All
+                </button>
+                <button class="btn btn-danger" id="delete-selected-desktop">
+                    <i class="fas fa-trash"></i> Delete Selected
+                </button>
+                <button class="btn btn-danger" id="delete-all-desktop">
+                    <i class="fas fa-trash-alt"></i> Delete All
+                </button>
+            </div>
+            
+            <!-- Bulk Actions - Mobile -->
+            <div class="mobile-bulk-actions" id="mobile-bulk-actions">
+                <button class="btn btn-secondary" id="select-all-mobile">
+                    <i class="fas fa-check-square"></i> Select All
+                </button>
+                <button class="btn btn-secondary" id="deselect-all-mobile">
+                    <i class="fas fa-square"></i> Deselect All
+                </button>
+                <button class="btn btn-danger" id="delete-selected-mobile">
+                    <i class="fas fa-trash"></i> Delete Selected
+                </button>
+                <button class="btn btn-danger" id="delete-all-mobile">
+                    <i class="fas fa-trash-alt"></i> Delete All
+                </button>
+            </div>
+            
+            <!-- Selected Count -->
+            <div class="select-all-row">
+                <div class="select-all-checkbox">
+                    <span id="selected-count">0 trades selected</span>
+                </div>
+            </div>
+            
             <!-- Search and Filter -->
             <div class="form-row" style="margin-bottom: 15px;">
                 <div class="form-group">
@@ -2272,16 +2431,6 @@
             <div class="trades-list" id="all-trades-list-desktop">
                 <!-- Desktop trades will be populated here -->
             </div>
-            
-            <!-- Action buttons for selected trade (mobile only) -->
-            <div class="mobile-action-buttons" id="mobile-action-buttons" style="display: none;">
-                <button type="button" class="btn btn-primary" id="mobile-edit-trade">
-                    <i class="fas fa-edit"></i> Edit
-                </button>
-                <button type="button" class="btn btn-danger" id="mobile-delete-trade">
-                    <i class="fas fa-trash"></i> Delete
-                </button>
-            </div>
         </div>
     </div>
     
@@ -2293,6 +2442,9 @@
                 <button class="close-modal" id="close-trade-details">&times;</button>
                 <button class="btn btn-primary" id="edit-trade-btn" style="margin-left: auto; margin-right: 10px;">
                     <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn btn-danger" id="delete-trade-btn">
+                    <i class="fas fa-trash"></i> Delete
                 </button>
             </div>
             <div class="trade-details" id="trade-details-content">
@@ -2350,2022 +2502,2177 @@
         </div>
     </div>
 
-    <script>
-        // Chart Management
-        const ChartManager = {
-            chart: null,
-            
-            init() {
-                // Initialize with empty data, but ensure theme colors are set
-                this.renderChart([], []);
+    <!-- JavaScript will be loaded in Part 2 -->
+    
+    <script> // Chart Management
+const ChartManager = {
+    chart: null,
+    
+    init() {
+        // Initialize with empty data, but ensure theme colors are set
+        this.renderChart([], []);
+    },
+    
+    renderChart(labels, data) {
+        const ctx = document.getElementById('balance-chart').getContext('2d');
+        const textColor = getComputedStyle(document.body).getPropertyValue('--text-color');
+        const gridColor = getComputedStyle(document.body).getPropertyValue('--border-color');
+        const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-color');
+        
+        if (this.chart) {
+            this.chart.destroy();
+        }
+        
+        this.chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Account Balance',
+                    data: data,
+                    borderColor: primaryColor,
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: primaryColor,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
             },
-            
-            renderChart(labels, data) {
-                const ctx = document.getElementById('balance-chart').getContext('2d');
-                const textColor = getComputedStyle(document.body).getPropertyValue('--text-color');
-                const gridColor = getComputedStyle(document.body).getPropertyValue('--border-color');
-                const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-color');
-                
-                if (this.chart) {
-                    this.chart.destroy();
-                }
-                
-                this.chart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Account Balance',
-                            data: data,
-                            borderColor: primaryColor,
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            borderWidth: 2,
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 3,
-                            pointHoverRadius: 5,
-                            pointBackgroundColor: primaryColor,
-                            pointBorderColor: '#fff',
-                            pointBorderWidth: 2
-                        }]
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { 
+                        display: false 
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { 
-                            legend: { 
-                                display: false 
-                            },
-                            tooltip: {
-                                mode: 'index',
-                                intersect: false,
-                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                                titleColor: '#fff',
-                                bodyColor: '#fff',
-                                borderColor: primaryColor,
-                                borderWidth: 1
-                            }
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: primaryColor,
+                        borderWidth: 1
+                    }
+                },
+                scales: {
+                    x: { 
+                        ticks: { 
+                            color: textColor,
+                            maxTicksLimit: 8
                         },
-                        scales: {
-                            x: { 
-                                ticks: { 
-                                    color: textColor,
-                                    maxTicksLimit: 8
-                                },
-                                grid: { 
-                                    color: gridColor,
-                                    drawBorder: false
-                                }
-                            },
-                            y: {
-                                ticks: { 
-                                    color: textColor,
-                                    callback: value => '$' + value.toLocaleString()
-                                },
-                                grid: { 
-                                    color: gridColor,
-                                    drawBorder: false
-                                }
-                            }
+                        grid: { 
+                            color: gridColor,
+                            drawBorder: false
+                        }
+                    },
+                    y: {
+                        ticks: { 
+                            color: textColor,
+                            callback: value => '$' + value.toLocaleString()
                         },
-                        interaction: {
-                            intersect: false,
-                            mode: 'nearest'
-                        },
-                        animation: {
-                            duration: 1000,
-                            easing: 'easeOutQuart'
+                        grid: { 
+                            color: gridColor,
+                            drawBorder: false
                         }
                     }
-                });
-            },
-            
-            updateChart() {
-                const closedTrades = TradeManager.trades
-                    .filter(t => t.status === 'closed')
-                    .sort((a, b) => new Date(a.closeTime) - new Date(b.closeTime));
-                
-                let balanceData = [SettingsManager.settings.initialBalance];
-                let labels = ['Initial'];
-                let runningBalance = SettingsManager.settings.initialBalance;
-                
-                closedTrades.forEach(trade => {
-                    runningBalance += trade.profitLoss;
-                    balanceData.push(runningBalance);
-                    const date = new Date(trade.closeTime);
-                    labels.push(`${date.getMonth()+1}/${date.getDate()}`);
-                });
-                
-                // If no trades, show initial balance only
-                if (closedTrades.length === 0) {
-                    balanceData = [SettingsManager.settings.initialBalance];
-                    labels = ['Initial'];
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'nearest'
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
                 }
-                
-                this.renderChart(labels, balanceData);
-                
-                const currentBalance = balanceData[balanceData.length - 1];
-                document.getElementById('current-balance').textContent = 
-                    `$${currentBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
             }
-        };
+        });
+    },
+    
+    updateChart() {
+        const closedTrades = TradeManager.trades
+            .filter(t => t.status === 'closed')
+            .sort((a, b) => new Date(a.closeTime) - new Date(b.closeTime));
+        
+        let balanceData = [SettingsManager.settings.initialBalance];
+        let labels = ['Initial'];
+        let runningBalance = SettingsManager.settings.initialBalance;
+        
+        closedTrades.forEach(trade => {
+            runningBalance += trade.profitLoss;
+            balanceData.push(runningBalance);
+            const date = new Date(trade.closeTime);
+            labels.push(`${date.getMonth()+1}/${date.getDate()}`);
+        });
+        
+        // If no trades, show initial balance only
+        if (closedTrades.length === 0) {
+            balanceData = [SettingsManager.settings.initialBalance];
+            labels = ['Initial'];
+        }
+        
+        this.renderChart(labels, balanceData);
+        
+        const currentBalance = balanceData[balanceData.length - 1];
+        document.getElementById('current-balance').textContent = 
+            `$${currentBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    }
+};
 
-        // Toast Notification System
-        const ToastManager = {
-            container: null,
+// Toast Notification System
+const ToastManager = {
+    container: null,
+    
+    init() {
+        this.container = document.getElementById('toast-container');
+    },
+    
+    show(message, type = 'info', duration = 5000) {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        const icons = {
+            success: 'fa-check-circle',
+            error: 'fa-exclamation-circle',
+            warning: 'fa-exclamation-triangle',
+            info: 'fa-info-circle'
+        };
+        
+        toast.innerHTML = `
+            <i class="fas ${icons[type]} toast-icon"></i>
+            <div class="toast-message">${this.escapeHtml(message)}</div>
+            <button class="toast-close">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        const closeBtn = toast.querySelector('.toast-close');
+        closeBtn.addEventListener('click', () => this.hide(toast));
+        
+        this.container.appendChild(toast);
+        
+        setTimeout(() => toast.classList.add('show'), 10);
+        
+        if (duration > 0) {
+            setTimeout(() => this.hide(toast), duration);
+        }
+        
+        return toast;
+    },
+    
+    hide(toast) {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 300);
+    },
+    
+    escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+};
+
+// Validation System
+const Validation = {
+    errors: {},
+    
+    validateTradeForm(formData) {
+        this.errors = {};
+        
+        if (!formData.pair || formData.pair.trim().length < 2) {
+            this.errors.pair = 'Please enter a valid trading pair';
+        }
+        
+        if (!formData.amount || formData.amount <= 0) {
+            this.errors.amount = 'Please enter a valid amount greater than 0';
+        }
+        
+        if (!formData.entryTime) {
+            this.errors.entryTime = 'Please enter a valid entry time';
+        } else if (new Date(formData.entryTime) > new Date()) {
+            this.errors.entryTime = 'Entry time cannot be in the future';
+        }
+        
+        if (formData.closeTime && formData.entryTime) {
+            if (new Date(formData.closeTime) <= new Date(formData.entryTime)) {
+                this.errors.closeTime = 'Close time must be after entry time';
+            }
+        }
+        
+        return Object.keys(this.errors).length === 0;
+    },
+    
+    showErrors() {
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.classList.remove('show');
+        });
+        
+        document.querySelectorAll('.form-group input, .form-group select').forEach(el => {
+            el.classList.remove('error');
+        });
+        
+        Object.keys(this.errors).forEach(field => {
+            const errorEl = document.getElementById(`${field}-error`);
+            const inputEl = document.getElementById(field);
             
-            init() {
-                this.container = document.getElementById('toast-container');
-            },
-            
-            show(message, type = 'info', duration = 5000) {
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                
-                const icons = {
-                    success: 'fa-check-circle',
-                    error: 'fa-exclamation-circle',
-                    warning: 'fa-exclamation-triangle',
-                    info: 'fa-info-circle'
-                };
-                
-                toast.innerHTML = `
-                    <i class="fas ${icons[type]} toast-icon"></i>
-                    <div class="toast-message">${this.escapeHtml(message)}</div>
-                    <button class="toast-close">
-                        <i class="fas fa-times"></i>
+            if (errorEl && inputEl) {
+                errorEl.textContent = this.errors[field];
+                errorEl.classList.add('show');
+                inputEl.classList.add('error');
+            }
+        });
+    }
+};
+
+// Confluence Management
+const ConfluenceManager = {
+    confluences: [],
+    
+    init() {
+        this.loadConfluences();
+    },
+    
+    loadConfluences() {
+        const savedConfluences = localStorage.getItem('tradeTrackerConfluences');
+        if (savedConfluences) {
+            try {
+                this.confluences = JSON.parse(savedConfluences);
+            } catch (error) {
+                ToastManager.show('Error loading confluences', 'error');
+            }
+        }
+    },
+    
+    saveConfluences() {
+        try {
+            localStorage.setItem('tradeTrackerConfluences', JSON.stringify(this.confluences));
+        } catch (error) {
+            ToastManager.show('Error saving confluences', 'error');
+        }
+    },
+    
+    addConfluence(name) {
+        const newConfluence = {
+            id: this.confluences.length > 0 ? Math.max(...this.confluences.map(c => c.id)) + 1 : 1,
+            name: name,
+            createdAt: new Date().toISOString()
+        };
+        
+        this.confluences.push(newConfluence);
+        this.saveConfluences();
+        return newConfluence;
+    },
+    
+    deleteConfluence(confluenceId) {
+        this.confluences = this.confluences.filter(c => c.id !== confluenceId);
+        this.saveConfluences();
+    },
+    
+    renderConfluenceList() {
+        const confluenceList = document.getElementById('confluence-list');
+        confluenceList.innerHTML = '';
+        
+        if (this.confluences.length === 0) {
+            confluenceList.innerHTML = '<p style="text-align: center; color: var(--neutral-color); padding: 10px;">No confluences added yet.</p>';
+            return;
+        }
+        
+        this.confluences.forEach(confluence => {
+            const confluenceItem = document.createElement('div');
+            confluenceItem.className = 'confluence-management-item';
+            confluenceItem.innerHTML = `
+                <div class="confluence-label">${confluence.name}</div>
+                <div class="confluence-actions">
+                    <button class="action-btn delete-btn" data-id="${confluence.id}">
+                        <i class="fas fa-trash"></i> Delete
                     </button>
-                `;
-                
-                const closeBtn = toast.querySelector('.toast-close');
-                closeBtn.addEventListener('click', () => this.hide(toast));
-                
-                this.container.appendChild(toast);
-                
-                setTimeout(() => toast.classList.add('show'), 10);
-                
-                if (duration > 0) {
-                    setTimeout(() => this.hide(toast), duration);
-                }
-                
-                return toast;
-            },
-            
-            hide(toast) {
-                toast.classList.remove('show');
-                setTimeout(() => {
-                    if (toast.parentNode) {
-                        toast.parentNode.removeChild(toast);
-                    }
-                }, 300);
-            },
-            
-            escapeHtml(unsafe) {
-                return unsafe
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;")
-                    .replace(/'/g, "&#039;");
-            }
-        };
-
-        // Validation System
-        const Validation = {
-            errors: {},
-            
-            validateTradeForm(formData) {
-                this.errors = {};
-                
-                if (!formData.pair || formData.pair.trim().length < 2) {
-                    this.errors.pair = 'Please enter a valid trading pair';
-                }
-                
-                if (!formData.amount || formData.amount <= 0) {
-                    this.errors.amount = 'Please enter a valid amount greater than 0';
-                }
-                
-                if (!formData.entryTime) {
-                    this.errors.entryTime = 'Please enter a valid entry time';
-                } else if (new Date(formData.entryTime) > new Date()) {
-                    this.errors.entryTime = 'Entry time cannot be in the future';
-                }
-                
-                if (formData.closeTime && formData.entryTime) {
-                    if (new Date(formData.closeTime) <= new Date(formData.entryTime)) {
-                        this.errors.closeTime = 'Close time must be after entry time';
-                    }
-                }
-                
-                return Object.keys(this.errors).length === 0;
-            },
-            
-            showErrors() {
-                document.querySelectorAll('.error-message').forEach(el => {
-                    el.classList.remove('show');
-                });
-                
-                document.querySelectorAll('.form-group input, .form-group select').forEach(el => {
-                    el.classList.remove('error');
-                });
-                
-                Object.keys(this.errors).forEach(field => {
-                    const errorEl = document.getElementById(`${field}-error`);
-                    const inputEl = document.getElementById(field);
-                    
-                    if (errorEl && inputEl) {
-                        errorEl.textContent = this.errors[field];
-                        errorEl.classList.add('show');
-                        inputEl.classList.add('error');
-                    }
-                });
-            }
-        };
-
-        // Confluence Management
-        const ConfluenceManager = {
-            confluences: [],
-            
-            init() {
-                this.loadConfluences();
-            },
-            
-            loadConfluences() {
-                const savedConfluences = localStorage.getItem('tradeTrackerConfluences');
-                if (savedConfluences) {
-                    try {
-                        this.confluences = JSON.parse(savedConfluences);
-                    } catch (error) {
-                        ToastManager.show('Error loading confluences', 'error');
-                    }
-                }
-            },
-            
-            saveConfluences() {
-                try {
-                    localStorage.setItem('tradeTrackerConfluences', JSON.stringify(this.confluences));
-                } catch (error) {
-                    ToastManager.show('Error saving confluences', 'error');
-                }
-            },
-            
-            addConfluence(name) {
-                const newConfluence = {
-                    id: this.confluences.length > 0 ? Math.max(...this.confluences.map(c => c.id)) + 1 : 1,
-                    name: name,
-                    createdAt: new Date().toISOString()
-                };
-                
-                this.confluences.push(newConfluence);
-                this.saveConfluences();
-                return newConfluence;
-            },
-            
-            deleteConfluence(confluenceId) {
-                this.confluences = this.confluences.filter(c => c.id !== confluenceId);
-                this.saveConfluences();
-            },
-            
-            renderConfluenceList() {
-                const confluenceList = document.getElementById('confluence-list');
-                confluenceList.innerHTML = '';
-                
-                if (this.confluences.length === 0) {
-                    confluenceList.innerHTML = '<p style="text-align: center; color: var(--neutral-color); padding: 10px;">No confluences added yet.</p>';
-                    return;
-                }
-                
-                this.confluences.forEach(confluence => {
-                    const confluenceItem = document.createElement('div');
-                    confluenceItem.className = 'confluence-management-item';
-                    confluenceItem.innerHTML = `
-                        <div class="confluence-label">${confluence.name}</div>
-                        <div class="confluence-actions">
-                            <button class="action-btn delete-btn" data-id="${confluence.id}">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
-                    `;
-                    confluenceList.appendChild(confluenceItem);
-                });
-                
-                // Add event listeners to delete buttons
-                confluenceList.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const confluenceId = parseInt(btn.getAttribute('data-id'));
-                        this.deleteConfluence(confluenceId);
-                        this.renderConfluenceList();
-                        ToastManager.show('Confluence deleted successfully', 'success');
-                    });
-                });
-            },
-            
-            renderConfluenceCheckboxes(selectedConfluences = []) {
-                const checkboxesContainer = document.getElementById('confluence-checkboxes');
-                checkboxesContainer.innerHTML = '';
-                
-                if (this.confluences.length === 0) {
-                    checkboxesContainer.innerHTML = '<p style="color: var(--neutral-color); text-align: center; padding: 10px;">No confluences defined. Add them in Settings.</p>';
-                    return;
-                }
-                
-                this.confluences.forEach(confluence => {
-                    const isChecked = selectedConfluences.includes(confluence.id);
-                    const confluenceItem = document.createElement('div');
-                    confluenceItem.className = 'confluence-item';
-                    confluenceItem.innerHTML = `
-                        <input type="checkbox" class="confluence-checkbox" id="confluence-${confluence.id}" value="${confluence.id}" ${isChecked ? 'checked' : ''}>
-                        <label class="confluence-label" for="confluence-${confluence.id}">${confluence.name}</label>
-                    `;
-                    checkboxesContainer.appendChild(confluenceItem);
-                });
-                
-                // Add event listeners to update confluence score
-                checkboxesContainer.querySelectorAll('.confluence-checkbox').forEach(checkbox => {
-                    checkbox.addEventListener('change', () => {
-                        this.updateConfluenceScorePreview();
-                    });
-                });
-                
+                </div>
+            `;
+            confluenceList.appendChild(confluenceItem);
+        });
+        
+        // Add event listeners to delete buttons
+        confluenceList.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const confluenceId = parseInt(btn.getAttribute('data-id'));
+                this.deleteConfluence(confluenceId);
+                this.renderConfluenceList();
+                ToastManager.show('Confluence deleted successfully', 'success');
+            });
+        });
+    },
+    
+    renderConfluenceCheckboxes(selectedConfluences = []) {
+        const checkboxesContainer = document.getElementById('confluence-checkboxes');
+        checkboxesContainer.innerHTML = '';
+        
+        if (this.confluences.length === 0) {
+            checkboxesContainer.innerHTML = '<p style="color: var(--neutral-color); text-align: center; padding: 10px;">No confluences defined. Add them in Settings.</p>';
+            return;
+        }
+        
+        this.confluences.forEach(confluence => {
+            const isChecked = selectedConfluences.includes(confluence.id);
+            const confluenceItem = document.createElement('div');
+            confluenceItem.className = 'confluence-item';
+            confluenceItem.innerHTML = `
+                <input type="checkbox" class="confluence-checkbox" id="confluence-${confluence.id}" value="${confluence.id}" ${isChecked ? 'checked' : ''}>
+                <label class="confluence-label" for="confluence-${confluence.id}">${confluence.name}</label>
+            `;
+            checkboxesContainer.appendChild(confluenceItem);
+        });
+        
+        // Add event listeners to update confluence score
+        checkboxesContainer.querySelectorAll('.confluence-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
                 this.updateConfluenceScorePreview();
-            },
+            });
+        });
+        
+        this.updateConfluenceScorePreview();
+    },
+    
+    updateConfluenceScorePreview() {
+        const checkboxes = document.querySelectorAll('.confluence-checkbox');
+        const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+        const totalCount = checkboxes.length;
+        
+        const scorePreview = document.getElementById('confluence-score-preview');
+        const scoreValue = document.getElementById('confluence-score-value');
+        
+        if (totalCount > 0) {
+            const score = Math.round((checkedCount / totalCount) * 100);
+            scoreValue.textContent = `${score}%`;
             
-            updateConfluenceScorePreview() {
-                const checkboxes = document.querySelectorAll('.confluence-checkbox');
-                const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
-                const totalCount = checkboxes.length;
-                
-                const scorePreview = document.getElementById('confluence-score-preview');
-                const scoreValue = document.getElementById('confluence-score-value');
-                
-                if (totalCount > 0) {
-                    const score = Math.round((checkedCount / totalCount) * 100);
-                    scoreValue.textContent = `${score}%`;
-                    
-                    // Set color based on score
-                    if (score >= 80) {
-                        scoreValue.className = 'confluence-score high';
-                    } else if (score >= 50) {
-                        scoreValue.className = 'confluence-score medium';
-                    } else {
-                        scoreValue.className = 'confluence-score low';
-                    }
-                    
-                    scorePreview.style.display = 'block';
-                } else {
-                    scorePreview.style.display = 'none';
-                }
-            },
+            // Set color based on score
+            if (score >= 80) {
+                scoreValue.className = 'confluence-score high';
+            } else if (score >= 50) {
+                scoreValue.className = 'confluence-score medium';
+            } else {
+                scoreValue.className = 'confluence-score low';
+            }
             
-            getSelectedConfluences() {
-                const checkboxes = document.querySelectorAll('.confluence-checkbox:checked');
-                return Array.from(checkboxes).map(cb => parseInt(cb.value));
-            },
+            scorePreview.style.display = 'block';
+        } else {
+            scorePreview.style.display = 'none';
+        }
+    },
+    
+    getSelectedConfluences() {
+        const checkboxes = document.querySelectorAll('.confluence-checkbox:checked');
+        return Array.from(checkboxes).map(cb => parseInt(cb.value));
+    },
+    
+    calculateConfluenceScore(selectedConfluences) {
+        if (this.confluences.length === 0) return 0;
+        return Math.round((selectedConfluences.length / this.confluences.length) * 100);
+    },
+    
+    getConfluenceNames(confluenceIds) {
+        return confluenceIds.map(id => {
+            const confluence = this.confluences.find(c => c.id === id);
+            return confluence ? confluence.name : 'Unknown';
+        });
+    }
+};
+
+// Security and Encryption
+const Security = {
+    encrypt(data, password = '') {
+        if (!password) return btoa(JSON.stringify(data));
+        
+        let encrypted = '';
+        for (let i = 0; i < JSON.stringify(data).length; i++) {
+            encrypted += String.fromCharCode(
+                JSON.stringify(data).charCodeAt(i) ^ password.charCodeAt(i % password.length)
+            );
+        }
+        return btoa(encrypted);
+    },
+    
+    decrypt(encryptedData, password = '') {
+        try {
+            if (!password) {
+                return JSON.parse(atob(encryptedData));
+            }
             
-            calculateConfluenceScore(selectedConfluences) {
-                if (this.confluences.length === 0) return 0;
-                return Math.round((selectedConfluences.length / this.confluences.length) * 100);
-            },
-            
-            getConfluenceNames(confluenceIds) {
-                return confluenceIds.map(id => {
-                    const confluence = this.confluences.find(c => c.id === id);
-                    return confluence ? confluence.name : 'Unknown';
+            const decoded = atob(encryptedData);
+            let decrypted = '';
+            for (let i = 0; i < decoded.length; i++) {
+                decrypted += String.fromCharCode(
+                    decoded.charCodeAt(i) ^ password.charCodeAt(i % password.length)
+                );
+            }
+            return JSON.parse(decrypted);
+        } catch (error) {
+            throw new Error('Failed to decrypt data. Check your password.');
+        }
+    }
+};
+
+// Performance Optimizations
+const Performance = {
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    },
+    
+    // Throttle function for scroll/resize events
+    throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
+};
+
+// Trade Management
+const TradeManager = {
+    trades: [],
+    
+    init() {
+        this.loadTrades();
+    },
+    
+    loadTrades() {
+        const savedTrades = localStorage.getItem('tradeTrackerTrades');
+        if (savedTrades) {
+            try {
+                this.trades = JSON.parse(savedTrades);
+                // Ensure all trades have confluences array
+                this.trades.forEach(trade => {
+                    if (!trade.confluences) trade.confluences = [];
+                    if (!trade.confluenceScore) trade.confluenceScore = 0;
+                    if (!trade.screenshots) trade.screenshots = [];
                 });
+            } catch (error) {
+                ToastManager.show('Error loading trades data', 'error');
             }
+        }
+    },
+    
+    saveTrades() {
+        try {
+            localStorage.setItem('tradeTrackerTrades', JSON.stringify(this.trades));
+        } catch (error) {
+            ToastManager.show('Error saving trades data', 'error');
+        }
+    },
+    
+    addTrade(tradeData) {
+        const newTrade = {
+            id: this.trades.length > 0 ? Math.max(...this.trades.map(t => t.id)) + 1 : 1,
+            ...tradeData,
+            createdAt: new Date().toISOString()
         };
+        
+        this.trades.push(newTrade);
+        this.saveTrades();
+        return newTrade;
+    },
+    
+    updateTrade(tradeId, tradeData) {
+        const index = this.trades.findIndex(t => t.id === tradeId);
+        if (index !== -1) {
+            this.trades[index] = {
+                ...this.trades[index],
+                ...tradeData,
+                updatedAt: new Date().toISOString()
+            };
+            this.saveTrades();
+            return this.trades[index];
+        }
+        return null;
+    },
+    
+    deleteTrade(tradeId) {
+        this.trades = this.trades.filter(t => t.id !== tradeId);
+        this.saveTrades();
+    },
+    
+    deleteMultipleTrades(tradeIds) {
+        this.trades = this.trades.filter(t => !tradeIds.includes(t.id));
+        this.saveTrades();
+    },
+    
+    calculateRiskMetrics(trade, initialBalance) {
+        if (trade.status === 'open' || !trade.profitLoss) return null;
+        
+        const riskPercent = (trade.amount / initialBalance * 100).toFixed(2);
+        const riskReward = trade.profitLoss > 0 ? 
+            (trade.profitLoss / trade.amount).toFixed(2) : 
+            (Math.abs(trade.profitLoss) / trade.amount).toFixed(2);
+        
+        return {
+            riskPercent,
+            riskReward
+        };
+    },
+    
+    getTradeStats() {
+        const closedTrades = this.trades.filter(t => t.status === 'closed');
+        const totalProfit = closedTrades.reduce((sum, t) => sum + t.profitLoss, 0);
+        const winningTrades = closedTrades.filter(t => t.profitLoss > 0);
+        const winRate = closedTrades.length > 0 ? 
+            Math.round((winningTrades.length / closedTrades.length) * 100) : 0;
+        
+        const totalWins = winningTrades.reduce((sum, t) => sum + t.profitLoss, 0);
+        const totalLosses = Math.abs(closedTrades
+            .filter(t => t.profitLoss < 0)
+            .reduce((sum, t) => sum + t.profitLoss, 0));
+        const profitFactor = totalLosses > 0 ? 
+            (totalWins / totalLosses).toFixed(2) : 
+            totalWins > 0 ? '∞' : '0.00';
+        
+        const avgRiskReward = closedTrades.length > 0 ?
+            (closedTrades.reduce((sum, t) => {
+                const metrics = this.calculateRiskMetrics(t, settings.initialBalance);
+                return sum + (metrics ? parseFloat(metrics.riskReward) : 0);
+            }, 0) / closedTrades.length).toFixed(2) : '0.00';
+        
+        // Calculate profit percentage
+        const profitPercent = (totalProfit / settings.initialBalance) * 100;
+        
+        return {
+            totalProfit,
+            profitPercent,
+            totalTrades: this.trades.length,
+            winRate,
+            profitFactor,
+            avgRiskReward,
+            closedTrades: closedTrades.length,
+            winningTrades: winningTrades.length
+        };
+    }
+};
 
-        // Security and Encryption
-        const Security = {
-            encrypt(data, password = '') {
-                if (!password) return btoa(JSON.stringify(data));
-                
-                let encrypted = '';
-                for (let i = 0; i < JSON.stringify(data).length; i++) {
-                    encrypted += String.fromCharCode(
-                        JSON.stringify(data).charCodeAt(i) ^ password.charCodeAt(i % password.length)
-                    );
+// Settings Management
+const SettingsManager = {
+    settings: {
+        initialBalance: 5000,
+        darkMode: false
+    },
+    
+    init() {
+        this.loadSettings();
+    },
+    
+    loadSettings() {
+        const savedSettings = localStorage.getItem('tradeTrackerSettings');
+        if (savedSettings) {
+            try {
+                this.settings = { ...this.settings, ...JSON.parse(savedSettings) };
+            } catch (error) {
+                ToastManager.show('Error loading settings', 'error');
+            }
+        }
+    },
+    
+    saveSettings() {
+        try {
+            localStorage.setItem('tradeTrackerSettings', JSON.stringify(this.settings));
+            return true;
+        } catch (error) {
+            ToastManager.show('Error saving settings', 'error');
+            return false;
+        }
+    },
+    
+    updateSetting(key, value) {
+        this.settings[key] = value;
+        return this.saveSettings();
+    }
+};
+
+// Keyboard Shortcuts
+const KeyboardManager = {
+    init() {
+        document.addEventListener('keydown', this.handleKeyPress.bind(this));
+    },
+    
+    handleKeyPress(event) {
+        if (event.target.tagName === 'INPUT' || 
+            event.target.tagName === 'TEXTAREA' || 
+            event.target.isContentEditable) {
+            return;
+        }
+        
+        const hasModifier = event.ctrlKey || event.metaKey || event.altKey;
+        
+        switch (event.key.toLowerCase()) {
+            case 'n':
+                if (!hasModifier) {
+                    event.preventDefault();
+                    document.getElementById('add-trade-btn').click();
                 }
-                return btoa(encrypted);
-            },
+                break;
+            case 's':
+                if (!hasModifier) {
+                    event.preventDefault();
+                    document.getElementById('settings-btn').click();
+                }
+                break;
+            case 'a':
+                if (!hasModifier) {
+                    event.preventDefault();
+                    document.getElementById('view-all-trades').click();
+                }
+                break;
+            case 'd':
+                if (!hasModifier) {
+                    event.preventDefault();
+                    document.getElementById('dark-mode-toggle').click();
+                }
+                break;
+            case 't':
+                if (!hasModifier) {
+                    event.preventDefault();
+                    document.getElementById('today-btn').click();
+                }
+                break;
+            case 'escape':
+                this.closeActiveModal();
+                break;
+            case '?':
+                event.preventDefault();
+                document.getElementById('help-btn').click();
+                break;
+        }
+    },
+    
+    closeActiveModal() {
+        const modals = document.querySelectorAll('.modal');
+        for (let modal of modals) {
+            if (modal.style.display === 'flex') {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                break;
+            }
+        }
+    }
+};
+
+// Global variables
+let currentDate = new Date();
+let currentMonth = currentDate.getMonth();
+let currentYear = currentDate.getFullYear();
+let editingTradeId = null;
+let selectedDay = null;
+let selectedTradeIds = new Set();
+let selectedMobileTradeIds = new Set();
+let tradeResult = 'open';
+let settings = SettingsManager.settings;
+let currentScreenshot = null;
+let longPressTimer = null;
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all managers
+    ToastManager.init();
+    TradeManager.init();
+    SettingsManager.init();
+    ConfluenceManager.init();
+    KeyboardManager.init();
+    
+    // Load settings first to ensure theme is set before rendering chart
+    const savedSettings = localStorage.getItem('tradeTrackerSettings');
+    if (savedSettings) {
+        settings = JSON.parse(savedSettings);
+        document.getElementById('dark-mode-toggle').checked = settings.darkMode;
+        document.getElementById('initial-balance').value = settings.initialBalance;
+        if (settings.darkMode) {
+            document.body.classList.add('dark-mode');
+        }
+    }
+    
+    // Set up UI - initialize chart AFTER theme is set
+    renderCalendar();
+    updateStats();
+    renderRecentTrades();
+    ChartManager.init(); // Initialize chart with empty data
+    ChartManager.updateChart(); // Update with actual data after theme is set
+    updateMonthlySummary();
+    ConfluenceManager.renderConfluenceList();
+    
+    // Set up event listeners
+    setupEventListeners();
+    
+    // Show welcome message
+    setTimeout(() => {
+        ToastManager.show('TradeTracker Pro loaded successfully!', 'info', 4000);
+    }, 500);
+});
+
+// Event Listeners Setup
+function setupEventListeners() {
+    // Modal controls
+    document.getElementById('settings-btn').addEventListener('click', openSettingsModal);
+    document.getElementById('add-trade-btn').addEventListener('click', openAddTradeModal);
+    document.getElementById('help-btn').addEventListener('click', openHelpModal);
+    document.getElementById('close-modal').addEventListener('click', closeModal);
+    document.getElementById('cancel-trade').addEventListener('click', closeModal);
+    document.getElementById('close-settings').addEventListener('click', closeSettingsModal);
+    document.getElementById('close-all-trades').addEventListener('click', closeAllTradesModal);
+    document.getElementById('close-help').addEventListener('click', closeHelpModal);
+    document.getElementById('close-trade-details').addEventListener('click', closeTradeDetailsModal);
+    document.getElementById('close-screenshot').addEventListener('click', closeScreenshotModal);
+    document.getElementById('edit-trade-btn').addEventListener('click', handleEditTradeFromDetails);
+    document.getElementById('delete-trade-btn').addEventListener('click', handleDeleteTradeFromDetails);
+    
+    // Calendar controls
+    document.getElementById('prev-month').addEventListener('click', goToPreviousMonth);
+    document.getElementById('next-month').addEventListener('click', goToNextMonth);
+    document.getElementById('today-btn').addEventListener('click', goToToday);
+    
+    // Form submissions
+    document.getElementById('trade-form').addEventListener('submit', handleTradeSubmit);
+    document.getElementById('save-balance').addEventListener('click', handleSaveBalance);
+    
+    // Confluence management
+    document.getElementById('add-confluence').addEventListener('click', handleAddConfluence);
+    
+    // Screenshot handling
+    document.getElementById('screenshot').addEventListener('change', handleScreenshotUpload);
+    
+    // Data management
+    document.getElementById('export-excel').addEventListener('click', handleExportExcel);
+    document.getElementById('import-excel').addEventListener('change', handleImportExcel);
+    document.getElementById('view-all-trades').addEventListener('click', openAllTradesModal);
+    
+    // Bulk actions
+    document.getElementById('select-all-desktop').addEventListener('click', selectAllTrades);
+    document.getElementById('deselect-all-desktop').addEventListener('click', deselectAllTrades);
+    document.getElementById('delete-selected-desktop').addEventListener('click', deleteSelectedTrades);
+    document.getElementById('delete-all-desktop').addEventListener('click', deleteAllTrades);
+    
+    document.getElementById('select-all-mobile').addEventListener('click', selectAllTrades);
+    document.getElementById('deselect-all-mobile').addEventListener('click', deselectAllTrades);
+    document.getElementById('delete-selected-mobile').addEventListener('click', deleteSelectedTrades);
+    document.getElementById('delete-all-mobile').addEventListener('click', deleteAllTrades);
+    
+    // Search and filter
+    document.getElementById('trade-search').addEventListener('input', renderAllTradesList);
+    document.getElementById('trade-filter').addEventListener('change', renderAllTradesList);
+    
+    // Theme toggle - update chart when theme changes
+    document.getElementById('dark-mode-toggle').addEventListener('change', function() {
+        toggleDarkMode();
+        // Force chart update after theme change
+        setTimeout(() => {
+            ChartManager.updateChart();
+        }, 100);
+    });
+    
+    // Trade result toggle
+    initTradeResultToggle();
+    
+    // Real-time validation
+    document.getElementById('amount').addEventListener('input', updateRiskMetrics);
+    document.getElementById('profit-loss').addEventListener('input', updateRiskMetrics);
+    
+    // Handle window resize to toggle between mobile/desktop views
+    window.addEventListener('resize', function() {
+        renderAllTradesList();
+    });
+    
+    // Close modals when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    });
+}
+
+// Initialize trade result toggle
+function initTradeResultToggle() {
+    const toggleOptions = document.querySelectorAll('.toggle-option');
+    toggleOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            toggleOptions.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            tradeResult = this.getAttribute('data-value');
             
-            decrypt(encryptedData, password = '') {
-                try {
-                    if (!password) {
-                        return JSON.parse(atob(encryptedData));
-                    }
-                    
-                    const decoded = atob(encryptedData);
-                    let decrypted = '';
-                    for (let i = 0; i < decoded.length; i++) {
-                        decrypted += String.fromCharCode(
-                            decoded.charCodeAt(i) ^ password.charCodeAt(i % password.length)
-                        );
-                    }
-                    return JSON.parse(decrypted);
-                } catch (error) {
-                    throw new Error('Failed to decrypt data. Check your password.');
+            const profitLossInput = document.getElementById('profit-loss');
+            if (tradeResult === 'open') {
+                profitLossInput.disabled = true;
+                profitLossInput.value = '';
+            } else {
+                profitLossInput.disabled = false;
+                // Auto-close trade if win/loss is selected
+                if (!document.getElementById('close-time').value) {
+                    const now = new Date();
+                    document.getElementById('close-time').value = now.toISOString().slice(0, 16);
                 }
             }
-        };
-
-        // Performance Optimizations
-        const Performance = {
-            debounce(func, wait) {
-                let timeout;
-                return function executedFunction(...args) {
-                    const later = () => {
-                        clearTimeout(timeout);
-                        func(...args);
-                    };
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                };
-            },
             
-            // Throttle function for scroll/resize events
-            throttle(func, limit) {
-                let inThrottle;
-                return function() {
-                    const args = arguments;
-                    const context = this;
-                    if (!inThrottle) {
-                        func.apply(context, args);
-                        inThrottle = true;
-                        setTimeout(() => inThrottle = false, limit);
-                    }
-                };
+            updateRiskMetrics();
+        });
+    });
+}
+
+// Update risk metrics in real-time
+function updateRiskMetrics() {
+    const amount = parseFloat(document.getElementById('amount').value) || 0;
+    const profitLoss = parseFloat(document.getElementById('profit-loss').value) || 0;
+    const riskMetrics = document.getElementById('risk-metrics-preview');
+    
+    if (amount > 0 && tradeResult !== 'open') {
+        const riskPercent = (amount / settings.initialBalance * 100).toFixed(2);
+        const riskReward = (profitLoss / amount).toFixed(2);
+        
+        document.getElementById('risk-reward-preview').textContent = riskReward;
+        document.getElementById('risk-percent-preview').textContent = riskPercent + '%';
+        riskMetrics.style.display = 'block';
+    } else {
+        riskMetrics.style.display = 'none';
+    }
+}
+
+// Confluence management
+function handleAddConfluence() {
+    const confluenceInput = document.getElementById('new-confluence');
+    const name = confluenceInput.value.trim();
+    
+    if (!name) {
+        ToastManager.show('Please enter a confluence name', 'warning');
+        return;
+    }
+    
+    ConfluenceManager.addConfluence(name);
+    ConfluenceManager.renderConfluenceList();
+    confluenceInput.value = '';
+    ToastManager.show('Confluence added successfully', 'success');
+}
+
+// Screenshot handling
+function handleScreenshotUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        currentScreenshot = e.target.result;
+        document.getElementById('screenshot-preview').src = currentScreenshot;
+        document.getElementById('screenshot-preview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+}
+
+function showScreenshotFull(screenshotData) {
+    document.getElementById('screenshot-full-container').innerHTML = `
+        <img src="${screenshotData}" class="screenshot-full" alt="Trade screenshot">
+    `;
+    document.getElementById('screenshot-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeScreenshotModal() {
+    document.getElementById('screenshot-modal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Calendar functions
+function renderCalendar() {
+    const calendarEl = document.getElementById('calendar');
+    calendarEl.innerHTML = '';
+    
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    days.forEach(day => {
+        const dayHeader = document.createElement('div');
+        dayHeader.className = 'day-header';
+        dayHeader.textContent = day;
+        calendarEl.appendChild(dayHeader);
+    });
+    
+    const monthYear = `${getMonthName(currentMonth)} ${currentYear}`;
+    document.getElementById('current-month').textContent = monthYear;
+    document.getElementById('summary-month').textContent = monthYear;
+    
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const prevMonthLastDay = new Date(currentYear, currentMonth, 0).getDate();
+    
+    // Create document fragment for better performance
+    const fragment = document.createDocumentFragment();
+    
+    for (let i = firstDay - 1; i >= 0; i--) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'day prev-month-day';
+        const dayNumber = document.createElement('div');
+        dayNumber.className = 'day-number';
+        dayNumber.textContent = prevMonthLastDay - i;
+        dayEl.appendChild(dayNumber);
+        fragment.appendChild(dayEl);
+    }
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'day';
+        
+        const today = new Date();
+        if (day === today.getDate() && 
+            currentMonth === today.getMonth() && 
+            currentYear === today.getFullYear()) {
+            dayEl.classList.add('today');
+        }
+        
+        const dayNumber = document.createElement('div');
+        dayNumber.className = 'day-number';
+        dayNumber.textContent = day;
+        dayEl.appendChild(dayNumber);
+        
+        const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const dailyTrades = getTradesForDay(dateStr);
+        const closedTrades = dailyTrades.filter(trade => trade.status === 'closed');
+        const dailyProfitLoss = closedTrades.reduce((sum, trade) => sum + trade.profitLoss, 0);
+        
+        if (closedTrades.length > 0) {
+            const pnlEl = document.createElement('div');
+            pnlEl.className = dailyProfitLoss >= 0 ? 'profit' : 'loss';
+            pnlEl.textContent = dailyProfitLoss >= 0 ? `+$${dailyProfitLoss.toFixed(2)}` : `-$${Math.abs(dailyProfitLoss).toFixed(2)}`;
+            dayEl.appendChild(pnlEl);
+        }
+        
+        if (dailyTrades.length > 0) {
+            const tradeCount = document.createElement('div');
+            tradeCount.className = 'trade-count';
+            tradeCount.textContent = `${dailyTrades.length} trade${dailyTrades.length > 1 ? 's' : ''}`;
+            dayEl.appendChild(tradeCount);
+        }
+        
+        dayEl.addEventListener('click', function() {
+            showDaySummary(dateStr, day);
+        });
+        
+        fragment.appendChild(dayEl);
+    }
+    
+    const totalCells = 42;
+    const cellsUsed = firstDay + daysInMonth;
+    const nextMonthDays = totalCells - cellsUsed;
+    
+    for (let day = 1; day <= nextMonthDays; day++) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'day prev-month-day';
+        const dayNumber = document.createElement('div');
+        dayNumber.className = 'day-number';
+        dayNumber.textContent = day;
+        dayEl.appendChild(dayNumber);
+        fragment.appendChild(dayEl);
+    }
+    
+    calendarEl.appendChild(fragment);
+}
+
+function getTradesForDay(dateStr) {
+    return TradeManager.trades.filter(trade => {
+        if (trade.status === 'open') {
+            return trade.date === dateStr;
+        } else {
+            const closeDate = trade.closeTime ? trade.closeTime.split('T')[0] : null;
+            return closeDate === dateStr;
+        }
+    });
+}
+
+function showDaySummary(dateStr, day) {
+    selectedDay = dateStr;
+    const dailyTrades = getTradesForDay(dateStr);
+    const closedTrades = dailyTrades.filter(trade => trade.status === 'closed');
+    const dailyProfitLoss = closedTrades.reduce((sum, trade) => sum + trade.profitLoss, 0);
+    const winningTrades = closedTrades.filter(trade => trade.profitLoss > 0).length;
+    const winRate = closedTrades.length > 0 ? Math.round((winningTrades / closedTrades.length) * 100) : 0;
+    
+    const dateObj = new Date(dateStr);
+    const monthName = getMonthName(dateObj.getMonth());
+    
+    document.getElementById('right-panel-title').textContent = `Summary: ${monthName} ${day}`;
+    document.getElementById('right-panel-content').innerHTML = `
+        <div class="day-summary">
+            <div class="day-summary-stats">
+                <div class="day-summary-stat">
+                    <div class="day-summary-value ${dailyProfitLoss >= 0 ? 'positive-stat' : 'negative-stat'}">
+                        ${dailyProfitLoss >= 0 ? '+' : ''}$${dailyProfitLoss.toFixed(2)}
+                    </div>
+                    <div class="day-summary-label">Daily P&L</div>
+                </div>
+                <div class="day-summary-stat">
+                    <div class="day-summary-value">${dailyTrades.length}</div>
+                    <div class="day-summary-label">Total Trades</div>
+                </div>
+                <div class="day-summary-stat">
+                    <div class="day-summary-value">${winRate}%</div>
+                    <div class="day-summary-label">Win Rate</div>
+                </div>
+                <div class="day-summary-stat">
+                    <div class="day-summary-value">${closedTrades.length}</div>
+                    <div class="day-summary-label">Closed Trades</div>
+                </div>
+            </div>
+            <div class="day-trades-list">
+                ${dailyTrades.length > 0 ? 
+                    dailyTrades.map(trade => {
+                        const duration = calculateTradeDuration(trade.entryTime, trade.closeTime);
+                        const confluenceScore = trade.confluenceScore || 0;
+                        const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
+                        
+                        return `
+                        <div class="day-trade-item" data-trade-id="${trade.id}">
+                            <div class="day-trade-info">
+                                <div class="day-trade-pair">${trade.pair}</div>
+                                <div class="day-trade-type ${trade.type.toLowerCase()}">${trade.type}</div>
+                                <div class="day-trade-score ${scoreClass}">${confluenceScore}%</div>
+                                <div class="day-trade-date">${formatDate(trade.entryTime)}</div>
+                            </div>
+                            <div class="day-trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                                ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                            </div>
+                        </div>
+                        `;
+                    }).join('') : 
+                    '<p style="text-align: center; color: var(--neutral-color); padding: 20px;">No trades for this day</p>'
+                }
+            </div>
+        </div>
+    `;
+    
+    // Add click event listeners to trade items
+    document.querySelectorAll('.day-trade-item[data-trade-id]').forEach(item => {
+        item.addEventListener('click', function() {
+            const tradeId = parseInt(this.getAttribute('data-trade-id'));
+            showTradeDetails(tradeId);
+        });
+    });
+    
+    // Scroll to day summary on mobile
+    if (window.innerWidth <= 768) {
+        setTimeout(() => {
+            document.getElementById('right-panel').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }, 100);
+    }
+}
+
+function showTradeDetails(tradeId) {
+    const trade = TradeManager.trades.find(t => t.id === tradeId);
+    if (!trade) return;
+    
+    document.getElementById('trade-details-title').textContent = `Trade Details: ${trade.pair}`;
+    document.getElementById('edit-trade-btn').setAttribute('data-trade-id', tradeId);
+    document.getElementById('delete-trade-btn').setAttribute('data-trade-id', tradeId);
+    
+    const confluenceNames = ConfluenceManager.getConfluenceNames(trade.confluences || []);
+    const confluenceScore = trade.confluenceScore || 0;
+    const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
+    
+    // Calculate risk metrics
+    const riskMetrics = TradeManager.calculateRiskMetrics(trade, settings.initialBalance);
+    
+    let screenshotsHtml = '';
+    if (trade.screenshots && trade.screenshots.length > 0) {
+        screenshotsHtml = `
+            <div class="trade-detail-item">
+                <div class="trade-detail-label">Screenshots:</div>
+                <div class="trade-detail-value">
+                    ${trade.screenshots.map((screenshot, index) => `
+                        <img src="${screenshot}" class="screenshot-thumbnail" alt="Screenshot ${index + 1}" data-screenshot="${screenshot}">
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+    
+    document.getElementById('trade-details-content').innerHTML = `
+        <div class="trade-detail-item">
+            <div class="trade-detail-label">Trading Pair:</div>
+            <div class="trade-detail-value">${trade.pair}</div>
+        </div>
+        <div class="trade-detail-item">
+            <div class="trade-detail-label">Type:</div>
+            <div class="trade-detail-value">${trade.type}</div>
+        </div>
+        <div class="trade-detail-item">
+            <div class="trade-detail-label">Amount Risked:</div>
+            <div class="trade-detail-value">$${trade.amount.toFixed(2)}</div>
+        </div>
+        <div class="trade-detail-item">
+            <div class="trade-detail-label">Entry Time:</div>
+            <div class="trade-detail-value">${formatDateTime(trade.entryTime)}</div>
+        </div>
+        ${trade.closeTime ? `
+        <div class="trade-detail-item">
+            <div class="trade-detail-label">Close Time:</div>
+            <div class="trade-detail-value">${formatDateTime(trade.closeTime)}</div>
+        </div>
+        ` : ''}
+        <div class="trade-detail-item">
+            <div class="trade-detail-label">Trade Duration:</div>
+            <div class="trade-detail-value">${calculateTradeDuration(trade.entryTime, trade.closeTime)}</div>
+        </div>
+        <div class="trade-detail-item">
+            <div class="trade-detail-label">Status:</div>
+            <div class="trade-detail-value">${trade.status}</div>
+        </div>
+        ${trade.profitLoss !== null ? `
+        <div class="trade-detail-item">
+            <div class="trade-detail-label">Profit/Loss:</div>
+            <div class="trade-detail-value ${trade.profitLoss >= 0 ? 'positive-stat' : 'negative-stat'}">
+                ${trade.profitLoss >= 0 ? '+' : ''}$${trade.profitLoss.toFixed(2)}
+            </div>
+        </div>
+        ` : ''}
+        ${riskMetrics ? `
+        <div class="trade-detail-item">
+            <div class="trade-detail-label">Risk/Reward Ratio:</div>
+            <div class="trade-detail-value">${riskMetrics.riskReward}</div>
+        </div>
+        <div class="trade-detail-item">
+            <div class="trade-detail-label">Risk %:</div>
+            <div class="trade-detail-value">${riskMetrics.riskPercent}%</div>
+        </div>
+        ` : ''}
+        ${trade.category ? `
+        <div class="trade-detail-item">
+            <div class="trade-detail-label">Category:</div>
+            <div class="trade-detail-value">${trade.category.charAt(0).toUpperCase() + trade.category.slice(1)}</div>
+        </div>
+        ` : ''}
+        <div class="trade-confluence-score ${scoreClass}">
+            Confluence Score: ${confluenceScore}%
+        </div>
+        ${confluenceNames.length > 0 ? `
+        <div class="trade-confluences">
+            <h4 style="margin-bottom: 10px;">Confluences Met:</h4>
+            <ul style="padding-left: 20px;">
+                ${confluenceNames.map(name => `<li>${name}</li>`).join('')}
+            </ul>
+        </div>
+        ` : ''}
+        ${screenshotsHtml}
+        ${trade.notes ? `
+        <div class="trade-detail-item">
+            <div class="trade-detail-label">Notes:</div>
+            <div class="trade-detail-value">${trade.notes}</div>
+        </div>
+        ` : ''}
+        <div class="trade-detail-item">
+            <div class="trade-detail-label">Created:</div>
+            <div class="trade-detail-value">${formatDateTime(trade.createdAt)}</div>
+        </div>
+        ${trade.updatedAt ? `
+        <div class="trade-detail-item">
+            <div class="trade-detail-label">Last Updated:</div>
+            <div class="trade-detail-value">${formatDateTime(trade.updatedAt)}</div>
+        </div>
+        ` : ''}
+    `;
+    
+    // Add click event listeners to screenshot thumbnails
+    document.querySelectorAll('.screenshot-thumbnail').forEach(thumbnail => {
+        thumbnail.addEventListener('click', function() {
+            const screenshotData = this.getAttribute('data-screenshot');
+            showScreenshotFull(screenshotData);
+        });
+    });
+    
+    document.getElementById('trade-details-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function handleEditTradeFromDetails() {
+    const tradeId = parseInt(document.getElementById('edit-trade-btn').getAttribute('data-trade-id'));
+    closeTradeDetailsModal();
+    openEditTradeModal(tradeId);
+}
+
+function handleDeleteTradeFromDetails() {
+    const tradeId = parseInt(document.getElementById('delete-trade-btn').getAttribute('data-trade-id'));
+    if (confirm('Are you sure you want to delete this trade?')) {
+        TradeManager.deleteTrade(tradeId);
+        ToastManager.show('Trade deleted successfully', 'success');
+        closeTradeDetailsModal();
+        
+        // Update UI
+        renderCalendar();
+        updateStats();
+        renderRecentTrades();
+        ChartManager.updateChart();
+        updateMonthlySummary();
+        
+        // If a day is selected, update its summary
+        if (selectedDay) {
+            const day = new Date(selectedDay).getDate();
+            showDaySummary(selectedDay, day);
+        }
+    }
+}
+
+function closeTradeDetailsModal() {
+    document.getElementById('trade-details-modal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function calculateTradeDuration(entryTime, closeTime) {
+    if (!closeTime) return 'Open';
+    
+    const entry = new Date(entryTime);
+    const close = new Date(closeTime);
+    const durationMs = close - entry;
+    
+    const days = Math.floor(durationMs / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((durationMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (days > 0) {
+        return `${days}d ${hours}h`;
+    } else if (hours > 0) {
+        return `${hours}h ${minutes}m`;
+    } else {
+        return `${minutes}m`;
+    }
+}
+
+function goToPreviousMonth() {
+    currentMonth--;
+    if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+    }
+    renderCalendar();
+    updateMonthlySummary();
+    showRecentTrades();
+}
+
+function goToNextMonth() {
+    currentMonth++;
+    if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+    }
+    renderCalendar();
+    updateMonthlySummary();
+    showRecentTrades();
+}
+
+function goToToday() {
+    const today = new Date();
+    currentMonth = today.getMonth();
+    currentYear = today.getFullYear();
+    renderCalendar();
+    updateMonthlySummary();
+    showRecentTrades();
+}
+
+function getMonthName(monthIndex) {
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return months[monthIndex];
+}
+
+// Modal functions
+function openAddTradeModal() {
+    editingTradeId = null;
+    document.getElementById('trade-modal-title').textContent = 'Add New Trade';
+    document.getElementById('trade-form').reset();
+    
+    tradeResult = 'open';
+    const toggleOptions = document.querySelectorAll('.toggle-option');
+    toggleOptions.forEach(opt => opt.classList.remove('selected'));
+    document.querySelector('.toggle-option.open').classList.add('selected');
+    
+    document.getElementById('profit-loss').disabled = true;
+    document.getElementById('profit-loss').value = '';
+    document.getElementById('risk-metrics-preview').style.display = 'none';
+    document.getElementById('screenshot-preview').style.display = 'none';
+    currentScreenshot = null;
+    
+    const today = new Date();
+    const formatForInput = (date) => {
+        return date.toISOString().slice(0, 16);
+    };
+    
+    document.getElementById('entry-time').value = formatForInput(today);
+    
+    // Render confluence checkboxes
+    ConfluenceManager.renderConfluenceCheckboxes();
+    
+    document.getElementById('trade-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function openEditTradeModal(tradeId) {
+    editingTradeId = tradeId;
+    const trade = TradeManager.trades.find(t => t.id === tradeId);
+    
+    if (!trade) return;
+    
+    document.getElementById('trade-modal-title').textContent = 'Edit Trade';
+    document.getElementById('trade-form').reset();
+    
+    document.getElementById('pair').value = trade.pair;
+    document.getElementById('type').value = trade.type;
+    document.getElementById('amount').value = trade.amount;
+    document.getElementById('entry-time').value = trade.entryTime;
+    document.getElementById('category').value = trade.category || 'day';
+    document.getElementById('notes').value = trade.notes || '';
+    
+    if (trade.closeTime) {
+        document.getElementById('close-time').value = trade.closeTime;
+    }
+    
+    const toggleOptions = document.querySelectorAll('.toggle-option');
+    toggleOptions.forEach(opt => opt.classList.remove('selected'));
+    
+    if (trade.status === 'open') {
+        tradeResult = 'open';
+        document.querySelector('.toggle-option.open').classList.add('selected');
+        document.getElementById('profit-loss').disabled = true;
+        document.getElementById('profit-loss').value = '';
+    } else {
+        if (trade.profitLoss > 0) {
+            tradeResult = 'win';
+            document.querySelector('.toggle-option.win').classList.add('selected');
+            document.getElementById('profit-loss').value = Math.abs(trade.profitLoss);
+        } else {
+            tradeResult = 'loss';
+            document.querySelector('.toggle-option.loss').classList.add('selected');
+            document.getElementById('profit-loss').value = Math.abs(trade.profitLoss);
+        }
+        document.getElementById('profit-loss').disabled = false;
+    }
+    
+    // Set screenshot if exists
+    if (trade.screenshots && trade.screenshots.length > 0) {
+        currentScreenshot = trade.screenshots[0];
+        document.getElementById('screenshot-preview').src = currentScreenshot;
+        document.getElementById('screenshot-preview').style.display = 'block';
+    } else {
+        document.getElementById('screenshot-preview').style.display = 'none';
+        currentScreenshot = null;
+    }
+    
+    // Render confluence checkboxes with selected confluences
+    ConfluenceManager.renderConfluenceCheckboxes(trade.confluences || []);
+    
+    updateRiskMetrics();
+    
+    document.getElementById('trade-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('trade-modal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function closeSettingsModal() {
+    document.getElementById('settings-modal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function closeAllTradesModal() {
+    document.getElementById('all-trades-modal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+    // Reset selections when closing modal
+    selectedTradeIds.clear();
+    selectedMobileTradeIds.clear();
+    updateSelectedCount();
+}
+
+function closeHelpModal() {
+    document.getElementById('help-modal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function openSettingsModal() {
+    document.getElementById('settings-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function openHelpModal() {
+    document.getElementById('help-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+// Update the stats function to include P&L percentage
+function updateStats() {
+    const stats = TradeManager.getTradeStats();
+    
+    document.getElementById('total-profit').textContent = `${stats.totalProfit >= 0 ? '+' : ''}$${stats.totalProfit.toFixed(2)}`;
+    document.getElementById('total-profit').className = `stat-value ${stats.totalProfit >= 0 ? 'positive-stat' : 'negative-stat'}`;
+    
+    // Calculate P&L percentage
+    const profitPercent = (stats.totalProfit / settings.initialBalance) * 100;
+    document.getElementById('total-profit-percent').textContent = `${profitPercent >= 0 ? '+' : ''}${profitPercent.toFixed(2)}%`;
+    document.getElementById('total-profit-percent').className = `stat-value ${profitPercent >= 0 ? 'positive-stat' : 'negative-stat'}`;
+    
+    document.getElementById('win-rate').textContent = `${stats.winRate}%`;
+    document.getElementById('total-trades').textContent = stats.totalTrades;
+    document.getElementById('profit-factor').textContent = stats.profitFactor;
+    document.getElementById('risk-reward').textContent = stats.avgRiskReward;
+}
+
+function handleTradeSubmit(e) {
+    e.preventDefault();
+    
+    const pair = document.getElementById('pair').value;
+    const type = document.getElementById('type').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+    const entryTime = document.getElementById('entry-time').value;
+    const closeTime = document.getElementById('close-time').value;
+    const category = document.getElementById('category').value;
+    const notes = document.getElementById('notes').value;
+    const selectedConfluences = ConfluenceManager.getSelectedConfluences();
+    const confluenceScore = ConfluenceManager.calculateConfluenceScore(selectedConfluences);
+    
+    let profitLoss = null;
+    const profitLossAmount = parseFloat(document.getElementById('profit-loss').value) || 0;
+    
+    if (tradeResult === 'win') {
+        profitLoss = profitLossAmount;
+    } else if (tradeResult === 'loss') {
+        profitLoss = -profitLossAmount;
+    }
+    
+    // Auto-close trade if win/loss is selected
+    const status = (tradeResult !== 'open') ? 'closed' : 'open';
+    
+    const entryDate = entryTime.split('T')[0];
+    const displayDate = status === 'closed' && closeTime ? closeTime.split('T')[0] : entryDate;
+    
+    const tradeData = {
+        pair,
+        type,
+        amount,
+        entryTime,
+        closeTime,
+        profitLoss,
+        date: displayDate,
+        entryDate: entryDate,
+        status,
+        category,
+        notes,
+        confluences: selectedConfluences,
+        confluenceScore
+    };
+    
+    // Add screenshot if exists
+    if (currentScreenshot) {
+        tradeData.screenshots = [currentScreenshot];
+    }
+    
+    if (!Validation.validateTradeForm(tradeData)) {
+        Validation.showErrors();
+        return;
+    }
+    
+    // Show loading state
+    document.getElementById('trade-modal-loading').classList.add('show');
+    document.getElementById('save-trade-btn').disabled = true;
+    document.getElementById('save-trade-text').innerHTML = '<div class="loading-spinner"></div> Saving...';
+    
+    setTimeout(() => {
+        if (editingTradeId) {
+            TradeManager.updateTrade(editingTradeId, tradeData);
+            ToastManager.show('Trade updated successfully', 'success');
+        } else {
+            TradeManager.addTrade(tradeData);
+            ToastManager.show('Trade added successfully', 'success');
+        }
+        
+        // Update UI
+        renderCalendar();
+        updateStats();
+        renderRecentTrades();
+        ChartManager.updateChart();
+        updateMonthlySummary();
+        
+        // If a day is selected, update its summary
+        if (selectedDay) {
+            const day = new Date(selectedDay).getDate();
+            showDaySummary(selectedDay, day);
+        }
+        
+        // Close modal
+        closeModal();
+        
+        // Reset loading state
+        document.getElementById('trade-modal-loading').classList.remove('show');
+        document.getElementById('save-trade-btn').disabled = false;
+        document.getElementById('save-trade-text').textContent = 'Save Trade';
+    }, 800);
+}
+
+function deleteTrade(tradeId) {
+    if (confirm('Are you sure you want to delete this trade?')) {
+        TradeManager.deleteTrade(tradeId);
+        ToastManager.show('Trade deleted successfully', 'success');
+        
+        renderCalendar();
+        updateStats();
+        renderRecentTrades();
+        ChartManager.updateChart();
+        updateMonthlySummary();
+        renderAllTradesList();
+        
+        if (selectedDay) {
+            const day = new Date(selectedDay).getDate();
+            showDaySummary(selectedDay, day);
+        }
+    }
+}
+
+// Recent trades functions
+function showRecentTrades() {
+    document.getElementById('right-panel-title').textContent = 'Recent Trades';
+    renderRecentTrades();
+}
+
+function renderRecentTrades() {
+    const rightPanelContent = document.getElementById('right-panel-content');
+    rightPanelContent.innerHTML = '';
+    
+    if (TradeManager.trades.length === 0) {
+        const emptyState = document.createElement('div');
+        emptyState.className = 'trade-item';
+        emptyState.innerHTML = `
+            <div class="trade-info">
+                <div class="trade-pair">No trades yet</div>
+            </div>
+        `;
+        rightPanelContent.appendChild(emptyState);
+        return;
+    }
+    
+    const sortedTrades = [...TradeManager.trades].sort((a, b) => {
+        const dateA = a.status === 'closed' && a.closeTime ? new Date(a.closeTime) : new Date(a.entryTime);
+        const dateB = b.status === 'closed' && b.closeTime ? new Date(b.closeTime) : new Date(b.entryTime);
+        return dateB - dateA;
+    }).slice(0, 5);
+    
+    sortedTrades.forEach(trade => {
+        const tradeEl = document.createElement('div');
+        tradeEl.className = 'trade-item';
+        tradeEl.setAttribute('data-trade-id', trade.id);
+        
+        const profitLossDisplay = trade.status === 'open' ? 
+            'Open' : 
+            `${trade.profitLoss >= 0 ? '+' : ''}$${trade.profitLoss.toFixed(2)}`;
+        
+        const tradeDate = trade.status === 'closed' && trade.closeTime ? 
+            new Date(trade.closeTime) : new Date(trade.entryTime);
+        const formattedDate = formatDate(trade.entryTime);
+        
+        const confluenceScore = trade.confluenceScore || 0;
+        const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
+        
+        tradeEl.innerHTML = `
+            <div class="trade-info">
+                <div class="trade-pair">${trade.pair}</div>
+                <div class="trade-type ${trade.type.toLowerCase()}">${trade.type}</div>
+                <div class="trade-score ${scoreClass}">${confluenceScore}%</div>
+                <div class="trade-date">${formattedDate}</div>
+            </div>
+            <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                ${profitLossDisplay}
+            </div>
+        `;
+        
+        rightPanelContent.appendChild(tradeEl);
+    });
+    
+    // Add click event listeners to trade items
+    document.querySelectorAll('.trade-item[data-trade-id]').forEach(item => {
+        item.addEventListener('click', function() {
+            const tradeId = parseInt(this.getAttribute('data-trade-id'));
+            showTradeDetails(tradeId);
+        });
+    });
+}
+
+// All trades functions
+function openAllTradesModal() {
+    renderAllTradesList();
+    document.getElementById('all-trades-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function renderAllTradesList() {
+    const allTradesListMobile = document.getElementById('all-trades-list-mobile');
+    const allTradesListDesktop = document.getElementById('all-trades-list-desktop');
+    allTradesListMobile.innerHTML = '';
+    allTradesListDesktop.innerHTML = '';
+    
+    // Get search and filter values
+    const searchTerm = document.getElementById('trade-search').value.toLowerCase();
+    const filterValue = document.getElementById('trade-filter').value;
+    
+    // Filter trades
+    let filteredTrades = TradeManager.trades;
+    
+    if (searchTerm) {
+        filteredTrades = filteredTrades.filter(trade => 
+            trade.pair.toLowerCase().includes(searchTerm) ||
+            (trade.notes && trade.notes.toLowerCase().includes(searchTerm))
+        );
+    }
+    
+    if (filterValue !== 'all') {
+        if (filterValue === 'win') {
+            filteredTrades = filteredTrades.filter(trade => 
+                trade.status === 'closed' && trade.profitLoss > 0
+            );
+        } else if (filterValue === 'loss') {
+            filteredTrades = filteredTrades.filter(trade => 
+                trade.status === 'closed' && trade.profitLoss < 0
+            );
+        } else if (filterValue === 'open') {
+            filteredTrades = filteredTrades.filter(trade => trade.status === 'open');
+        }
+    }
+    
+    // Sort by date (newest first)
+    const sortedTrades = filteredTrades.sort((a, b) => {
+        const dateA = a.status === 'closed' && a.closeTime ? new Date(a.closeTime) : new Date(a.entryTime);
+        const dateB = b.status === 'closed' && b.closeTime ? new Date(b.closeTime) : new Date(b.entryTime);
+        return dateB - dateA;
+    });
+    
+    // Mobile version
+    sortedTrades.forEach(trade => {
+        const tradeEl = document.createElement('div');
+        tradeEl.className = 'mobile-trade-item';
+        tradeEl.setAttribute('data-trade-id', trade.id);
+        
+        if (selectedMobileTradeIds.has(trade.id)) {
+            tradeEl.classList.add('selected');
+        }
+        
+        const openDate = new Date(trade.entryTime);
+        const formattedOpenDate = formatDate(trade.entryTime);
+        
+        let formattedCloseDate = 'Open';
+        if (trade.status === 'closed' && trade.closeTime) {
+            formattedCloseDate = formatDate(trade.closeTime);
+        }
+        
+        const confluenceScore = trade.confluenceScore || 0;
+        const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
+        
+        tradeEl.innerHTML = `
+            <div class="mobile-trade-row-1">
+                <div class="mobile-trade-pair">${trade.pair}</div>
+                <div class="mobile-trade-type ${trade.type.toLowerCase()}">${trade.type}</div>
+                <div class="mobile-trade-score ${scoreClass}">${confluenceScore}%</div>
+            </div>
+            <div class="mobile-trade-row-2">
+                <div class="mobile-trade-date">${formattedOpenDate}</div>
+                <div class="mobile-trade-date">${formattedCloseDate}</div>
+                <div class="mobile-trade-pnl ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                    ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                </div>
+            </div>
+        `;
+        
+        allTradesListMobile.appendChild(tradeEl);
+    });
+    
+    // Add event listeners for mobile trades
+    allTradesListMobile.querySelectorAll('.mobile-trade-item').forEach(item => {
+        const tradeId = parseInt(item.getAttribute('data-trade-id'));
+        
+        // Single tap - only show details if nothing is selected
+        item.addEventListener('click', function() {
+            if (selectedMobileTradeIds.size === 0) {
+                showTradeDetails(tradeId);
+            } else {
+                // Toggle selection
+                toggleMobileTradeSelection(tradeId, this);
             }
-        };
-
-        // Trade Management
-        const TradeManager = {
-            trades: [],
-            
-            init() {
-                this.loadTrades();
-            },
-            
-            loadTrades() {
-                const savedTrades = localStorage.getItem('tradeTrackerTrades');
-                if (savedTrades) {
-                    try {
-                        this.trades = JSON.parse(savedTrades);
-                        // Ensure all trades have confluences array
-                        this.trades.forEach(trade => {
-                            if (!trade.confluences) trade.confluences = [];
-                            if (!trade.confluenceScore) trade.confluenceScore = 0;
-                            if (!trade.screenshots) trade.screenshots = [];
-                        });
-                    } catch (error) {
-                        ToastManager.show('Error loading trades data', 'error');
-                    }
-                }
-            },
-            
-            saveTrades() {
-                try {
-                    localStorage.setItem('tradeTrackerTrades', JSON.stringify(this.trades));
-                } catch (error) {
-                    ToastManager.show('Error saving trades data', 'error');
-                }
-            },
-            
-            addTrade(tradeData) {
-                const newTrade = {
-                    id: this.trades.length > 0 ? Math.max(...this.trades.map(t => t.id)) + 1 : 1,
-                    ...tradeData,
-                    createdAt: new Date().toISOString()
-                };
-                
-                this.trades.push(newTrade);
-                this.saveTrades();
-                return newTrade;
-            },
-            
-            updateTrade(tradeId, tradeData) {
-                const index = this.trades.findIndex(t => t.id === tradeId);
-                if (index !== -1) {
-                    this.trades[index] = {
-                        ...this.trades[index],
-                        ...tradeData,
-                        updatedAt: new Date().toISOString()
-                    };
-                    this.saveTrades();
-                    return this.trades[index];
-                }
-                return null;
-            },
-            
-            deleteTrade(tradeId) {
-                this.trades = this.trades.filter(t => t.id !== tradeId);
-                this.saveTrades();
-            },
-            
-            deleteMultipleTrades(tradeIds) {
-                this.trades = this.trades.filter(t => !tradeIds.includes(t.id));
-                this.saveTrades();
-            },
-            
-            calculateRiskMetrics(trade, initialBalance) {
-                if (trade.status === 'open' || !trade.profitLoss) return null;
-                
-                const riskPercent = (trade.amount / initialBalance * 100).toFixed(2);
-                const riskReward = trade.profitLoss > 0 ? 
-                    (trade.profitLoss / trade.amount).toFixed(2) : 
-                    (Math.abs(trade.profitLoss) / trade.amount).toFixed(2);
-                
-                return {
-                    riskPercent,
-                    riskReward
-                };
-            },
-            
-            getTradeStats() {
-                const closedTrades = this.trades.filter(t => t.status === 'closed');
-                const totalProfit = closedTrades.reduce((sum, t) => sum + t.profitLoss, 0);
-                const winningTrades = closedTrades.filter(t => t.profitLoss > 0);
-                const winRate = closedTrades.length > 0 ? 
-                    Math.round((winningTrades.length / closedTrades.length) * 100) : 0;
-                
-                const totalWins = winningTrades.reduce((sum, t) => sum + t.profitLoss, 0);
-                const totalLosses = Math.abs(closedTrades
-                    .filter(t => t.profitLoss < 0)
-                    .reduce((sum, t) => sum + t.profitLoss, 0));
-                const profitFactor = totalLosses > 0 ? 
-                    (totalWins / totalLosses).toFixed(2) : 
-                    totalWins > 0 ? '∞' : '0.00';
-                
-                const avgRiskReward = closedTrades.length > 0 ?
-                    (closedTrades.reduce((sum, t) => {
-                        const metrics = this.calculateRiskMetrics(t, settings.initialBalance);
-                        return sum + (metrics ? parseFloat(metrics.riskReward) : 0);
-                    }, 0) / closedTrades.length).toFixed(2) : '0.00';
-                
-                // Calculate profit percentage
-                const profitPercent = (totalProfit / settings.initialBalance) * 100;
-                
-                return {
-                    totalProfit,
-                    profitPercent,
-                    totalTrades: this.trades.length,
-                    winRate,
-                    profitFactor,
-                    avgRiskReward,
-                    closedTrades: closedTrades.length,
-                    winningTrades: winningTrades.length
-                };
+        });
+        
+        // Long press to select
+        item.addEventListener('touchstart', function(e) {
+            longPressTimer = setTimeout(() => {
+                toggleMobileTradeSelection(tradeId, this);
+                e.preventDefault();
+            }, 500);
+        });
+        
+        item.addEventListener('touchend', function() {
+            clearTimeout(longPressTimer);
+        });
+        
+        item.addEventListener('touchmove', function() {
+            clearTimeout(longPressTimer);
+        });
+    });
+    
+    // Desktop version
+    sortedTrades.forEach(trade => {
+        const tradeEl = document.createElement('div');
+        tradeEl.className = 'trade-management-item';
+        
+        const tradeDate = trade.status === 'closed' && trade.closeTime ? 
+            new Date(trade.closeTime) : new Date(trade.entryTime);
+        const formattedDate = formatDate(trade.entryTime);
+        
+        const categoryClass = trade.category ? `category-${trade.category}` : '';
+        const categoryName = trade.category ? trade.category.charAt(0).toUpperCase() + trade.category.slice(1) : '';
+        const confluenceScore = trade.confluenceScore || 0;
+        const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
+        
+        const isChecked = selectedTradeIds.has(trade.id);
+        
+        tradeEl.innerHTML = `
+            <div class="trade-management-info">
+                <input type="checkbox" class="trade-checkbox" value="${trade.id}" ${isChecked ? 'checked' : ''}>
+                <div class="trade-management-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
+                <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
+                <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                    ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                </div>
+                <div class="trade-management-date">${formattedDate}</div>
+                <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
+                <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
+            </div>
+            <div class="trade-management-actions">
+                <button class="action-btn edit-btn" data-id="${trade.id}">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="action-btn delete-btn" data-id="${trade.id}">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        `;
+        
+        allTradesListDesktop.appendChild(tradeEl);
+    });
+    
+    // Add event listeners to desktop checkboxes
+    allTradesListDesktop.querySelectorAll('.trade-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const tradeId = parseInt(this.value);
+            if (this.checked) {
+                selectedTradeIds.add(tradeId);
+            } else {
+                selectedTradeIds.delete(tradeId);
             }
-        };
+            updateSelectedCount();
+        });
+    });
+    
+    // Add event listeners to desktop edit and delete buttons
+    allTradesListDesktop.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tradeId = parseInt(this.getAttribute('data-id'));
+            closeAllTradesModal();
+            openEditTradeModal(tradeId);
+        });
+    });
+    
+    allTradesListDesktop.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tradeId = parseInt(this.getAttribute('data-id'));
+            deleteTrade(tradeId);
+        });
+    });
+    
+    // Show/hide desktop/mobile based on screen size
+    if (window.innerWidth <= 768) {
+        allTradesListDesktop.style.display = 'none';
+        allTradesListMobile.style.display = 'block';
+        document.getElementById('desktop-bulk-actions').style.display = 'none';
+        document.getElementById('mobile-bulk-actions').style.display = 'grid';
+    } else {
+        allTradesListDesktop.style.display = 'block';
+        allTradesListMobile.style.display = 'none';
+        document.getElementById('desktop-bulk-actions').style.display = 'grid';
+        document.getElementById('mobile-bulk-actions').style.display = 'none';
+    }
+    
+    updateSelectedCount();
+}
 
-        // Settings Management
-        const SettingsManager = {
-            settings: {
-                initialBalance: 5000,
-                darkMode: false
-            },
+// Mobile trade selection functions
+function toggleMobileTradeSelection(tradeId, element) {
+    if (selectedMobileTradeIds.has(tradeId)) {
+        selectedMobileTradeIds.delete(tradeId);
+        element.classList.remove('selected');
+    } else {
+        selectedMobileTradeIds.add(tradeId);
+        element.classList.add('selected');
+    }
+    updateSelectedCount();
+}
+
+function selectAllTrades() {
+    // Get filtered trades
+    const searchTerm = document.getElementById('trade-search').value.toLowerCase();
+    const filterValue = document.getElementById('trade-filter').value;
+    
+    let filteredTrades = TradeManager.trades;
+    
+    if (searchTerm) {
+        filteredTrades = filteredTrades.filter(trade => 
+            trade.pair.toLowerCase().includes(searchTerm) ||
+            (trade.notes && trade.notes.toLowerCase().includes(searchTerm))
+        );
+    }
+    
+    if (filterValue !== 'all') {
+        if (filterValue === 'win') {
+            filteredTrades = filteredTrades.filter(trade => 
+                trade.status === 'closed' && trade.profitLoss > 0
+            );
+        } else if (filterValue === 'loss') {
+            filteredTrades = filteredTrades.filter(trade => 
+                trade.status === 'closed' && trade.profitLoss < 0
+            );
+        } else if (filterValue === 'open') {
+            filteredTrades = filteredTrades.filter(trade => trade.status === 'open');
+        }
+    }
+    
+    // Select all filtered trades
+    filteredTrades.forEach(trade => {
+        selectedTradeIds.add(trade.id);
+        selectedMobileTradeIds.add(trade.id);
+    });
+    
+    renderAllTradesList();
+}
+
+function deselectAllTrades() {
+    selectedTradeIds.clear();
+    selectedMobileTradeIds.clear();
+    renderAllTradesList();
+}
+
+function deleteSelectedTrades() {
+    const selectedIds = window.innerWidth <= 768 ? 
+        Array.from(selectedMobileTradeIds) : 
+        Array.from(selectedTradeIds);
+    
+    if (selectedIds.length === 0) {
+        ToastManager.show('No trades selected', 'warning');
+        return;
+    }
+    
+    if (confirm(`Are you sure you want to delete ${selectedIds.length} trade(s)?`)) {
+        TradeManager.deleteMultipleTrades(selectedIds);
+        ToastManager.show(`${selectedIds.length} trade(s) deleted successfully`, 'success');
+        
+        // Clear selections
+        selectedTradeIds.clear();
+        selectedMobileTradeIds.clear();
+        
+        // Update UI
+        renderCalendar();
+        updateStats();
+        renderRecentTrades();
+        ChartManager.updateChart();
+        updateMonthlySummary();
+        renderAllTradesList();
+        
+        if (selectedDay) {
+            const day = new Date(selectedDay).getDate();
+            showDaySummary(selectedDay, day);
+        }
+    }
+}
+
+function deleteAllTrades() {
+    if (TradeManager.trades.length === 0) {
+        ToastManager.show('No trades to delete', 'warning');
+        return;
+    }
+    
+    if (confirm(`Are you sure you want to delete ALL ${TradeManager.trades.length} trades? This action cannot be undone.`)) {
+        TradeManager.trades = [];
+        TradeManager.saveTrades();
+        ToastManager.show('All trades deleted successfully', 'success');
+        
+        // Clear selections
+        selectedTradeIds.clear();
+        selectedMobileTradeIds.clear();
+        
+        // Update UI
+        renderCalendar();
+        updateStats();
+        renderRecentTrades();
+        ChartManager.updateChart();
+        updateMonthlySummary();
+        renderAllTradesList();
+        
+        if (selectedDay) {
+            const day = new Date(selectedDay).getDate();
+            showDaySummary(selectedDay, day);
+        }
+    }
+}
+
+function updateSelectedCount() {
+    const selectedCount = window.innerWidth <= 768 ? 
+        selectedMobileTradeIds.size : 
+        selectedTradeIds.size;
+    
+    document.getElementById('selected-count').textContent = `${selectedCount} trade(s) selected`;
+}
+
+// Update the monthly summary function
+function updateMonthlySummary() {
+    const monthTrades = TradeManager.trades.filter(trade => {
+        const tradeDate = new Date(trade.status === 'closed' && trade.closeTime ? trade.closeTime : trade.entryTime);
+        return tradeDate.getMonth() === currentMonth && tradeDate.getFullYear() === currentYear;
+    });
+    
+    const closedMonthTrades = monthTrades.filter(trade => trade.status === 'closed');
+    const monthlyProfit = closedMonthTrades.reduce((sum, trade) => sum + trade.profitLoss, 0);
+    const winningMonthTrades = closedMonthTrades.filter(trade => trade.profitLoss > 0).length;
+    const monthlyWinRate = closedMonthTrades.length > 0 ? Math.round((winningMonthTrades / closedMonthTrades.length) * 100) : 0;
+    
+    const monthlyWins = closedMonthTrades.filter(t => t.profitLoss > 0).reduce((sum, t) => sum + t.profitLoss, 0);
+    const monthlyLosses = Math.abs(closedMonthTrades.filter(t => t.profitLoss < 0).reduce((sum, t) => sum + t.profitLoss, 0));
+    const monthlyProfitFactor = monthlyLosses > 0 ? (monthlyWins / monthlyLosses).toFixed(2) : monthlyWins > 0 ? '∞' : '0.00';
+    
+    // Calculate monthly P&L percentage
+    const monthlyProfitPercent = (monthlyProfit / settings.initialBalance) * 100;
+    
+    document.getElementById('monthly-profit').textContent = `${monthlyProfit >= 0 ? '+' : ''}$${monthlyProfit.toFixed(2)}`;
+    document.getElementById('monthly-profit').className = `summary-value ${monthlyProfit >= 0 ? 'positive-stat' : 'negative-stat'}`;
+    
+    document.getElementById('monthly-profit-percent').textContent = `${monthlyProfitPercent >= 0 ? '+' : ''}${monthlyProfitPercent.toFixed(2)}%`;
+    document.getElementById('monthly-profit-percent').className = `summary-value ${monthlyProfitPercent >= 0 ? 'positive-stat' : 'negative-stat'}`;
+    
+    document.getElementById('monthly-trades').textContent = monthTrades.length;
+    document.getElementById('monthly-win-rate').textContent = `${monthlyWinRate}%`;
+    document.getElementById('monthly-profit-factor').textContent = monthlyProfitFactor;
+    document.getElementById('monthly-closed-trades').textContent = closedMonthTrades.length;
+}
+
+// Settings functions
+function toggleDarkMode() {
+    settings.darkMode = document.getElementById('dark-mode-toggle').checked;
+    SettingsManager.updateSetting('darkMode', settings.darkMode);
+    
+    if (settings.darkMode) {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+    }
+    
+    // Update chart with new theme
+    ChartManager.updateChart();
+}
+
+function handleSaveBalance() {
+    const balance = parseFloat(document.getElementById('initial-balance').value);
+    if (!isNaN(balance) && balance >= 0) {
+        settings.initialBalance = balance;
+        if (SettingsManager.updateSetting('initialBalance', balance)) {
+            ToastManager.show('Initial balance updated successfully!', 'success');
+            updateStats();
+            ChartManager.updateChart();
+        }
+    } else {
+        ToastManager.show('Please enter a valid balance amount.', 'error');
+    }
+}
+
+function handleExportExcel() {
+    if (TradeManager.trades.length === 0) {
+        ToastManager.show('No trades to export.', 'warning');
+        return;
+    }
+    
+    const exportData = TradeManager.trades.map(trade => ({
+        'Trade ID': trade.id,
+        'Pair': trade.pair,
+        'Type': trade.type,
+        'Amount Risked': trade.amount,
+        'Entry Time': trade.entryTime,
+        'Close Time': trade.closeTime || 'Open',
+        'Profit/Loss': trade.profitLoss || 'Open',
+        'Status': trade.status,
+        'Category': trade.category || '',
+        'Confluences': (trade.confluences || []).map(id => {
+            const confluence = ConfluenceManager.confluences.find(c => c.id === id);
+            return confluence ? confluence.name : 'Unknown';
+        }).join(', '),
+        'Confluence Score': trade.confluenceScore || 0,
+        'Notes': trade.notes || '',
+        'Entry Date': trade.entryDate,
+        'Display Date': trade.date
+    }));
+    
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Trades');
+    
+    const fileName = `TradeJournal_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+    ToastManager.show('Trades exported successfully!', 'success');
+}
+
+function handleImportExcel(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const importStatus = document.getElementById('import-status');
+    importStatus.textContent = 'Importing...';
+    importStatus.style.color = 'var(--neutral-color)';
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
             
-            init() {
-                this.loadSettings();
-            },
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet);
             
-            loadSettings() {
-                const savedSettings = localStorage.getItem('tradeTrackerSettings');
-                if (savedSettings) {
-                    try {
-                        this.settings = { ...this.settings, ...JSON.parse(savedSettings) };
-                    } catch (error) {
-                        ToastManager.show('Error loading settings', 'error');
-                    }
-                }
-            },
-            
-            saveSettings() {
-                try {
-                    localStorage.setItem('tradeTrackerSettings', JSON.stringify(this.settings));
-                    return true;
-                } catch (error) {
-                    ToastManager.show('Error saving settings', 'error');
-                    return false;
-                }
-            },
-            
-            updateSetting(key, value) {
-                this.settings[key] = value;
-                return this.saveSettings();
+            if (jsonData.length === 0) {
+                importStatus.textContent = 'No data found in file.';
+                importStatus.style.color = 'var(--loss-color)';
+                return;
             }
-        };
-
-        // Keyboard Shortcuts
-        const KeyboardManager = {
-            init() {
-                document.addEventListener('keydown', this.handleKeyPress.bind(this));
-            },
             
-            handleKeyPress(event) {
-                if (event.target.tagName === 'INPUT' || 
-                    event.target.tagName === 'TEXTAREA' || 
-                    event.target.isContentEditable) {
+            let importedCount = 0;
+            let skippedCount = 0;
+            
+            jsonData.forEach(row => {
+                if (!row.Pair || !row.Type || row['Amount Risked'] === undefined) {
+                    skippedCount++;
                     return;
                 }
                 
-                const hasModifier = event.ctrlKey || event.metaKey || event.altKey;
+                const hasCloseTime = row['Close Time'] && row['Close Time'] !== 'Open';
+                const hasProfitLoss = row['Profit/Loss'] !== undefined && row['Profit/Loss'] !== 'Open';
+                const status = hasCloseTime && hasProfitLoss ? 'closed' : 'open';
                 
-                switch (event.key.toLowerCase()) {
-                    case 'n':
-                        if (!hasModifier) {
-                            event.preventDefault();
-                            document.getElementById('add-trade-btn').click();
-                        }
-                        break;
-                    case 's':
-                        if (!hasModifier) {
-                            event.preventDefault();
-                            document.getElementById('settings-btn').click();
-                        }
-                        break;
-                    case 'a':
-                        if (!hasModifier) {
-                            event.preventDefault();
-                            document.getElementById('view-all-trades').click();
-                        }
-                        break;
-                    case 'd':
-                        if (!hasModifier) {
-                            event.preventDefault();
-                            document.getElementById('dark-mode-toggle').click();
-                        }
-                        break;
-                    case 't':
-                        if (!hasModifier) {
-                            event.preventDefault();
-                            document.getElementById('today-btn').click();
-                        }
-                        break;
-                    case 'escape':
-                        this.closeActiveModal();
-                        break;
-                    case '?':
-                        event.preventDefault();
-                        document.getElementById('help-btn').click();
-                        break;
+                let displayDate;
+                if (row['Display Date']) {
+                    displayDate = row['Display Date'];
+                } else if (hasCloseTime) {
+                    displayDate = new Date(row['Close Time']).toISOString().split('T')[0];
+                } else {
+                    displayDate = new Date(row['Entry Time']).toISOString().split('T')[0];
                 }
-            },
-            
-            closeActiveModal() {
-                const modals = document.querySelectorAll('.modal');
-                for (let modal of modals) {
-                    if (modal.style.display === 'flex') {
-                        modal.style.display = 'none';
-                        document.body.style.overflow = 'auto';
-                        break;
-                    }
+                
+                // Parse confluences from string to array of IDs
+                let confluences = [];
+                if (row.Confluences) {
+                    const confluenceNames = row.Confluences.split(', ');
+                    confluences = confluenceNames.map(name => {
+                        const confluence = ConfluenceManager.confluences.find(c => c.name === name);
+                        return confluence ? confluence.id : null;
+                    }).filter(id => id !== null);
                 }
-            }
-        };
-
-        // Global variables
-        let currentDate = new Date();
-        let currentMonth = currentDate.getMonth();
-        let currentYear = currentDate.getFullYear();
-        let editingTradeId = null;
-        let selectedDay = null;
-        let selectedTradeIds = new Set();
-        let tradeResult = 'open';
-        let settings = SettingsManager.settings;
-        let currentScreenshot = null;
-        let selectedMobileTradeId = null;
-        let longPressTimer = null;
-
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize all managers
-            ToastManager.init();
-            TradeManager.init();
-            SettingsManager.init();
-            ConfluenceManager.init();
-            KeyboardManager.init();
+                
+                const trade = {
+                    id: TradeManager.trades.length > 0 ? Math.max(...TradeManager.trades.map(t => t.id)) + 1 : 1,
+                    pair: row.Pair,
+                    type: row.Type,
+                    amount: parseFloat(row['Amount Risked']),
+                    entryTime: row['Entry Time'],
+                    closeTime: hasCloseTime ? row['Close Time'] : '',
+                    profitLoss: hasProfitLoss ? parseFloat(row['Profit/Loss']) : null,
+                    date: displayDate,
+                    entryDate: new Date(row['Entry Time']).toISOString().split('T')[0],
+                    status: status,
+                    category: row.Category || 'day',
+                    notes: row.Notes || '',
+                    confluences: confluences,
+                    confluenceScore: row['Confluence Score'] || 0,
+                    screenshots: []
+                };
+                
+                TradeManager.trades.push(trade);
+                importedCount++;
+            });
             
-            // Load settings first to ensure theme is set before rendering chart
-            const savedSettings = localStorage.getItem('tradeTrackerSettings');
-            if (savedSettings) {
-                settings = JSON.parse(savedSettings);
-                document.getElementById('dark-mode-toggle').checked = settings.darkMode;
-                document.getElementById('initial-balance').value = settings.initialBalance;
-                if (settings.darkMode) {
-                    document.body.classList.add('dark-mode');
-                }
-            }
+            TradeManager.saveTrades();
             
-            // Set up UI - initialize chart AFTER theme is set
             renderCalendar();
             updateStats();
             renderRecentTrades();
-            ChartManager.init(); // Initialize chart with empty data
-            ChartManager.updateChart(); // Update with actual data after theme is set
-            updateMonthlySummary();
-            ConfluenceManager.renderConfluenceList();
-            
-            // Set up event listeners
-            setupEventListeners();
-            
-            // Show welcome message
-            setTimeout(() => {
-                ToastManager.show('TradeTracker Pro loaded successfully!', 'info', 4000);
-            }, 500);
-        });
-
-        // Event Listeners Setup
-        function setupEventListeners() {
-            // Modal controls
-            document.getElementById('settings-btn').addEventListener('click', openSettingsModal);
-            document.getElementById('add-trade-btn').addEventListener('click', openAddTradeModal);
-            document.getElementById('help-btn').addEventListener('click', openHelpModal);
-            document.getElementById('close-modal').addEventListener('click', closeModal);
-            document.getElementById('cancel-trade').addEventListener('click', closeModal);
-            document.getElementById('close-settings').addEventListener('click', closeSettingsModal);
-            document.getElementById('close-all-trades').addEventListener('click', closeAllTradesModal);
-            document.getElementById('close-help').addEventListener('click', closeHelpModal);
-            document.getElementById('close-trade-details').addEventListener('click', closeTradeDetailsModal);
-            document.getElementById('close-screenshot').addEventListener('click', closeScreenshotModal);
-            document.getElementById('edit-trade-btn').addEventListener('click', handleEditTradeFromDetails);
-            
-            // Calendar controls
-            document.getElementById('prev-month').addEventListener('click', goToPreviousMonth);
-            document.getElementById('next-month').addEventListener('click', goToNextMonth);
-            document.getElementById('today-btn').addEventListener('click', goToToday);
-            
-            // Form submissions
-            document.getElementById('trade-form').addEventListener('submit', handleTradeSubmit);
-            document.getElementById('save-balance').addEventListener('click', handleSaveBalance);
-            
-            // Confluence management
-            document.getElementById('add-confluence').addEventListener('click', handleAddConfluence);
-            
-            // Screenshot handling
-            document.getElementById('screenshot').addEventListener('change', handleScreenshotUpload);
-            
-            // Data management
-            document.getElementById('export-excel').addEventListener('click', handleExportExcel);
-            document.getElementById('import-excel').addEventListener('change', handleImportExcel);
-            document.getElementById('view-all-trades').addEventListener('click', openAllTradesModal);
-            
-            // Theme toggle - update chart when theme changes
-            document.getElementById('dark-mode-toggle').addEventListener('change', function() {
-                toggleDarkMode();
-                // Force chart update after theme change
-                setTimeout(() => {
-                    ChartManager.updateChart();
-                }, 100);
-            });
-            
-            // Trade result toggle
-            initTradeResultToggle();
-            
-            // Real-time validation
-            document.getElementById('amount').addEventListener('input', updateRiskMetrics);
-            document.getElementById('profit-loss').addEventListener('input', updateRiskMetrics);
-            
-            // Mobile-specific event listeners
-            document.getElementById('mobile-edit-trade').addEventListener('click', function() {
-                if (selectedMobileTradeId) {
-                    closeAllTradesModal();
-                    openEditTradeModal(selectedMobileTradeId);
-                }
-            });
-            
-            document.getElementById('mobile-delete-trade').addEventListener('click', function() {
-                if (selectedMobileTradeId) {
-                    deleteTrade(selectedMobileTradeId);
-                    closeAllTradesModal();
-                }
-            });
-            
-            // Handle window resize to toggle between mobile/desktop views
-            window.addEventListener('resize', function() {
-                renderAllTradesList();
-            });
-            
-            // Close modals when clicking outside
-            window.addEventListener('click', function(e) {
-                if (e.target.classList.contains('modal')) {
-                    e.target.style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                }
-            });
-        }
-
-        // Initialize trade result toggle
-        function initTradeResultToggle() {
-            const toggleOptions = document.querySelectorAll('.toggle-option');
-            toggleOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    toggleOptions.forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                    tradeResult = this.getAttribute('data-value');
-                    
-                    const profitLossInput = document.getElementById('profit-loss');
-                    if (tradeResult === 'open') {
-                        profitLossInput.disabled = true;
-                        profitLossInput.value = '';
-                    } else {
-                        profitLossInput.disabled = false;
-                        // Auto-close trade if win/loss is selected
-                        if (!document.getElementById('close-time').value) {
-                            const now = new Date();
-                            document.getElementById('close-time').value = now.toISOString().slice(0, 16);
-                        }
-                    }
-                    
-                    updateRiskMetrics();
-                });
-            });
-        }
-
-        // Update risk metrics in real-time
-        function updateRiskMetrics() {
-            const amount = parseFloat(document.getElementById('amount').value) || 0;
-            const profitLoss = parseFloat(document.getElementById('profit-loss').value) || 0;
-            const riskMetrics = document.getElementById('risk-metrics-preview');
-            
-            if (amount > 0 && tradeResult !== 'open') {
-                const riskPercent = (amount / settings.initialBalance * 100).toFixed(2);
-                const riskReward = (profitLoss / amount).toFixed(2);
-                
-                document.getElementById('risk-reward-preview').textContent = riskReward;
-                document.getElementById('risk-percent-preview').textContent = riskPercent + '%';
-                riskMetrics.style.display = 'block';
-            } else {
-                riskMetrics.style.display = 'none';
-            }
-        }
-
-        // Confluence management
-        function handleAddConfluence() {
-            const confluenceInput = document.getElementById('new-confluence');
-            const name = confluenceInput.value.trim();
-            
-            if (!name) {
-                ToastManager.show('Please enter a confluence name', 'warning');
-                return;
-            }
-            
-            ConfluenceManager.addConfluence(name);
-            ConfluenceManager.renderConfluenceList();
-            confluenceInput.value = '';
-            ToastManager.show('Confluence added successfully', 'success');
-        }
-
-        // Screenshot handling
-        function handleScreenshotUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                currentScreenshot = e.target.result;
-                document.getElementById('screenshot-preview').src = currentScreenshot;
-                document.getElementById('screenshot-preview').style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function showScreenshotFull(screenshotData) {
-            document.getElementById('screenshot-full-container').innerHTML = `
-                <img src="${screenshotData}" class="screenshot-full" alt="Trade screenshot">
-            `;
-            document.getElementById('screenshot-modal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeScreenshotModal() {
-            document.getElementById('screenshot-modal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        // Calendar functions
-        function renderCalendar() {
-            const calendarEl = document.getElementById('calendar');
-            calendarEl.innerHTML = '';
-            
-            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            days.forEach(day => {
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'day-header';
-                dayHeader.textContent = day;
-                calendarEl.appendChild(dayHeader);
-            });
-            
-            const monthYear = `${getMonthName(currentMonth)} ${currentYear}`;
-            document.getElementById('current-month').textContent = monthYear;
-            document.getElementById('summary-month').textContent = monthYear;
-            
-            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-            const prevMonthLastDay = new Date(currentYear, currentMonth, 0).getDate();
-            
-            // Create document fragment for better performance
-            const fragment = document.createDocumentFragment();
-            
-            for (let i = firstDay - 1; i >= 0; i--) {
-                const dayEl = document.createElement('div');
-                dayEl.className = 'day prev-month-day';
-                const dayNumber = document.createElement('div');
-                dayNumber.className = 'day-number';
-                dayNumber.textContent = prevMonthLastDay - i;
-                dayEl.appendChild(dayNumber);
-                fragment.appendChild(dayEl);
-            }
-            
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayEl = document.createElement('div');
-                dayEl.className = 'day';
-                
-                const today = new Date();
-                if (day === today.getDate() && 
-                    currentMonth === today.getMonth() && 
-                    currentYear === today.getFullYear()) {
-                    dayEl.classList.add('today');
-                }
-                
-                const dayNumber = document.createElement('div');
-                dayNumber.className = 'day-number';
-                dayNumber.textContent = day;
-                dayEl.appendChild(dayNumber);
-                
-                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const dailyTrades = getTradesForDay(dateStr);
-                const closedTrades = dailyTrades.filter(trade => trade.status === 'closed');
-                const dailyProfitLoss = closedTrades.reduce((sum, trade) => sum + trade.profitLoss, 0);
-                
-                if (closedTrades.length > 0) {
-                    const pnlEl = document.createElement('div');
-                    pnlEl.className = dailyProfitLoss >= 0 ? 'profit' : 'loss';
-                    pnlEl.textContent = dailyProfitLoss >= 0 ? `+$${dailyProfitLoss.toFixed(2)}` : `-$${Math.abs(dailyProfitLoss).toFixed(2)}`;
-                    dayEl.appendChild(pnlEl);
-                }
-                
-                if (dailyTrades.length > 0) {
-                    const tradeCount = document.createElement('div');
-                    tradeCount.className = 'trade-count';
-                    tradeCount.textContent = `${dailyTrades.length} trade${dailyTrades.length > 1 ? 's' : ''}`;
-                    dayEl.appendChild(tradeCount);
-                }
-                
-                dayEl.addEventListener('click', function() {
-                    showDaySummary(dateStr, day);
-                });
-                
-                fragment.appendChild(dayEl);
-            }
-            
-            const totalCells = 42;
-            const cellsUsed = firstDay + daysInMonth;
-            const nextMonthDays = totalCells - cellsUsed;
-            
-            for (let day = 1; day <= nextMonthDays; day++) {
-                const dayEl = document.createElement('div');
-                dayEl.className = 'day prev-month-day';
-                const dayNumber = document.createElement('div');
-                dayNumber.className = 'day-number';
-                dayNumber.textContent = day;
-                dayEl.appendChild(dayNumber);
-                fragment.appendChild(dayEl);
-            }
-            
-            calendarEl.appendChild(fragment);
-        }
-
-        function getTradesForDay(dateStr) {
-            return TradeManager.trades.filter(trade => {
-                if (trade.status === 'open') {
-                    return trade.date === dateStr;
-                } else {
-                    const closeDate = trade.closeTime ? trade.closeTime.split('T')[0] : null;
-                    return closeDate === dateStr;
-                }
-            });
-        }
-
-        function showDaySummary(dateStr, day) {
-            selectedDay = dateStr;
-            const dailyTrades = getTradesForDay(dateStr);
-            const closedTrades = dailyTrades.filter(trade => trade.status === 'closed');
-            const dailyProfitLoss = closedTrades.reduce((sum, trade) => sum + trade.profitLoss, 0);
-            const winningTrades = closedTrades.filter(trade => trade.profitLoss > 0).length;
-            const winRate = closedTrades.length > 0 ? Math.round((winningTrades / closedTrades.length) * 100) : 0;
-            
-            const dateObj = new Date(dateStr);
-            const monthName = getMonthName(dateObj.getMonth());
-            
-            document.getElementById('right-panel-title').textContent = `Summary: ${monthName} ${day}`;
-            document.getElementById('right-panel-content').innerHTML = `
-                <div class="day-summary">
-                    <div class="day-summary-stats">
-                        <div class="day-summary-stat">
-                            <div class="day-summary-value ${dailyProfitLoss >= 0 ? 'positive-stat' : 'negative-stat'}">
-                                ${dailyProfitLoss >= 0 ? '+' : ''}$${dailyProfitLoss.toFixed(2)}
-                            </div>
-                            <div class="day-summary-label">Daily P&L</div>
-                        </div>
-                        <div class="day-summary-stat">
-                            <div class="day-summary-value">${dailyTrades.length}</div>
-                            <div class="day-summary-label">Total Trades</div>
-                        </div>
-                        <div class="day-summary-stat">
-                            <div class="day-summary-value">${winRate}%</div>
-                            <div class="day-summary-label">Win Rate</div>
-                        </div>
-                        <div class="day-summary-stat">
-                            <div class="day-summary-value">${closedTrades.length}</div>
-                            <div class="day-summary-label">Closed Trades</div>
-                        </div>
-                    </div>
-                    <div class="day-trades-list">
-                        ${dailyTrades.length > 0 ? 
-                            dailyTrades.map(trade => {
-                                const duration = calculateTradeDuration(trade.entryTime, trade.closeTime);
-                                const confluenceScore = trade.confluenceScore || 0;
-                                const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
-                                
-                                // Risk to reward for closed trades
-                                let riskReward = 'Open';
-                                if (trade.status === 'closed' && trade.amount > 0) {
-                                    const rr = (trade.profitLoss / trade.amount).toFixed(2);
-                                    riskReward = trade.profitLoss >= 0 ? `+${rr}` : rr;
-                                }
-                                
-                                return `
-                                <div class="day-trade-item" data-trade-id="${trade.id}">
-                                    <div class="trade-info">
-                                        <div class="day-trade-main-info">
-                                            <div class="trade-pair">${trade.pair}</div>
-                                            <div class="trade-type ${trade.type.toLowerCase()}">${trade.type}</div>
-                                        </div>
-                                        <div class="day-trade-secondary-info">
-                                            <div class="trade-score ${scoreClass}">${confluenceScore}%</div>
-                                            <div class="risk-reward">${riskReward}</div>
-                                        </div>
-                                    </div>
-                                    <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
-                                        ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
-                                    </div>
-                                </div>
-                                `;
-                            }).join('') : 
-                            '<p style="text-align: center; color: var(--neutral-color); padding: 20px;">No trades for this day</p>'
-                        }
-                    </div>
-                </div>
-            `;
-            
-            // Add click event listeners to trade items
-            document.querySelectorAll('.day-trade-item[data-trade-id]').forEach(item => {
-                item.addEventListener('click', function() {
-                    const tradeId = parseInt(this.getAttribute('data-trade-id'));
-                    showTradeDetails(tradeId);
-                });
-            });
-            
-            // Scroll to day summary on mobile
-            if (window.innerWidth <= 768) {
-                setTimeout(() => {
-                    document.getElementById('right-panel').scrollIntoView({ 
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }, 100);
-            }
-        }
-
-        function showTradeDetails(tradeId) {
-            const trade = TradeManager.trades.find(t => t.id === tradeId);
-            if (!trade) return;
-            
-            document.getElementById('trade-details-title').textContent = `Trade Details: ${trade.pair}`;
-            document.getElementById('edit-trade-btn').setAttribute('data-trade-id', tradeId);
-            
-            const confluenceNames = ConfluenceManager.getConfluenceNames(trade.confluences || []);
-            const confluenceScore = trade.confluenceScore || 0;
-            const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
-            
-            let screenshotsHtml = '';
-            if (trade.screenshots && trade.screenshots.length > 0) {
-                screenshotsHtml = `
-                    <div class="trade-detail-item">
-                        <div class="trade-detail-label">Screenshots:</div>
-                        <div class="trade-detail-value">
-                            ${trade.screenshots.map((screenshot, index) => `
-                                <img src="${screenshot}" class="screenshot-thumbnail" alt="Screenshot ${index + 1}" data-screenshot="${screenshot}">
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-            
-            document.getElementById('trade-details-content').innerHTML = `
-                <div class="trade-detail-item">
-                    <div class="trade-detail-label">Trading Pair:</div>
-                    <div class="trade-detail-value">${trade.pair}</div>
-                </div>
-                <div class="trade-detail-item">
-                    <div class="trade-detail-label">Type:</div>
-                    <div class="trade-detail-value">${trade.type}</div>
-                </div>
-                <div class="trade-detail-item">
-                    <div class="trade-detail-label">Amount Risked:</div>
-                    <div class="trade-detail-value">$${trade.amount.toFixed(2)}</div>
-                </div>
-                <div class="trade-detail-item">
-                    <div class="trade-detail-label">Entry Time:</div>
-                    <div class="trade-detail-value">${formatDateTime(trade.entryTime)}</div>
-                </div>
-                ${trade.closeTime ? `
-                <div class="trade-detail-item">
-                    <div class="trade-detail-label">Close Time:</div>
-                    <div class="trade-detail-value">${formatDateTime(trade.closeTime)}</div>
-                </div>
-                ` : ''}
-                <div class="trade-detail-item">
-                    <div class="trade-detail-label">Status:</div>
-                    <div class="trade-detail-value">${trade.status}</div>
-                </div>
-                ${trade.profitLoss !== null ? `
-                <div class="trade-detail-item">
-                    <div class="trade-detail-label">Profit/Loss:</div>
-                    <div class="trade-detail-value ${trade.profitLoss >= 0 ? 'positive-stat' : 'negative-stat'}">
-                        ${trade.profitLoss >= 0 ? '+' : ''}$${trade.profitLoss.toFixed(2)}
-                    </div>
-                </div>
-                ` : ''}
-                ${trade.category ? `
-                <div class="trade-detail-item">
-                    <div class="trade-detail-label">Category:</div>
-                    <div class="trade-detail-value">${trade.category.charAt(0).toUpperCase() + trade.category.slice(1)}</div>
-                </div>
-                ` : ''}
-                <div class="trade-confluence-score ${scoreClass}">
-                    Confluence Score: ${confluenceScore}%
-                </div>
-                ${confluenceNames.length > 0 ? `
-                <div class="trade-confluences">
-                    <h4 style="margin-bottom: 10px;">Confluences Met:</h4>
-                    <ul style="padding-left: 20px;">
-                        ${confluenceNames.map(name => `<li>${name}</li>`).join('')}
-                    </ul>
-                </div>
-                ` : ''}
-                ${screenshotsHtml}
-                ${trade.notes ? `
-                <div class="trade-detail-item">
-                    <div class="trade-detail-label">Notes:</div>
-                    <div class="trade-detail-value">${trade.notes}</div>
-                </div>
-                ` : ''}
-            `;
-            
-            // Add click event listeners to screenshot thumbnails
-            document.querySelectorAll('.screenshot-thumbnail').forEach(thumbnail => {
-                thumbnail.addEventListener('click', function() {
-                    const screenshotData = this.getAttribute('data-screenshot');
-                    showScreenshotFull(screenshotData);
-                });
-            });
-            
-            document.getElementById('trade-details-modal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function handleEditTradeFromDetails() {
-            const tradeId = parseInt(document.getElementById('edit-trade-btn').getAttribute('data-trade-id'));
-            closeTradeDetailsModal();
-            openEditTradeModal(tradeId);
-        }
-
-        function closeTradeDetailsModal() {
-            document.getElementById('trade-details-modal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        function calculateTradeDuration(entryTime, closeTime) {
-            if (!closeTime) return 'Open';
-            
-            const entry = new Date(entryTime);
-            const close = new Date(closeTime);
-            const durationMs = close - entry;
-            
-            const days = Math.floor(durationMs / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((durationMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
-            
-            if (days > 0) {
-                return `${days}d ${hours}h`;
-            } else if (hours > 0) {
-                return `${hours}h ${minutes}m`;
-            } else {
-                return `${minutes}m`;
-            }
-        }
-
-        function goToPreviousMonth() {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            renderCalendar();
-            updateMonthlySummary();
-            showRecentTrades();
-        }
-
-        function goToNextMonth() {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            renderCalendar();
-            updateMonthlySummary();
-            showRecentTrades();
-        }
-
-        function goToToday() {
-            const today = new Date();
-            currentMonth = today.getMonth();
-            currentYear = today.getFullYear();
-            renderCalendar();
-            updateMonthlySummary();
-            showRecentTrades();
-        }
-
-        function getMonthName(monthIndex) {
-            const months = [
-                'January', 'February', 'March', 'April', 'May', 'June',
-                'July', 'August', 'September', 'October', 'November', 'December'
-            ];
-            return months[monthIndex];
-        }
-
-        // Modal functions
-        function openAddTradeModal() {
-            editingTradeId = null;
-            document.getElementById('trade-modal-title').textContent = 'Add New Trade';
-            document.getElementById('trade-form').reset();
-            
-            tradeResult = 'open';
-            const toggleOptions = document.querySelectorAll('.toggle-option');
-            toggleOptions.forEach(opt => opt.classList.remove('selected'));
-            document.querySelector('.toggle-option.open').classList.add('selected');
-            
-            document.getElementById('profit-loss').disabled = true;
-            document.getElementById('profit-loss').value = '';
-            document.getElementById('risk-metrics-preview').style.display = 'none';
-            document.getElementById('screenshot-preview').style.display = 'none';
-            currentScreenshot = null;
-            
-            const today = new Date();
-            const formatForInput = (date) => {
-                return date.toISOString().slice(0, 16);
-            };
-            
-            document.getElementById('entry-time').value = formatForInput(today);
-            
-            // Render confluence checkboxes
-            ConfluenceManager.renderConfluenceCheckboxes();
-            
-            document.getElementById('trade-modal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function openEditTradeModal(tradeId) {
-            editingTradeId = tradeId;
-            const trade = TradeManager.trades.find(t => t.id === tradeId);
-            
-            if (!trade) return;
-            
-            document.getElementById('trade-modal-title').textContent = 'Edit Trade';
-            document.getElementById('trade-form').reset();
-            
-            document.getElementById('pair').value = trade.pair;
-            document.getElementById('type').value = trade.type;
-            document.getElementById('amount').value = trade.amount;
-            document.getElementById('entry-time').value = trade.entryTime;
-            document.getElementById('category').value = trade.category || 'day';
-            document.getElementById('notes').value = trade.notes || '';
-            
-            if (trade.closeTime) {
-                document.getElementById('close-time').value = trade.closeTime;
-            }
-            
-            const toggleOptions = document.querySelectorAll('.toggle-option');
-            toggleOptions.forEach(opt => opt.classList.remove('selected'));
-            
-            if (trade.status === 'open') {
-                tradeResult = 'open';
-                document.querySelector('.toggle-option.open').classList.add('selected');
-                document.getElementById('profit-loss').disabled = true;
-                document.getElementById('profit-loss').value = '';
-            } else {
-                if (trade.profitLoss > 0) {
-                    tradeResult = 'win';
-                    document.querySelector('.toggle-option.win').classList.add('selected');
-                    document.getElementById('profit-loss').value = Math.abs(trade.profitLoss);
-                } else {
-                    tradeResult = 'loss';
-                    document.querySelector('.toggle-option.loss').classList.add('selected');
-                    document.getElementById('profit-loss').value = Math.abs(trade.profitLoss);
-                }
-                document.getElementById('profit-loss').disabled = false;
-            }
-            
-            // Set screenshot if exists
-            if (trade.screenshots && trade.screenshots.length > 0) {
-                currentScreenshot = trade.screenshots[0];
-                document.getElementById('screenshot-preview').src = currentScreenshot;
-                document.getElementById('screenshot-preview').style.display = 'block';
-            } else {
-                document.getElementById('screenshot-preview').style.display = 'none';
-                currentScreenshot = null;
-            }
-            
-            // Render confluence checkboxes with selected confluences
-            ConfluenceManager.renderConfluenceCheckboxes(trade.confluences || []);
-            
-            updateRiskMetrics();
-            
-            document.getElementById('trade-modal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            document.getElementById('trade-modal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        function closeSettingsModal() {
-            document.getElementById('settings-modal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        function closeAllTradesModal() {
-            document.getElementById('all-trades-modal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        function closeHelpModal() {
-            document.getElementById('help-modal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        function openSettingsModal() {
-            document.getElementById('settings-modal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function openHelpModal() {
-            document.getElementById('help-modal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Update the stats function to include P&L percentage
-        function updateStats() {
-            const stats = TradeManager.getTradeStats();
-            
-            document.getElementById('total-profit').textContent = `${stats.totalProfit >= 0 ? '+' : ''}$${stats.totalProfit.toFixed(2)}`;
-            document.getElementById('total-profit').className = `stat-value ${stats.totalProfit >= 0 ? 'positive-stat' : 'negative-stat'}`;
-            
-            // Calculate P&L percentage
-            const profitPercent = (stats.totalProfit / settings.initialBalance) * 100;
-            document.getElementById('total-profit-percent').textContent = `${profitPercent >= 0 ? '+' : ''}${profitPercent.toFixed(2)}%`;
-            document.getElementById('total-profit-percent').className = `stat-value ${profitPercent >= 0 ? 'positive-stat' : 'negative-stat'}`;
-            
-            document.getElementById('win-rate').textContent = `${stats.winRate}%`;
-            document.getElementById('total-trades').textContent = stats.totalTrades;
-            document.getElementById('profit-factor').textContent = stats.profitFactor;
-            document.getElementById('risk-reward').textContent = stats.avgRiskReward;
-        }
-
-        function handleTradeSubmit(e) {
-            e.preventDefault();
-            
-            const pair = document.getElementById('pair').value;
-            const type = document.getElementById('type').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            const entryTime = document.getElementById('entry-time').value;
-            const closeTime = document.getElementById('close-time').value;
-            const category = document.getElementById('category').value;
-            const notes = document.getElementById('notes').value;
-            const selectedConfluences = ConfluenceManager.getSelectedConfluences();
-            const confluenceScore = ConfluenceManager.calculateConfluenceScore(selectedConfluences);
-            
-            let profitLoss = null;
-            const profitLossAmount = parseFloat(document.getElementById('profit-loss').value) || 0;
-            
-            if (tradeResult === 'win') {
-                profitLoss = profitLossAmount;
-            } else if (tradeResult === 'loss') {
-                profitLoss = -profitLossAmount;
-            }
-            
-            // Auto-close trade if win/loss is selected
-            const status = (tradeResult !== 'open') ? 'closed' : 'open';
-            
-            const entryDate = entryTime.split('T')[0];
-            const displayDate = status === 'closed' && closeTime ? closeTime.split('T')[0] : entryDate;
-            
-            const tradeData = {
-                pair,
-                type,
-                amount,
-                entryTime,
-                closeTime,
-                profitLoss,
-                date: displayDate,
-                entryDate: entryDate,
-                status,
-                category,
-                notes,
-                confluences: selectedConfluences,
-                confluenceScore
-            };
-            
-            // Add screenshot if exists
-            if (currentScreenshot) {
-                tradeData.screenshots = [currentScreenshot];
-            }
-            
-            if (!Validation.validateTradeForm(tradeData)) {
-                Validation.showErrors();
-                return;
-            }
-            
-            // Show loading state
-            document.getElementById('trade-modal-loading').classList.add('show');
-            document.getElementById('save-trade-btn').disabled = true;
-            document.getElementById('save-trade-text').innerHTML = '<div class="loading-spinner"></div> Saving...';
-            
-            setTimeout(() => {
-                if (editingTradeId) {
-                    TradeManager.updateTrade(editingTradeId, tradeData);
-                    ToastManager.show('Trade updated successfully', 'success');
-                } else {
-                    TradeManager.addTrade(tradeData);
-                    ToastManager.show('Trade added successfully', 'success');
-                }
-                
-                // Update UI
-                renderCalendar();
-                updateStats();
-                renderRecentTrades();
-                ChartManager.updateChart();
-                updateMonthlySummary();
-                
-                // If a day is selected, update its summary
-                if (selectedDay) {
-                    const day = new Date(selectedDay).getDate();
-                    showDaySummary(selectedDay, day);
-                }
-                
-                // Close modal
-                closeModal();
-                
-                // Reset loading state
-                document.getElementById('trade-modal-loading').classList.remove('show');
-                document.getElementById('save-trade-btn').disabled = false;
-                document.getElementById('save-trade-text').textContent = 'Save Trade';
-            }, 800);
-        }
-
-        function deleteTrade(tradeId) {
-            if (confirm('Are you sure you want to delete this trade?')) {
-                TradeManager.deleteTrade(tradeId);
-                ToastManager.show('Trade deleted successfully', 'success');
-                
-                renderCalendar();
-                updateStats();
-                renderRecentTrades();
-                ChartManager.updateChart();
-                updateMonthlySummary();
-                renderAllTradesList();
-                
-                if (selectedDay) {
-                    const day = new Date(selectedDay).getDate();
-                    showDaySummary(selectedDay, day);
-                }
-            }
-        }
-
-        // Recent trades functions
-        function showRecentTrades() {
-            document.getElementById('right-panel-title').textContent = 'Recent Trades';
-            renderRecentTrades();
-        }
-
-        function renderRecentTrades() {
-            const rightPanelContent = document.getElementById('right-panel-content');
-            rightPanelContent.innerHTML = '';
-            
-            if (TradeManager.trades.length === 0) {
-                const emptyState = document.createElement('div');
-                emptyState.className = 'trade-item';
-                emptyState.innerHTML = `
-                    <div class="trade-info">
-                        <div class="trade-pair">No trades yet</div>
-                    </div>
-                `;
-                rightPanelContent.appendChild(emptyState);
-                return;
-            }
-            
-            const sortedTrades = [...TradeManager.trades].sort((a, b) => {
-                const dateA = a.status === 'closed' && a.closeTime ? new Date(a.closeTime) : new Date(a.entryTime);
-                const dateB = b.status === 'closed' && b.closeTime ? new Date(b.closeTime) : new Date(b.entryTime);
-                return dateB - dateA;
-            }).slice(0, 5);
-            
-            sortedTrades.forEach(trade => {
-                const tradeEl = document.createElement('div');
-                tradeEl.className = 'trade-item';
-                tradeEl.setAttribute('data-trade-id', trade.id);
-                
-                const profitLossDisplay = trade.status === 'open' ? 
-                    'Open' : 
-                    `${trade.profitLoss >= 0 ? '+' : ''}$${trade.profitLoss.toFixed(2)}`;
-                
-                const tradeDate = trade.status === 'closed' && trade.closeTime ? 
-                    new Date(trade.closeTime) : new Date(trade.entryTime);
-                const formattedDate = `${tradeDate.getMonth() + 1}/${tradeDate.getDate()}/${tradeDate.getFullYear().toString().slice(-2)}`;
-                
-                const confluenceScore = trade.confluenceScore || 0;
-                const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
-                
-                tradeEl.innerHTML = `
-                    <div class="trade-info">
-                        <div class="trade-main-info">
-                            <div class="trade-pair">${trade.pair}</div>
-                            <div class="trade-type ${trade.type.toLowerCase()}">${trade.type}</div>
-                        </div>
-                        <div class="trade-secondary-info">
-                            <div class="trade-score ${scoreClass}">${confluenceScore}%</div>
-                            <div class="trade-date">${formattedDate}</div>
-                        </div>
-                    </div>
-                    <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
-                        ${profitLossDisplay}
-                    </div>
-                `;
-                
-                rightPanelContent.appendChild(tradeEl);
-            });
-            
-            // Add click event listeners to trade items
-            document.querySelectorAll('.trade-item[data-trade-id]').forEach(item => {
-                item.addEventListener('click', function() {
-                    const tradeId = parseInt(this.getAttribute('data-trade-id'));
-                    showTradeDetails(tradeId);
-                });
-            });
-        }
-
-        // All trades functions
-        function openAllTradesModal() {
-            renderAllTradesList();
-            document.getElementById('all-trades-modal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function renderAllTradesList() {
-            const allTradesListMobile = document.getElementById('all-trades-list-mobile');
-            const allTradesListDesktop = document.getElementById('all-trades-list-desktop');
-            allTradesListMobile.innerHTML = '';
-            allTradesListDesktop.innerHTML = '';
-            
-            selectedTradeIds.clear();
-            selectedMobileTradeId = null;
-            document.getElementById('mobile-action-buttons').style.display = 'none';
-            
-            if (TradeManager.trades.length === 0) {
-                allTradesListMobile.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--neutral-color);">No trades recorded yet.</p>';
-                allTradesListDesktop.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--neutral-color);">No trades recorded yet.</p>';
-                return;
-            }
-            
-            // Get search and filter values
-            const searchTerm = document.getElementById('trade-search').value.toLowerCase();
-            const filterValue = document.getElementById('trade-filter').value;
-            
-            // Filter trades
-            let filteredTrades = TradeManager.trades;
-            
-            if (searchTerm) {
-                filteredTrades = filteredTrades.filter(trade => 
-                    trade.pair.toLowerCase().includes(searchTerm) ||
-                    (trade.notes && trade.notes.toLowerCase().includes(searchTerm))
-                );
-            }
-            
-            if (filterValue !== 'all') {
-                if (filterValue === 'win') {
-                    filteredTrades = filteredTrades.filter(trade => 
-                        trade.status === 'closed' && trade.profitLoss > 0
-                    );
-                } else if (filterValue === 'loss') {
-                    filteredTrades = filteredTrades.filter(trade => 
-                        trade.status === 'closed' && trade.profitLoss < 0
-                    );
-                } else if (filterValue === 'open') {
-                    filteredTrades = filteredTrades.filter(trade => trade.status === 'open');
-                }
-            }
-            
-            // Sort by date (newest first)
-            const sortedTrades = filteredTrades.sort((a, b) => {
-                const dateA = a.status === 'closed' && a.closeTime ? new Date(a.closeTime) : new Date(a.entryTime);
-                const dateB = b.status === 'closed' && b.closeTime ? new Date(b.closeTime) : new Date(b.entryTime);
-                return dateB - dateA;
-            });
-            
-            // Mobile version
-            sortedTrades.forEach(trade => {
-                const tradeEl = document.createElement('div');
-                tradeEl.className = 'mobile-trade-item';
-                tradeEl.setAttribute('data-trade-id', trade.id);
-                
-                const openDate = new Date(trade.entryTime);
-                const formattedOpenDate = `${openDate.getMonth() + 1}/${openDate.getDate()}/${openDate.getFullYear().toString().slice(-2)}`;
-                
-                let formattedCloseDate = 'Open';
-                if (trade.status === 'closed' && trade.closeTime) {
-                    const closeDate = new Date(trade.closeTime);
-                    formattedCloseDate = `${closeDate.getMonth() + 1}/${closeDate.getDate()}/${closeDate.getFullYear().toString().slice(-2)}`;
-                }
-                
-                const confluenceScore = trade.confluenceScore || 0;
-                const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
-                
-                // Risk to reward for closed trades
-                let riskReward = 'Open';
-                if (trade.status === 'closed' && trade.amount > 0) {
-                    const rr = (trade.profitLoss / trade.amount).toFixed(2);
-                    riskReward = trade.profitLoss >= 0 ? `+${rr}` : rr;
-                }
-                
-                tradeEl.innerHTML = `
-                    <div class="mobile-trade-row-1">
-                        <div class="mobile-trade-pair">${trade.pair}</div>
-                        <div class="mobile-trade-type ${trade.type.toLowerCase()}">${trade.type}</div>
-                        <div class="mobile-trade-score ${scoreClass}">${confluenceScore}%</div>
-                        <div class="mobile-trade-rr">${riskReward}</div>
-                    </div>
-                    <div class="mobile-trade-row-2">
-                        <div class="mobile-trade-date">${formattedOpenDate}</div>
-                        <div class="mobile-trade-date">${formattedCloseDate}</div>
-                        <div class="mobile-trade-pnl ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
-                            ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
-                        </div>
-                    </div>
-                `;
-                
-                allTradesListMobile.appendChild(tradeEl);
-            });
-            
-            // Add event listeners for mobile trades
-            allTradesListMobile.querySelectorAll('.mobile-trade-item').forEach(item => {
-                // Click to show details
-                item.addEventListener('click', function() {
-                    const tradeId = parseInt(this.getAttribute('data-trade-id'));
-                    showTradeDetails(tradeId);
-                });
-                
-                // Long press to select
-                item.addEventListener('touchstart', function(e) {
-                    const tradeId = parseInt(this.getAttribute('data-trade-id'));
-                    longPressTimer = setTimeout(() => {
-                        selectMobileTrade(tradeId, this);
-                        e.preventDefault();
-                    }, 500);
-                });
-                
-                item.addEventListener('touchend', function() {
-                    clearTimeout(longPressTimer);
-                });
-                
-                item.addEventListener('touchmove', function() {
-                    clearTimeout(longPressTimer);
-                });
-            });
-            
-            // Desktop version (hidden on mobile)
-            sortedTrades.forEach(trade => {
-                const tradeEl = document.createElement('div');
-                tradeEl.className = 'trade-management-item';
-                
-                const tradeDate = trade.status === 'closed' && trade.closeTime ? 
-                    new Date(trade.closeTime) : new Date(trade.entryTime);
-                const formattedDate = `${tradeDate.getMonth() + 1}/${tradeDate.getDate()}/${tradeDate.getFullYear()}`;
-                
-                const categoryClass = trade.category ? `category-${trade.category}` : '';
-                const categoryName = trade.category ? trade.category.charAt(0).toUpperCase() + trade.category.slice(1) : '';
-                const confluenceScore = trade.confluenceScore || 0;
-                const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
-                
-                tradeEl.innerHTML = `
-                    <div class="trade-management-info">
-                        <input type="checkbox" class="trade-checkbox" value="${trade.id}">
-                        <div class="trade-management-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
-                        <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
-                        <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
-                            ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
-                        </div>
-                        <div class="trade-management-date">${formattedDate}</div>
-                        <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
-                        <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
-                    </div>
-                    <div class="trade-management-actions">
-                        <button class="action-btn edit-btn" data-id="${trade.id}">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="action-btn delete-btn" data-id="${trade.id}">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </div>
-                `;
-                
-                allTradesListDesktop.appendChild(tradeEl);
-            });
-            
-            // Add event listeners to desktop checkboxes
-            allTradesListDesktop.querySelectorAll('.trade-checkbox').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const tradeId = parseInt(this.value);
-                    if (this.checked) {
-                        selectedTradeIds.add(tradeId);
-                    } else {
-                        selectedTradeIds.delete(tradeId);
-                    }
-                });
-            });
-            
-            // Add event listeners to desktop edit and delete buttons
-            allTradesListDesktop.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const tradeId = parseInt(this.getAttribute('data-id'));
-                    closeAllTradesModal();
-                    openEditTradeModal(tradeId);
-                });
-            });
-            
-            allTradesListDesktop.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const tradeId = parseInt(this.getAttribute('data-id'));
-                    deleteTrade(tradeId);
-                });
-            });
-            
-            // Show/hide desktop/mobile based on screen size
-            if (window.innerWidth <= 768) {
-                allTradesListDesktop.style.display = 'none';
-                allTradesListMobile.style.display = 'block';
-            } else {
-                allTradesListDesktop.style.display = 'block';
-                allTradesListMobile.style.display = 'none';
-            }
-        }
-
-        // Function to select a trade on mobile via long press
-        function selectMobileTrade(tradeId, element) {
-            selectedMobileTradeId = tradeId;
-            
-            // Clear previous selection
-            document.querySelectorAll('.mobile-trade-item').forEach(item => {
-                item.classList.remove('selected');
-            });
-            
-            // Select current
-            element.classList.add('selected');
-            
-            // Show action buttons
-            document.getElementById('mobile-action-buttons').style.display = 'grid';
-        }
-
-        // Update the monthly summary function
-        function updateMonthlySummary() {
-            const monthTrades = TradeManager.trades.filter(trade => {
-                const tradeDate = new Date(trade.status === 'closed' && trade.closeTime ? trade.closeTime : trade.entryTime);
-                return tradeDate.getMonth() === currentMonth && tradeDate.getFullYear() === currentYear;
-            });
-            
-            const closedMonthTrades = monthTrades.filter(trade => trade.status === 'closed');
-            const monthlyProfit = closedMonthTrades.reduce((sum, trade) => sum + trade.profitLoss, 0);
-            const winningMonthTrades = closedMonthTrades.filter(trade => trade.profitLoss > 0).length;
-            const monthlyWinRate = closedMonthTrades.length > 0 ? Math.round((winningMonthTrades / closedMonthTrades.length) * 100) : 0;
-            
-            const monthlyWins = closedMonthTrades.filter(t => t.profitLoss > 0).reduce((sum, t) => sum + t.profitLoss, 0);
-            const monthlyLosses = Math.abs(closedMonthTrades.filter(t => t.profitLoss < 0).reduce((sum, t) => sum + t.profitLoss, 0));
-            const monthlyProfitFactor = monthlyLosses > 0 ? (monthlyWins / monthlyLosses).toFixed(2) : monthlyWins > 0 ? '∞' : '0.00';
-            
-            // Calculate monthly P&L percentage
-            const monthlyProfitPercent = (monthlyProfit / settings.initialBalance) * 100;
-            
-            document.getElementById('monthly-profit').textContent = `${monthlyProfit >= 0 ? '+' : ''}$${monthlyProfit.toFixed(2)}`;
-            document.getElementById('monthly-profit').className = `summary-value ${monthlyProfit >= 0 ? 'positive-stat' : 'negative-stat'}`;
-            
-            document.getElementById('monthly-profit-percent').textContent = `${monthlyProfitPercent >= 0 ? '+' : ''}${monthlyProfitPercent.toFixed(2)}%`;
-            document.getElementById('monthly-profit-percent').className = `summary-value ${monthlyProfitPercent >= 0 ? 'positive-stat' : 'negative-stat'}`;
-            
-            document.getElementById('monthly-trades').textContent = monthTrades.length;
-            document.getElementById('monthly-win-rate').textContent = `${monthlyWinRate}%`;
-            document.getElementById('monthly-profit-factor').textContent = monthlyProfitFactor;
-            document.getElementById('monthly-closed-trades').textContent = closedMonthTrades.length;
-        }
-
-        // Settings functions
-        function toggleDarkMode() {
-            settings.darkMode = document.getElementById('dark-mode-toggle').checked;
-            SettingsManager.updateSetting('darkMode', settings.darkMode);
-            
-            if (settings.darkMode) {
-                document.body.classList.add('dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-            }
-            
-            // Update chart with new theme
             ChartManager.updateChart();
+            updateMonthlySummary();
+            
+            importStatus.textContent = `Successfully imported ${importedCount} trades. ${skippedCount} rows skipped.`;
+            importStatus.style.color = 'var(--profit-color)';
+            
+            document.getElementById('import-excel').value = '';
+            ToastManager.show(`Imported ${importedCount} trades successfully!`, 'success');
+            
+        } catch (error) {
+            console.error('Import error:', error);
+            importStatus.textContent = 'Error importing file. Please check the format.';
+            importStatus.style.color = 'var(--loss-color)';
+            ToastManager.show('Error importing file. Please check the format.', 'error');
         }
+    };
+    
+    reader.onerror = function() {
+        importStatus.textContent = 'Error reading file.';
+        importStatus.style.color = 'var(--loss-color)';
+        ToastManager.show('Error reading file.', 'error');
+    };
+    
+    reader.readAsArrayBuffer(file);
+}
 
-        function handleSaveBalance() {
-            const balance = parseFloat(document.getElementById('initial-balance').value);
-            if (!isNaN(balance) && balance >= 0) {
-                settings.initialBalance = balance;
-                if (SettingsManager.updateSetting('initialBalance', balance)) {
-                    ToastManager.show('Initial balance updated successfully!', 'success');
-                    updateStats();
-                    ChartManager.updateChart();
-                }
-            } else {
-                ToastManager.show('Please enter a valid balance amount.', 'error');
-            }
-        }
+// Utility functions
+function formatDate(dateTimeStr) {
+    if (!dateTimeStr) return '';
+    const date = new Date(dateTimeStr);
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear().toString().slice(-2)}`;
+}
 
-        function handleExportExcel() {
-            if (TradeManager.trades.length === 0) {
-                ToastManager.show('No trades to export.', 'warning');
-                return;
-            }
-            
-            const exportData = TradeManager.trades.map(trade => ({
-                'Trade ID': trade.id,
-                'Pair': trade.pair,
-                'Type': trade.type,
-                'Amount Risked': trade.amount,
-                'Entry Time': trade.entryTime,
-                'Close Time': trade.closeTime || 'Open',
-                'Profit/Loss': trade.profitLoss || 'Open',
-                'Status': trade.status,
-                'Category': trade.category || '',
-                'Confluences': (trade.confluences || []).map(id => {
-                    const confluence = ConfluenceManager.confluences.find(c => c.id === id);
-                    return confluence ? confluence.name : 'Unknown';
-                }).join(', '),
-                'Confluence Score': trade.confluenceScore || 0,
-                'Notes': trade.notes || '',
-                'Entry Date': trade.entryDate,
-                'Display Date': trade.date
-            }));
-            
-            const ws = XLSX.utils.json_to_sheet(exportData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Trades');
-            
-            const fileName = `TradeJournal_${new Date().toISOString().split('T')[0]}.xlsx`;
-            XLSX.writeFile(wb, fileName);
-            ToastManager.show('Trades exported successfully!', 'success');
-        }
+function formatTime(dateTimeStr) {
+    if (!dateTimeStr) return '';
+    const date = new Date(dateTimeStr);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
 
-        function handleImportExcel(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const importStatus = document.getElementById('import-status');
-            importStatus.textContent = 'Importing...';
-            importStatus.style.color = 'var(--neutral-color)';
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    
-                    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
-                    
-                    if (jsonData.length === 0) {
-                        importStatus.textContent = 'No data found in file.';
-                        importStatus.style.color = 'var(--loss-color)';
-                        return;
-                    }
-                    
-                    let importedCount = 0;
-                    let skippedCount = 0;
-                    
-                    jsonData.forEach(row => {
-                        if (!row.Pair || !row.Type || row['Amount Risked'] === undefined) {
-                            skippedCount++;
-                            return;
-                        }
-                        
-                        const hasCloseTime = row['Close Time'] && row['Close Time'] !== 'Open';
-                        const hasProfitLoss = row['Profit/Loss'] !== undefined && row['Profit/Loss'] !== 'Open';
-                        const status = hasCloseTime && hasProfitLoss ? 'closed' : 'open';
-                        
-                        let displayDate;
-                        if (row['Display Date']) {
-                            displayDate = row['Display Date'];
-                        } else if (hasCloseTime) {
-                            displayDate = new Date(row['Close Time']).toISOString().split('T')[0];
-                        } else {
-                            displayDate = new Date(row['Entry Time']).toISOString().split('T')[0];
-                        }
-                        
-                        // Parse confluences from string to array of IDs
-                        let confluences = [];
-                        if (row.Confluences) {
-                            const confluenceNames = row.Confluences.split(', ');
-                            confluences = confluenceNames.map(name => {
-                                const confluence = ConfluenceManager.confluences.find(c => c.name === name);
-                                return confluence ? confluence.id : null;
-                            }).filter(id => id !== null);
-                        }
-                        
-                        const trade = {
-                            id: TradeManager.trades.length > 0 ? Math.max(...TradeManager.trades.map(t => t.id)) + 1 : 1,
-                            pair: row.Pair,
-                            type: row.Type,
-                            amount: parseFloat(row['Amount Risked']),
-                            entryTime: row['Entry Time'],
-                            closeTime: hasCloseTime ? row['Close Time'] : '',
-                            profitLoss: hasProfitLoss ? parseFloat(row['Profit/Loss']) : null,
-                            date: displayDate,
-                            entryDate: new Date(row['Entry Time']).toISOString().split('T')[0],
-                            status: status,
-                            category: row.Category || 'day',
-                            notes: row.Notes || '',
-                            confluences: confluences,
-                            confluenceScore: row['Confluence Score'] || 0,
-                            screenshots: []
-                        };
-                        
-                        TradeManager.trades.push(trade);
-                        importedCount++;
-                    });
-                    
-                    TradeManager.saveTrades();
-                    
-                    renderCalendar();
-                    updateStats();
-                    renderRecentTrades();
-                    ChartManager.updateChart();
-                    updateMonthlySummary();
-                    
-                    importStatus.textContent = `Successfully imported ${importedCount} trades. ${skippedCount} rows skipped.`;
-                    importStatus.style.color = 'var(--profit-color)';
-                    
-                    document.getElementById('import-excel').value = '';
-                    ToastManager.show(`Imported ${importedCount} trades successfully!`, 'success');
-                    
-                } catch (error) {
-                    console.error('Import error:', error);
-                    importStatus.textContent = 'Error importing file. Please check the format.';
-                    importStatus.style.color = 'var(--loss-color)';
-                    ToastManager.show('Error importing file. Please check the format.', 'error');
-                }
-            };
-            
-            reader.onerror = function() {
-                importStatus.textContent = 'Error reading file.';
-                importStatus.style.color = 'var(--loss-color)';
-                ToastManager.show('Error reading file.', 'error');
-            };
-            
-            reader.readAsArrayBuffer(file);
-        }
+function formatDateTime(dateTimeStr) {
+    if (!dateTimeStr) return '';
+    const date = new Date(dateTimeStr);
+    return date.toLocaleString();
+}
 
-        // Utility functions
-        function formatTime(dateTimeStr) {
-            if (!dateTimeStr) return '';
-            const date = new Date(dateTimeStr);
-            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        }
-
-        function formatDateTime(dateTimeStr) {
-            if (!dateTimeStr) return '';
-            const date = new Date(dateTimeStr);
-            return date.toLocaleString();
-        }
-
-        // Initialize with recent trades view
-        showRecentTrades();
-    </script>
+// Initialize with recent trades view
+showRecentTrades();</script>
 </body>
 </html>
