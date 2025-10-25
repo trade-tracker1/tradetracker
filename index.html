@@ -1381,9 +1381,236 @@
             .summary-label {
                 font-size: 11px;
             }
+            
+            /* Hide keyboard shortcuts button on mobile */
+            #help-btn {
+                display: none;
+            }
+            
+            /* Recent trades - new layout */
+            .trade-item {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                gap: 8px;
+                padding: 12px 0;
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            .trade-info {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+            
+            .trade-main-info {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .trade-pair {
+                font-weight: 600;
+                font-size: 14px;
+            }
+            
+            .trade-type {
+                padding: 2px 6px;
+                border-radius: 4px;
+                font-size: 11px;
+                font-weight: 600;
+            }
+            
+            .trade-type.buy {
+                background-color: #d1fae5;
+                color: #065f46;
+            }
+            
+            .trade-type.sell {
+                background-color: #fee2e2;
+                color: #991b1b;
+            }
+            
+            .trade-secondary-info {
+                display: flex;
+                justify-content: space-between;
+                font-size: 12px;
+                color: var(--neutral-color);
+            }
+            
+            .trade-score {
+                font-size: 11px;
+                font-weight: 600;
+                padding: 2px 6px;
+                border-radius: 10px;
+                background: var(--primary-color);
+                color: white;
+            }
+            
+            .trade-score.high {
+                background: var(--profit-color);
+            }
+            
+            .trade-score.medium {
+                background: var(--warning-color);
+            }
+            
+            .trade-score.low {
+                background: var(--loss-color);
+            }
+            
+            .trade-profit {
+                font-weight: 600;
+                font-size: 14px;
+                text-align: right;
+                align-self: center;
+            }
+            
+            /* Day summary - new layout */
+            .day-trade-item {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                gap: 8px;
+                padding: 12px 0;
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            .day-trade-main-info {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .day-trade-secondary-info {
+                display: flex;
+                justify-content: space-between;
+                font-size: 12px;
+                color: var(--neutral-color);
+            }
+            
+            .trade-duration {
+                font-size: 11px;
+            }
+            
+            .risk-reward {
+                font-size: 11px;
+                font-weight: 600;
+            }
+            
+            /* All trades modal - mobile layout */
+            .mobile-trade-item {
+                padding: 12px;
+                border-bottom: 1px solid var(--border-color);
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+            
+            .mobile-trade-item:active {
+                background-color: var(--border-color);
+            }
+            
+            .mobile-trade-item.selected {
+                background-color: rgba(59, 130, 246, 0.1);
+            }
+            
+            .mobile-trade-row-1, .mobile-trade-row-2 {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 6px;
+            }
+            
+            .mobile-trade-row-2 {
+                margin-bottom: 0;
+            }
+            
+            .mobile-trade-pair {
+                font-weight: 600;
+                font-size: 14px;
+            }
+            
+            .mobile-trade-type {
+                padding: 2px 6px;
+                border-radius: 4px;
+                font-size: 11px;
+                font-weight: 600;
+            }
+            
+            .mobile-trade-type.buy {
+                background-color: #d1fae5;
+                color: #065f46;
+            }
+            
+            .mobile-trade-type.sell {
+                background-color: #fee2e2;
+                color: #991b1b;
+            }
+            
+            .mobile-trade-score {
+                font-size: 11px;
+                font-weight: 600;
+                padding: 2px 6px;
+                border-radius: 10px;
+                background: var(--primary-color);
+                color: white;
+            }
+            
+            .mobile-trade-score.high {
+                background: var(--profit-color);
+            }
+            
+            .mobile-trade-score.medium {
+                background: var(--warning-color);
+            }
+            
+            .mobile-trade-score.low {
+                background: var(--loss-color);
+            }
+            
+            .mobile-trade-rr {
+                font-size: 11px;
+                font-weight: 600;
+            }
+            
+            .mobile-trade-date {
+                font-size: 11px;
+                color: var(--neutral-color);
+            }
+            
+            .mobile-trade-pnl {
+                font-weight: 600;
+                font-size: 13px;
+            }
+            
+            .mobile-trade-pnl.positive {
+                color: var(--profit-color);
+            }
+            
+            .mobile-trade-pnl.negative {
+                color: var(--loss-color);
+            }
+            
+            /* Remove checkboxes and bulk actions on mobile */
+            .bulk-actions, .select-all-row {
+                display: none;
+            }
+            
+            /* Edit/Delete buttons in 2x2 grid */
+            .mobile-action-buttons {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                margin-top: 10px;
+            }
+            
+            .mobile-action-buttons .btn {
+                width: 100%;
+                min-width: auto;
+                font-size: 12px;
+                padding: 8px;
+            }
         }
         
-        /* Galaxy A35 5G Specific Optimizations (392px CSS width) */
+        /* Galaxy A35 specific optimizations */
         @media (max-width: 480px) {
             .main-content {
                 padding: 12px;
@@ -1558,128 +1785,6 @@
                 font-size: 14px;
             }
             
-            /* Mobile Layout for All Trades Modal */
-            .trade-management-info.mobile-layout {
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
-                width: 100%;
-            }
-            
-            .trade-row-first {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                width: 100%;
-            }
-            
-            .trade-row-second {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-                width: 100%;
-            }
-            
-            .trade-type-badge {
-                padding: 4px 8px;
-                border-radius: 4px;
-                font-size: 11px;
-                font-weight: 600;
-                text-align: center;
-                min-width: 45px;
-            }
-            
-            .trade-type-badge.buy {
-                background-color: #d1fae5;
-                color: #065f46;
-            }
-            
-            .trade-type-badge.sell {
-                background-color: #fee2e2;
-                color: #991b1b;
-            }
-            
-            .dark-mode .trade-type-badge.buy {
-                background-color: #064e3b;
-                color: #a7f3d0;
-            }
-            
-            .dark-mode .trade-type-badge.sell {
-                background-color: #7f1d1d;
-                color: #fecaca;
-            }
-            
-            .trade-category-badge {
-                padding: 4px 8px;
-                border-radius: 12px;
-                font-size: 11px;
-                font-weight: 600;
-                text-align: center;
-                min-width: 60px;
-            }
-            
-            .trade-date-info,
-            .trade-amount-info,
-            .trade-pnl-info {
-                display: flex;
-                flex-direction: column;
-                gap: 2px;
-            }
-            
-            .date-label,
-            .amount-label,
-            .pnl-label {
-                font-size: 10px;
-                color: var(--neutral-color);
-                font-weight: 500;
-            }
-            
-            .date-value,
-            .amount-value,
-            .pnl-value {
-                font-size: 11px;
-                font-weight: 600;
-            }
-            
-            .trade-pnl-info.positive .pnl-value {
-                color: var(--profit-color);
-            }
-            
-            .trade-pnl-info.negative .pnl-value {
-                color: var(--loss-color);
-            }
-            
-            /* Ensure actions stay in the same position */
-            .trade-management-item {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                padding: 12px;
-                border-bottom: 1px solid var(--border-color);
-                gap: 10px;
-            }
-            
-            .trade-management-actions {
-                display: flex;
-                flex-direction: column;
-                gap: 6px;
-                flex-shrink: 0;
-            }
-            
-            .action-btn {
-                padding: 6px 8px;
-                font-size: 12px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 4px;
-                min-width: 60px;
-            }
-            
-            .action-btn i {
-                font-size: 12px;
-            }
-            
             /* All Trades Modal - Mobile Optimized Layout */
             .trade-management-item {
                 flex-direction: column;
@@ -1804,13 +1909,6 @@
             
             .today-btn {
                 margin-top: 0;
-            }
-        }
-        
-        /* Keep desktop layout unchanged */
-        @media (min-width: 481px) {
-            .trade-management-info.mobile-layout {
-                display: none;
             }
         }
     </style>
@@ -1943,8 +2041,7 @@
             </div>
         </div>
     </div>
-    
-    <!-- All the modals remain the same as in your original code -->
+        <!-- All the modals -->
     <!-- Add Trade Modal -->
     <div class="modal" id="trade-modal">
         <div class="modal-content">
@@ -2118,13 +2215,6 @@
                     <i class="fas fa-file-import"></i> Import from Excel
                 </label>
                 <input type="file" id="import-excel" class="file-input" accept=".xlsx, .xls">
-                <div class="form-group">
-                    <label for="backup-file">Backup File Password (Optional)</label>
-                    <input type="password" id="backup-password" placeholder="Enter password for encryption">
-                </div>
-                <button type="button" class="btn btn-secondary" id="create-backup">
-                    <i class="fas fa-download"></i> Create Encrypted Backup
-                </button>
                 <div id="import-status" style="margin-top: 10px; font-size: 14px; color: var(--neutral-color);"></div>
             </div>
             
@@ -2169,41 +2259,28 @@
                         <option value="win">Winning Trades</option>
                         <option value="loss">Losing Trades</option>
                         <option value="open">Open Trades</option>
-                        <option value="scalping">Scalping</option>
-                        <option value="day">Day Trading</option>
-                        <option value="swing">Swing Trading</option>
-                        <option value="position">Position Trading</option>
                     </select>
                 </div>
             </div>
             
-            <!-- Bulk Actions - Updated to 2x2 Grid -->
-            <div class="bulk-actions">
-                <button type="button" class="btn btn-secondary" id="select-all-trades">
-                    <i class="fas fa-check-square"></i> Select All
-                </button>
-                <button type="button" class="btn btn-secondary" id="deselect-all-trades">
-                    <i class="fas fa-square"></i> Deselect All
-                </button>
-                <button type="button" class="btn btn-danger" id="delete-selected-trades">
-                    <i class="fas fa-trash"></i> Delete Selected
-                </button>
-                <button type="button" class="btn btn-danger" id="delete-all-trades">
-                    <i class="fas fa-trash-alt"></i> Delete All
-                </button>
+            <!-- Mobile-specific trade list -->
+            <div class="trades-list" id="all-trades-list-mobile">
+                <!-- Mobile trades will be populated here -->
             </div>
             
-            <div class="select-all-row">
-                <div class="select-all-checkbox">
-                    <input type="checkbox" id="select-all-checkbox">
-                    <label for="select-all-checkbox">Select All</label>
-                </div>
-                <div class="selected-count" id="selected-count">0 selected</div>
-                <div class="trade-count" id="filtered-trade-count">Showing 0 of 0 trades</div>
+            <!-- Desktop trade list (hidden on mobile) -->
+            <div class="trades-list" id="all-trades-list-desktop">
+                <!-- Desktop trades will be populated here -->
             </div>
             
-            <div class="trades-list" id="all-trades-list">
-                <!-- All trades will be populated by JavaScript -->
+            <!-- Action buttons for selected trade (mobile only) -->
+            <div class="mobile-action-buttons" id="mobile-action-buttons" style="display: none;">
+                <button type="button" class="btn btn-primary" id="mobile-edit-trade">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button type="button" class="btn btn-danger" id="mobile-delete-trade">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
             </div>
         </div>
     </div>
@@ -2704,6 +2781,20 @@
                     clearTimeout(timeout);
                     timeout = setTimeout(later, wait);
                 };
+            },
+            
+            // Throttle function for scroll/resize events
+            throttle(func, limit) {
+                let inThrottle;
+                return function() {
+                    const args = arguments;
+                    const context = this;
+                    if (!inThrottle) {
+                        func.apply(context, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
+                    }
+                };
             }
         };
 
@@ -2943,6 +3034,8 @@
         let tradeResult = 'open';
         let settings = SettingsManager.settings;
         let currentScreenshot = null;
+        let selectedMobileTradeId = null;
+        let longPressTimer = null;
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
@@ -2978,7 +3071,7 @@
             
             // Show welcome message
             setTimeout(() => {
-                ToastManager.show('TradeTracker Pro loaded successfully! Press ? for keyboard shortcuts', 'info', 4000);
+                ToastManager.show('TradeTracker Pro loaded successfully!', 'info', 4000);
             }, 500);
         });
 
@@ -3015,7 +3108,6 @@
             // Data management
             document.getElementById('export-excel').addEventListener('click', handleExportExcel);
             document.getElementById('import-excel').addEventListener('change', handleImportExcel);
-            document.getElementById('create-backup').addEventListener('click', handleCreateBackup);
             document.getElementById('view-all-trades').addEventListener('click', openAllTradesModal);
             
             // Theme toggle - update chart when theme changes
@@ -3034,20 +3126,25 @@
             document.getElementById('amount').addEventListener('input', updateRiskMetrics);
             document.getElementById('profit-loss').addEventListener('input', updateRiskMetrics);
             
-            // Bulk actions
-            document.getElementById('select-all-trades').addEventListener('click', selectAllTrades);
-            document.getElementById('deselect-all-trades').addEventListener('click', deselectAllTrades);
-            document.getElementById('delete-selected-trades').addEventListener('click', deleteSelectedTrades);
-            document.getElementById('delete-all-trades').addEventListener('click', deleteAllTrades);
-            document.getElementById('select-all-checkbox').addEventListener('change', toggleSelectAll);
+            // Mobile-specific event listeners
+            document.getElementById('mobile-edit-trade').addEventListener('click', function() {
+                if (selectedMobileTradeId) {
+                    closeAllTradesModal();
+                    openEditTradeModal(selectedMobileTradeId);
+                }
+            });
             
-            // Search and filter with debouncing
-            document.getElementById('trade-search').addEventListener('input', 
-                Performance.debounce(handleTradeSearch, 300)
-            );
-            document.getElementById('trade-filter').addEventListener('change', 
-                Performance.debounce(handleTradeFilter, 300)
-            );
+            document.getElementById('mobile-delete-trade').addEventListener('click', function() {
+                if (selectedMobileTradeId) {
+                    deleteTrade(selectedMobileTradeId);
+                    closeAllTradesModal();
+                }
+            });
+            
+            // Handle window resize to toggle between mobile/desktop views
+            window.addEventListener('resize', function() {
+                renderAllTradesList();
+            });
             
             // Close modals when clicking outside
             window.addEventListener('click', function(e) {
@@ -3167,6 +3264,9 @@
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
             const prevMonthLastDay = new Date(currentYear, currentMonth, 0).getDate();
             
+            // Create document fragment for better performance
+            const fragment = document.createDocumentFragment();
+            
             for (let i = firstDay - 1; i >= 0; i--) {
                 const dayEl = document.createElement('div');
                 dayEl.className = 'day prev-month-day';
@@ -3174,7 +3274,7 @@
                 dayNumber.className = 'day-number';
                 dayNumber.textContent = prevMonthLastDay - i;
                 dayEl.appendChild(dayNumber);
-                calendarEl.appendChild(dayEl);
+                fragment.appendChild(dayEl);
             }
             
             for (let day = 1; day <= daysInMonth; day++) {
@@ -3216,7 +3316,7 @@
                     showDaySummary(dateStr, day);
                 });
                 
-                calendarEl.appendChild(dayEl);
+                fragment.appendChild(dayEl);
             }
             
             const totalCells = 42;
@@ -3230,8 +3330,10 @@
                 dayNumber.className = 'day-number';
                 dayNumber.textContent = day;
                 dayEl.appendChild(dayNumber);
-                calendarEl.appendChild(dayEl);
+                fragment.appendChild(dayEl);
             }
+            
+            calendarEl.appendChild(fragment);
         }
 
         function getTradesForDay(dateStr) {
@@ -3283,20 +3385,26 @@
                         ${dailyTrades.length > 0 ? 
                             dailyTrades.map(trade => {
                                 const duration = calculateTradeDuration(trade.entryTime, trade.closeTime);
-                                const categoryClass = trade.category ? `category-${trade.category}` : '';
-                                const categoryName = trade.category ? trade.category.charAt(0).toUpperCase() + trade.category.slice(1) : '';
                                 const confluenceScore = trade.confluenceScore || 0;
                                 const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
                                 
+                                // Risk to reward for closed trades
+                                let riskReward = 'Open';
+                                if (trade.status === 'closed' && trade.amount > 0) {
+                                    const rr = (trade.profitLoss / trade.amount).toFixed(2);
+                                    riskReward = trade.profitLoss >= 0 ? `+${rr}` : rr;
+                                }
+                                
                                 return `
-                                <div class="trade-item" data-trade-id="${trade.id}">
+                                <div class="day-trade-item" data-trade-id="${trade.id}">
                                     <div class="trade-info">
-                                        <div class="trade-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
-                                        <div class="trade-date">
-                                            ${formatTime(trade.entryTime)} - ${trade.status === 'closed' ? formatTime(trade.closeTime) : 'Open'}
-                                            <div style="font-size: 10px; color: var(--neutral-color); margin-top: 2px;">
-                                                ${duration} <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
-                                            </div>
+                                        <div class="day-trade-main-info">
+                                            <div class="trade-pair">${trade.pair}</div>
+                                            <div class="trade-type ${trade.type.toLowerCase()}">${trade.type}</div>
+                                        </div>
+                                        <div class="day-trade-secondary-info">
+                                            <div class="trade-score ${scoreClass}">${confluenceScore}%</div>
+                                            <div class="risk-reward">${riskReward}</div>
                                         </div>
                                     </div>
                                     <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
@@ -3312,12 +3420,22 @@
             `;
             
             // Add click event listeners to trade items
-            document.querySelectorAll('.trade-item[data-trade-id]').forEach(item => {
+            document.querySelectorAll('.day-trade-item[data-trade-id]').forEach(item => {
                 item.addEventListener('click', function() {
                     const tradeId = parseInt(this.getAttribute('data-trade-id'));
                     showTradeDetails(tradeId);
                 });
             });
+            
+            // Scroll to day summary on mobile
+            if (window.innerWidth <= 768) {
+                setTimeout(() => {
+                    document.getElementById('right-panel').scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 100);
+            }
         }
 
         function showTradeDetails(tradeId) {
@@ -3776,17 +3894,21 @@
                 
                 const tradeDate = trade.status === 'closed' && trade.closeTime ? 
                     new Date(trade.closeTime) : new Date(trade.entryTime);
-                const formattedDate = `${tradeDate.getMonth() + 1}/${tradeDate.getDate()}/${tradeDate.getFullYear()}`;
+                const formattedDate = `${tradeDate.getMonth() + 1}/${tradeDate.getDate()}/${tradeDate.getFullYear().toString().slice(-2)}`;
                 
-                const categoryClass = trade.category ? `category-${trade.category}` : '';
-                const categoryName = trade.category ? trade.category.charAt(0).toUpperCase() + trade.category.slice(1) : '';
                 const confluenceScore = trade.confluenceScore || 0;
                 const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
                 
                 tradeEl.innerHTML = `
                     <div class="trade-info">
-                        <div class="trade-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
-                        <div class="trade-date">${formattedDate} <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span></div>
+                        <div class="trade-main-info">
+                            <div class="trade-pair">${trade.pair}</div>
+                            <div class="trade-type ${trade.type.toLowerCase()}">${trade.type}</div>
+                        </div>
+                        <div class="trade-secondary-info">
+                            <div class="trade-score ${scoreClass}">${confluenceScore}%</div>
+                            <div class="trade-date">${formattedDate}</div>
+                        </div>
                     </div>
                     <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
                         ${profitLossDisplay}
@@ -3813,14 +3935,18 @@
         }
 
         function renderAllTradesList() {
-            const allTradesList = document.getElementById('all-trades-list');
-            allTradesList.innerHTML = '';
+            const allTradesListMobile = document.getElementById('all-trades-list-mobile');
+            const allTradesListDesktop = document.getElementById('all-trades-list-desktop');
+            allTradesListMobile.innerHTML = '';
+            allTradesListDesktop.innerHTML = '';
+            
             selectedTradeIds.clear();
-            updateSelectedCount();
+            selectedMobileTradeId = null;
+            document.getElementById('mobile-action-buttons').style.display = 'none';
             
             if (TradeManager.trades.length === 0) {
-                allTradesList.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--neutral-color);">No trades recorded yet.</p>';
-                document.getElementById('filtered-trade-count').textContent = 'Showing 0 of 0 trades';
+                allTradesListMobile.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--neutral-color);">No trades recorded yet.</p>';
+                allTradesListDesktop.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--neutral-color);">No trades recorded yet.</p>';
                 return;
             }
             
@@ -3849,8 +3975,6 @@
                     );
                 } else if (filterValue === 'open') {
                     filteredTrades = filteredTrades.filter(trade => trade.status === 'open');
-                } else {
-                    filteredTrades = filteredTrades.filter(trade => trade.category === filterValue);
                 }
             }
             
@@ -3861,6 +3985,77 @@
                 return dateB - dateA;
             });
             
+            // Mobile version
+            sortedTrades.forEach(trade => {
+                const tradeEl = document.createElement('div');
+                tradeEl.className = 'mobile-trade-item';
+                tradeEl.setAttribute('data-trade-id', trade.id);
+                
+                const openDate = new Date(trade.entryTime);
+                const formattedOpenDate = `${openDate.getMonth() + 1}/${openDate.getDate()}/${openDate.getFullYear().toString().slice(-2)}`;
+                
+                let formattedCloseDate = 'Open';
+                if (trade.status === 'closed' && trade.closeTime) {
+                    const closeDate = new Date(trade.closeTime);
+                    formattedCloseDate = `${closeDate.getMonth() + 1}/${closeDate.getDate()}/${closeDate.getFullYear().toString().slice(-2)}`;
+                }
+                
+                const confluenceScore = trade.confluenceScore || 0;
+                const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
+                
+                // Risk to reward for closed trades
+                let riskReward = 'Open';
+                if (trade.status === 'closed' && trade.amount > 0) {
+                    const rr = (trade.profitLoss / trade.amount).toFixed(2);
+                    riskReward = trade.profitLoss >= 0 ? `+${rr}` : rr;
+                }
+                
+                tradeEl.innerHTML = `
+                    <div class="mobile-trade-row-1">
+                        <div class="mobile-trade-pair">${trade.pair}</div>
+                        <div class="mobile-trade-type ${trade.type.toLowerCase()}">${trade.type}</div>
+                        <div class="mobile-trade-score ${scoreClass}">${confluenceScore}%</div>
+                        <div class="mobile-trade-rr">${riskReward}</div>
+                    </div>
+                    <div class="mobile-trade-row-2">
+                        <div class="mobile-trade-date">${formattedOpenDate}</div>
+                        <div class="mobile-trade-date">${formattedCloseDate}</div>
+                        <div class="mobile-trade-pnl ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                            ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                        </div>
+                    </div>
+                `;
+                
+                allTradesListMobile.appendChild(tradeEl);
+            });
+            
+            // Add event listeners for mobile trades
+            allTradesListMobile.querySelectorAll('.mobile-trade-item').forEach(item => {
+                // Click to show details
+                item.addEventListener('click', function() {
+                    const tradeId = parseInt(this.getAttribute('data-trade-id'));
+                    showTradeDetails(tradeId);
+                });
+                
+                // Long press to select
+                item.addEventListener('touchstart', function(e) {
+                    const tradeId = parseInt(this.getAttribute('data-trade-id'));
+                    longPressTimer = setTimeout(() => {
+                        selectMobileTrade(tradeId, this);
+                        e.preventDefault();
+                    }, 500);
+                });
+                
+                item.addEventListener('touchend', function() {
+                    clearTimeout(longPressTimer);
+                });
+                
+                item.addEventListener('touchmove', function() {
+                    clearTimeout(longPressTimer);
+                });
+            });
+            
+            // Desktop version (hidden on mobile)
             sortedTrades.forEach(trade => {
                 const tradeEl = document.createElement('div');
                 tradeEl.className = 'trade-management-item';
@@ -3874,86 +4069,33 @@
                 const confluenceScore = trade.confluenceScore || 0;
                 const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
                 
-                // Check if we're on mobile
-                const isMobile = window.innerWidth <= 480;
+                tradeEl.innerHTML = `
+                    <div class="trade-management-info">
+                        <input type="checkbox" class="trade-checkbox" value="${trade.id}">
+                        <div class="trade-management-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
+                        <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
+                        <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                            ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                        </div>
+                        <div class="trade-management-date">${formattedDate}</div>
+                        <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
+                        <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
+                    </div>
+                    <div class="trade-management-actions">
+                        <button class="action-btn edit-btn" data-id="${trade.id}">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="action-btn delete-btn" data-id="${trade.id}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                `;
                 
-                if (isMobile) {
-                    // Mobile layout - new structure
-                    const entryDate = new Date(trade.entryTime);
-                    const closeDate = trade.closeTime ? new Date(trade.closeTime) : null;
-                    const formattedEntry = `${entryDate.getMonth()+1}/${entryDate.getDate()}`;
-                    const formattedClose = closeDate ? `${closeDate.getMonth()+1}/${closeDate.getDate()}` : 'Open';
-                    
-                    tradeEl.innerHTML = `
-                        <div class="trade-management-info mobile-layout">
-                            <!-- First Row -->
-                            <div class="trade-row-first">
-                                <input type="checkbox" class="trade-checkbox" value="${trade.id}">
-                                <div class="trade-type-badge ${trade.type.toLowerCase()}">${trade.type}</div>
-                                <div class="trade-category-badge ${categoryClass}">${categoryName}</div>
-                                <span class="confluence-score ${scoreClass}">${confluenceScore}%</span>
-                            </div>
-                            <!-- Second Row -->
-                            <div class="trade-row-second">
-                                <div class="trade-date-info">
-                                    <span class="date-label">Entry:</span>
-                                    <span class="date-value">${formattedEntry}</span>
-                                </div>
-                                <div class="trade-date-info">
-                                    <span class="date-label">Close:</span>
-                                    <span class="date-value">${formattedClose}</span>
-                                </div>
-                                <div class="trade-amount-info">
-                                    <span class="amount-label">Risk:</span>
-                                    <span class="amount-value">$${trade.amount.toFixed(2)}</span>
-                                </div>
-                                <div class="trade-pnl-info ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
-                                    <span class="pnl-label">P&L:</span>
-                                    <span class="pnl-value">
-                                        ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="trade-management-actions">
-                            <button class="action-btn edit-btn" data-id="${trade.id}">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="action-btn delete-btn" data-id="${trade.id}">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
-                    `;
-                } else {
-                    // Desktop layout - keep original structure
-                    tradeEl.innerHTML = `
-                        <div class="trade-management-info">
-                            <input type="checkbox" class="trade-checkbox" value="${trade.id}">
-                            <div class="trade-management-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
-                            <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
-                            <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
-                                ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
-                            </div>
-                            <div class="trade-management-date">${formattedDate}</div>
-                            <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
-                            <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
-                        </div>
-                        <div class="trade-management-actions">
-                            <button class="action-btn edit-btn" data-id="${trade.id}">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="action-btn delete-btn" data-id="${trade.id}">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
-                    `;
-                }
-                
-                allTradesList.appendChild(tradeEl);
+                allTradesListDesktop.appendChild(tradeEl);
             });
             
-            // Add event listeners to checkboxes
-            allTradesList.querySelectorAll('.trade-checkbox').forEach(checkbox => {
+            // Add event listeners to desktop checkboxes
+            allTradesListDesktop.querySelectorAll('.trade-checkbox').forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     const tradeId = parseInt(this.value);
                     if (this.checked) {
@@ -3961,13 +4103,11 @@
                     } else {
                         selectedTradeIds.delete(tradeId);
                     }
-                    updateSelectedCount();
-                    updateSelectAllCheckbox();
                 });
             });
             
-            // Add event listeners to edit and delete buttons
-            allTradesList.querySelectorAll('.edit-btn').forEach(btn => {
+            // Add event listeners to desktop edit and delete buttons
+            allTradesListDesktop.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const tradeId = parseInt(this.getAttribute('data-id'));
                     closeAllTradesModal();
@@ -3975,113 +4115,37 @@
                 });
             });
             
-            allTradesList.querySelectorAll('.delete-btn').forEach(btn => {
+            allTradesListDesktop.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const tradeId = parseInt(this.getAttribute('data-id'));
                     deleteTrade(tradeId);
                 });
             });
             
-            document.getElementById('filtered-trade-count').textContent = `Showing ${sortedTrades.length} of ${TradeManager.trades.length} trades`;
-        }
-
-        // Search and filter functions
-        function handleTradeSearch() {
-            renderAllTradesList();
-        }
-
-        function handleTradeFilter() {
-            renderAllTradesList();
-        }
-
-        // Bulk selection functions
-        function selectAllTrades() {
-            selectedTradeIds.clear();
-            TradeManager.trades.forEach(trade => {
-                selectedTradeIds.add(trade.id);
-            });
-            updateSelectedCount();
-            updateCheckboxes();
-        }
-
-        function deselectAllTrades() {
-            selectedTradeIds.clear();
-            updateSelectedCount();
-            updateCheckboxes();
-        }
-
-        function deleteSelectedTrades() {
-            if (selectedTradeIds.size === 0) {
-                ToastManager.show('Please select at least one trade to delete.', 'warning');
-                return;
-            }
-            
-            if (confirm(`Are you sure you want to delete ${selectedTradeIds.size} selected trade(s)? This action cannot be undone.`)) {
-                TradeManager.deleteMultipleTrades([...selectedTradeIds]);
-                ToastManager.show(`Successfully deleted ${selectedTradeIds.size} trade(s).`, 'success');
-                
-                selectedTradeIds.clear();
-                updateSelectedCount();
-                
-                renderCalendar();
-                updateStats();
-                renderRecentTrades();
-                ChartManager.updateChart();
-                updateMonthlySummary();
-                renderAllTradesList();
-            }
-        }
-
-        function deleteAllTrades() {
-            if (TradeManager.trades.length === 0) {
-                ToastManager.show('No trades to delete.', 'warning');
-                return;
-            }
-            
-            if (confirm(`Are you sure you want to delete ALL ${TradeManager.trades.length} trades? This action cannot be undone.`)) {
-                TradeManager.trades = [];
-                TradeManager.saveTrades();
-                
-                selectedTradeIds.clear();
-                updateSelectedCount();
-                
-                renderCalendar();
-                updateStats();
-                renderRecentTrades();
-                ChartManager.updateChart();
-                updateMonthlySummary();
-                renderAllTradesList();
-                
-                ToastManager.show('All trades have been deleted.', 'success');
-            }
-        }
-
-        function toggleSelectAll() {
-            if (document.getElementById('select-all-checkbox').checked) {
-                selectAllTrades();
+            // Show/hide desktop/mobile based on screen size
+            if (window.innerWidth <= 768) {
+                allTradesListDesktop.style.display = 'none';
+                allTradesListMobile.style.display = 'block';
             } else {
-                deselectAllTrades();
+                allTradesListDesktop.style.display = 'block';
+                allTradesListMobile.style.display = 'none';
             }
         }
 
-        function updateSelectedCount() {
-            document.getElementById('selected-count').textContent = `${selectedTradeIds.size} selected`;
-        }
-
-        function updateCheckboxes() {
-            const checkboxes = document.querySelectorAll('.trade-checkbox');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = selectedTradeIds.has(parseInt(checkbox.value));
-            });
-            updateSelectAllCheckbox();
-        }
-
-        function updateSelectAllCheckbox() {
-            const allSelected = TradeManager.trades.length > 0 && selectedTradeIds.size === TradeManager.trades.length;
-            const someSelected = selectedTradeIds.size > 0 && selectedTradeIds.size < TradeManager.trades.length;
+        // Function to select a trade on mobile via long press
+        function selectMobileTrade(tradeId, element) {
+            selectedMobileTradeId = tradeId;
             
-            document.getElementById('select-all-checkbox').checked = allSelected;
-            document.getElementById('select-all-checkbox').indeterminate = someSelected;
+            // Clear previous selection
+            document.querySelectorAll('.mobile-trade-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Select current
+            element.classList.add('selected');
+            
+            // Show action buttons
+            document.getElementById('mobile-action-buttons').style.display = 'grid';
         }
 
         // Update the monthly summary function
@@ -4285,33 +4349,6 @@
             };
             
             reader.readAsArrayBuffer(file);
-        }
-
-        function handleCreateBackup() {
-            if (TradeManager.trades.length === 0) {
-                ToastManager.show('No trades to backup.', 'warning');
-                return;
-            }
-            
-            const password = document.getElementById('backup-password').value;
-            const encryptedData = Security.encrypt({
-                trades: TradeManager.trades,
-                settings: settings,
-                confluences: ConfluenceManager.confluences,
-                backupDate: new Date().toISOString()
-            }, password);
-            
-            const blob = new Blob([encryptedData], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `tradetracker_backup_${new Date().toISOString().split('T')[0]}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            ToastManager.show('Backup created successfully!', 'success');
         }
 
         // Utility functions
