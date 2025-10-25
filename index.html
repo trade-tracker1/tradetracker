@@ -315,13 +315,13 @@
         .dark-mode .category-swing { background: #713f12; color: #fef3c7; }
         .dark-mode .category-position { background: #831843; color: #fce7f3; }
         
-       /* Update the confluence grid from 2x2 to 3x3 */
-.confluence-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Changed from 2 to 3 */
-    gap: 8px;
-    margin-top: 8px;
-}
+        /* Confluence Styles - Smaller and Neater */
+        .confluence-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
         
         .confluence-item {
             display: flex;
@@ -2011,13 +2011,12 @@
             }
         }
         
-        /*
-@media (max-width: 768px) {
-    .confluence-grid {
-        grid-template-columns: 1fr;
-    }
-}
-*/
+        /* Very small screens optimization */
+        @media (max-width: 360px) {
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
             .summary-stats {
                 grid-template-columns: repeat(2, 1fr);
             }
