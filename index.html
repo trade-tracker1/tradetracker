@@ -2513,114 +2513,230 @@ const ChartManager = {
         this.renderChart([], []);
     },
     
-    renderChart(labels, data) {
-        const ctx = document.getElementById('balance-chart').getContext('2d');
-        const textColor = getComputedStyle(document.body).getPropertyValue('--text-color');
-        const gridColor = getComputedStyle(document.body).getPropertyValue('--border-color');
-        const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-color');
-        
-        if (this.chart) {
-            this.chart.destroy();
-        }
-        
-        this.chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Account Balance',
-                    data: data,
-                    borderColor: primaryColor,
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 3,
-                    pointHoverRadius: 5,
-                    pointBackgroundColor: primaryColor,
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { 
-                    legend: { 
-                        display: false 
-                    },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false,
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                        titleColor: '#fff',
-                        bodyColor: '#fff',
-                        borderColor: primaryColor,
-                        borderWidth: 1
-                    }
-                },
-                scales: {
-                    x: { 
-                        ticks: { 
-                            color: textColor,
-                            maxTicksLimit: 8
-                        },
-                        grid: { 
-                            color: gridColor,
-                            drawBorder: false
-                        }
-                    },
-                    y: {
-                        ticks: { 
-                            color: textColor,
-                            callback: value => '$' + value.toLocaleString()
-                        },
-                        grid: { 
-                            color: gridColor,
-                            drawBorder: false
-                        }
-                    }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'nearest'
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                }
-            }
-        });
-    },
+   // In the ChartManager.renderChart function, update the dataset configuration:
+// In the ChartManager.renderChart function, update the tooltip configuration:
+renderChart(labels, data) {
+    const ctx = document.getElementById('balance-chart').getContext('2d');
+    const textColor = getComputedStyle(document.body).getPropertyValue('--text-color');
+    const gridColor = getComputedStyle(document.body).getPropertyValue('--border-color');
+    const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-color');
     
-    updateChart() {
-        const closedTrades = TradeManager.trades
-            .filter(t => t.status === 'closed')
-            .sort((a, b) => new Date(a.closeTime) - new Date(b.closeTime));
-        
-        let balanceData = [SettingsManager.settings.initialBalance];
-        let labels = ['Initial'];
-        let runningBalance = SettingsManager.settings.initialBalance;
-        
-        closedTrades.forEach(trade => {
-            runningBalance += trade.profitLoss;
-            balanceData.push(runningBalance);
-            const date = new Date(trade.closeTime);
-            labels.push(`${date.getMonth()+1}/${date.getDate()}`);
-        });
-        
-        // If no trades, show initial balance only
-        if (closedTrades.length === 0) {
-            balanceData = [SettingsManager.settings.initialBalance];
-            labels = ['Initial'];
-        }
-        
-        this.renderChart(labels, balanceData);
-        
-        const currentBalance = balanceData[balanceData.length - 1];
-        document.getElementById('current-balance').textContent = 
-            `$${currentBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    if (this.chart) {
+        this.chart.destroy();
     }
+    
+    this.chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Account Balance',
+                data: data,
+                borderColor: primaryColor,
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 5,
+                pointBackgroundColor: primaryColor,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { 
+                    display: false 
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: primaryColor,
+                    borderWidth: 1,
+                    callbacks: {
+                        // Customize the tooltip title to show the date
+                        title: function(tooltipItems) {
+                            const index = tooltipItems[0].dataIndex;
+                            return labels[index];
+                        },
+                        // Customize the tooltip label to show only the balance
+                        label: function(context) {
+                            const value = context.parsed.y;
+                            return `Balance: $${value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { 
+                    ticks: { 
+                        color: textColor,
+                        maxTicksLimit: 8
+                    },
+                    grid: { 
+                        color: gridColor,
+                        drawBorder: false
+                    }
+                },
+                y: {
+                    ticks: { 
+                        color: textColor,
+                        callback: value => '$' + value.toLocaleString()
+                    },
+                    grid: { 
+                        color: gridColor,
+                        drawBorder: false
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'nearest'
+            },
+            animation: {
+                duration: 1000,
+                easing: 'easeOutQuart'
+            }
+        }
+    });
+},
+    
+    // In the ChartManager.updateChart function, update to include trading pairs:
+updateChart() {
+    const closedTrades = TradeManager.trades
+        .filter(t => t.status === 'closed')
+        .sort((a, b) => new Date(a.closeTime) - new Date(b.closeTime));
+    
+    let balanceData = [SettingsManager.settings.initialBalance];
+    let labels = ['Initial'];
+    let tradePairs = ['']; // Store trading pairs for tooltips
+    let runningBalance = SettingsManager.settings.initialBalance;
+    
+    closedTrades.forEach(trade => {
+        runningBalance += trade.profitLoss;
+        balanceData.push(runningBalance);
+        const date = new Date(trade.closeTime);
+        // Change date format to dd/mm/yyyy
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        labels.push(`${day}/${month}/${year}`);
+        tradePairs.push(trade.pair); // Store the trading pair
+    });
+    
+    // If no trades, show initial balance only
+    if (closedTrades.length === 0) {
+        balanceData = [SettingsManager.settings.initialBalance];
+        labels = ['Initial'];
+        tradePairs = [''];
+    }
+    
+    this.renderChart(labels, balanceData, tradePairs);
+},
+
+// Update the renderChart function to accept tradePairs parameter
+renderChart(labels, data, tradePairs = []) {
+    const ctx = document.getElementById('balance-chart').getContext('2d');
+    const textColor = getComputedStyle(document.body).getPropertyValue('--text-color');
+    const gridColor = getComputedStyle(document.body).getPropertyValue('--border-color');
+    const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-color');
+    
+    if (this.chart) {
+        this.chart.destroy();
+    }
+    
+    this.chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Account Balance',
+                data: data,
+                borderColor: primaryColor,
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 5,
+                pointBackgroundColor: primaryColor,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { 
+                    display: false 
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: primaryColor,
+                    borderWidth: 1,
+                    callbacks: {
+                        // Customize the tooltip title to show the date and pair
+                        title: function(tooltipItems) {
+                            const index = tooltipItems[0].dataIndex;
+                            const date = labels[index];
+                            const pair = tradePairs[index] || '';
+                            if (index === 0) {
+                                return 'Initial Balance';
+                            }
+                            return `${date} ${pair ? `- ${pair}` : ''}`;
+                        },
+                        // Customize the tooltip label to show only the balance
+                        label: function(context) {
+                            const value = context.parsed.y;
+                            return `Balance: $${value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { 
+                    ticks: { 
+                        color: textColor,
+                        maxTicksLimit: 8
+                    },
+                    grid: { 
+                        color: gridColor,
+                        drawBorder: false
+                    }
+                },
+                y: {
+                    ticks: { 
+                        color: textColor,
+                        callback: value => '$' + value.toLocaleString()
+                    },
+                    grid: { 
+                        color: gridColor,
+                        drawBorder: false
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'nearest'
+            },
+            animation: {
+                duration: 1000,
+                easing: 'easeOutQuart'
+            }
+        }
+    });
+},
 };
 
 // Toast Notification System
@@ -4254,28 +4370,29 @@ function renderAllTradesList() {
         
         const isChecked = selectedTradeIds.has(trade.id);
         
-        tradeEl.innerHTML = `
-            <div class="trade-management-info">
-                <input type="checkbox" class="trade-checkbox" value="${trade.id}" ${isChecked ? 'checked' : ''}>
-                <div class="trade-management-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
-                <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
-                <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
-                    ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
-                </div>
-                <div class="trade-management-date">${formattedDate}</div>
-                <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
-                <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
-            </div>
-            <div class="trade-management-actions">
-                <button class="action-btn edit-btn" data-id="${trade.id}">
-                    <i class="fas fa-edit"></i> Edit
-                </button>
-                <button class="action-btn delete-btn" data-id="${trade.id}">
-                    <i class="fas fa-trash"></i> Delete
-                </button>
-            </div>
-        `;
-        
+tradeEl.innerHTML = `
+    <div class="trade-management-info">
+        <input type="checkbox" class="trade-checkbox" value="${trade.id}" ${isChecked ? 'checked' : ''}>
+        <div class="trade-management-pair">${trade.pair} ${trade.category ? `<span class="category-badge ${categoryClass}">${categoryName}</span>` : ''}</div>
+        <div class="trade-management-type ${trade.type.toLowerCase()}">${trade.type}</div>
+        <div class="trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+            ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+        </div>
+        <div class="trade-management-date">${formattedDate}</div>
+        <div class="trade-management-amount">$${trade.amount.toFixed(2)}</div>
+        <span class="confluence-score ${scoreClass}" style="margin-left: 5px;">${confluenceScore}%</span>
+    </div>
+    <div class="trade-management-actions">
+        ${trade.status === 'open' ? `
+            <button class="action-btn edit-btn" data-id="${trade.id}">
+                <i class="fas fa-edit"></i> Edit
+            </button>
+        ` : ''}
+        <button class="action-btn delete-btn" data-id="${trade.id}">
+            <i class="fas fa-trash"></i> Delete
+        </button>
+    </div>
+`;        
         allTradesListDesktop.appendChild(tradeEl);
     });
     
