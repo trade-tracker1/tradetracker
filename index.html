@@ -2608,6 +2608,7 @@ renderChart(labels, data) {
 },
     
    // In the ChartManager.updateChart function, update the axis label format:
+// In the ChartManager.updateChart function, fix the current balance calculation:
 updateChart() {
     const closedTrades = TradeManager.trades
         .filter(t => t.status === 'closed')
@@ -2615,7 +2616,7 @@ updateChart() {
     
     let balanceData = [SettingsManager.settings.initialBalance];
     let labels = ['Initial'];
-    let tooltipLabels = ['Initial']; // Separate labels for tooltip with full year
+    let tooltipLabels = ['Initial'];
     let tradePairs = [''];
     let runningBalance = SettingsManager.settings.initialBalance;
     
@@ -2636,6 +2637,15 @@ updateChart() {
         tradePairs.push(trade.pair);
     });
     
+    // Calculate current balance including all closed trades
+    const currentBalance = closedTrades.length > 0 ? 
+        balanceData[balanceData.length - 1] : 
+        SettingsManager.settings.initialBalance;
+    
+    // Update the current balance display
+    document.getElementById('current-balance').textContent = 
+        `$${currentBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    
     // If no trades, show initial balance only
     if (closedTrades.length === 0) {
         balanceData = [SettingsManager.settings.initialBalance];
@@ -2646,6 +2656,9 @@ updateChart() {
     
     this.renderChart(labels, balanceData, tooltipLabels, tradePairs);
 },
+
+// Also update the updateStats function to ensure it's called when needed:
+// Make sure this function is called after trade operations in handleTradeSubmit and deleteTrade
 
 // Update the renderChart function to accept tooltipLabels parameter
 renderChart(labels, data, tooltipLabels = [], tradePairs = []) {
