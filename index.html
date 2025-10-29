@@ -8,6 +8,48 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
+    /* Add this to the existing CSS - anywhere in the style section */
+.day-summary-modal .modal-content {
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.mobile-day-summary {
+    padding: 0;
+}
+
+.mobile-day-summary-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.mobile-day-summary-stat {
+    text-align: center;
+    padding: 12px 8px;
+    background-color: var(--bg-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.mobile-day-summary-value {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.mobile-day-summary-label {
+    color: var(--neutral-color);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.mobile-day-trades-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
         * {
             margin: 0;
             padding: 0;
@@ -3467,6 +3509,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Event Listeners Setup
 function setupEventListeners() {
+    // Add this line to the setupEventListeners function
+document.getElementById('close-day-summary').addEventListener('click', closeDaySummaryModal);
     // Modal controls
     document.getElementById('settings-btn').addEventListener('click', openSettingsModal);
     document.getElementById('add-trade-btn').addEventListener('click', openAddTradeModal);
@@ -3737,6 +3781,10 @@ function getTradesForDay(dateStr) {
         }
     });
 }
+function closeDaySummaryModal() {
+    document.getElementById('day-summary-modal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
 
 function showDaySummary(dateStr, day) {
     selectedDay = dateStr;
@@ -3749,72 +3797,135 @@ function showDaySummary(dateStr, day) {
     const dateObj = new Date(dateStr);
     const monthName = getMonthName(dateObj.getMonth());
     
-    document.getElementById('right-panel-title').textContent = `Summary: ${monthName} ${day}`;
-    document.getElementById('right-panel-content').innerHTML = `
-        <div class="day-summary">
-            <div class="day-summary-stats">
-                <div class="day-summary-stat">
-                    <div class="day-summary-value ${dailyProfitLoss >= 0 ? 'positive-stat' : 'negative-stat'}">
+    // Check if we're on mobile
+    if (window.innerWidth <= 768) {
+        // Show modal for mobile
+        document.getElementById('day-summary-modal-title').textContent = `Summary: ${monthName} ${day}`;
+        
+        let tradesHtml = '';
+        if (dailyTrades.length > 0) {
+            tradesHtml = dailyTrades.map(trade => {
+                const duration = calculateTradeDuration(trade.entryTime, trade.closeTime);
+                const confluenceScore = trade.confluenceScore || 0;
+                const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
+                
+                return `
+                <div class="day-trade-item" data-trade-id="${trade.id}">
+                    <div class="day-trade-info">
+                        <div class="day-trade-pair">${trade.pair}</div>
+                        <div class="day-trade-type ${trade.type.toLowerCase()}">${trade.type}</div>
+                        <div class="day-trade-score ${scoreClass}">${confluenceScore}%</div>
+                        <div class="day-trade-date">${formatDate(trade.entryTime)}</div>
+                    </div>
+                    <div class="day-trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                        ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                    </div>
+                </div>
+                `;
+            }).join('');
+        } else {
+            tradesHtml = '<p style="text-align: center; color: var(--neutral-color); padding: 20px;">No trades for this day</p>';
+        }
+        
+        document.getElementById('day-summary-modal-content').innerHTML = `
+            <div class="mobile-day-summary-stats">
+                <div class="mobile-day-summary-stat">
+                    <div class="mobile-day-summary-value ${dailyProfitLoss >= 0 ? 'positive-stat' : 'negative-stat'}">
                         ${dailyProfitLoss >= 0 ? '+' : ''}$${dailyProfitLoss.toFixed(2)}
                     </div>
-                    <div class="day-summary-label">Daily P&L</div>
+                    <div class="mobile-day-summary-label">Daily P&L</div>
                 </div>
-                <div class="day-summary-stat">
-                    <div class="day-summary-value">${dailyTrades.length}</div>
-                    <div class="day-summary-label">Total Trades</div>
+                <div class="mobile-day-summary-stat">
+                    <div class="mobile-day-summary-value">${dailyTrades.length}</div>
+                    <div class="mobile-day-summary-label">Total Trades</div>
                 </div>
-                <div class="day-summary-stat">
-                    <div class="day-summary-value">${winRate}%</div>
-                    <div class="day-summary-label">Win Rate</div>
+                <div class="mobile-day-summary-stat">
+                    <div class="mobile-day-summary-value">${winRate}%</div>
+                    <div class="mobile-day-summary-label">Win Rate</div>
                 </div>
-                <div class="day-summary-stat">
-                    <div class="day-summary-value">${closedTrades.length}</div>
-                    <div class="day-summary-label">Closed Trades</div>
+                <div class="mobile-day-summary-stat">
+                    <div class="mobile-day-summary-value">${closedTrades.length}</div>
+                    <div class="mobile-day-summary-label">Closed Trades</div>
                 </div>
             </div>
-            <div class="day-trades-list">
-                ${dailyTrades.length > 0 ? 
-                    dailyTrades.map(trade => {
-                        const duration = calculateTradeDuration(trade.entryTime, trade.closeTime);
-                        const confluenceScore = trade.confluenceScore || 0;
-                        const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
-                        
-                        return `
-                        <div class="day-trade-item" data-trade-id="${trade.id}">
-                            <div class="day-trade-info">
-                                <div class="day-trade-pair">${trade.pair}</div>
-                                <div class="day-trade-type ${trade.type.toLowerCase()}">${trade.type}</div>
-                                <div class="day-trade-score ${scoreClass}">${confluenceScore}%</div>
-                                <div class="day-trade-date">${formatDate(trade.entryTime)}</div>
-                            </div>
-                            <div class="day-trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
-                                ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
-                            </div>
-                        </div>
-                        `;
-                    }).join('') : 
-                    '<p style="text-align: center; color: var(--neutral-color); padding: 20px;">No trades for this day</p>'
-                }
+            <div class="mobile-day-trades-list">
+                ${tradesHtml}
             </div>
-        </div>
-    `;
-    
-    // Add click event listeners to trade items
-    document.querySelectorAll('.day-trade-item[data-trade-id]').forEach(item => {
-        item.addEventListener('click', function() {
-            const tradeId = parseInt(this.getAttribute('data-trade-id'));
-            showTradeDetails(tradeId);
-        });
-    });
-    
-    // Scroll to day summary on mobile
-    if (window.innerWidth <= 768) {
+        `;
+        
+        // Add click event listeners to trade items in the modal
         setTimeout(() => {
-            document.getElementById('right-panel').scrollIntoView({ 
-                behavior: 'smooth',
-                block: 'start'
+            document.querySelectorAll('#day-summary-modal-content .day-trade-item[data-trade-id]').forEach(item => {
+                item.addEventListener('click', function() {
+                    const tradeId = parseInt(this.getAttribute('data-trade-id'));
+                    closeDaySummaryModal();
+                    showTradeDetails(tradeId);
+                });
             });
         }, 100);
+        
+        document.getElementById('day-summary-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+    } else {
+        // Desktop behavior - update right panel as before
+        document.getElementById('right-panel-title').textContent = `Summary: ${monthName} ${day}`;
+        document.getElementById('right-panel-content').innerHTML = `
+            <div class="day-summary">
+                <div class="day-summary-stats">
+                    <div class="day-summary-stat">
+                        <div class="day-summary-value ${dailyProfitLoss >= 0 ? 'positive-stat' : 'negative-stat'}">
+                            ${dailyProfitLoss >= 0 ? '+' : ''}$${dailyProfitLoss.toFixed(2)}
+                        </div>
+                        <div class="day-summary-label">Daily P&L</div>
+                    </div>
+                    <div class="day-summary-stat">
+                        <div class="day-summary-value">${dailyTrades.length}</div>
+                        <div class="day-summary-label">Total Trades</div>
+                    </div>
+                    <div class="day-summary-stat">
+                        <div class="day-summary-value">${winRate}%</div>
+                        <div class="day-summary-label">Win Rate</div>
+                    </div>
+                    <div class="day-summary-stat">
+                        <div class="day-summary-value">${closedTrades.length}</div>
+                        <div class="day-summary-label">Closed Trades</div>
+                    </div>
+                </div>
+                <div class="day-trades-list">
+                    ${dailyTrades.length > 0 ? 
+                        dailyTrades.map(trade => {
+                            const duration = calculateTradeDuration(trade.entryTime, trade.closeTime);
+                            const confluenceScore = trade.confluenceScore || 0;
+                            const scoreClass = confluenceScore >= 80 ? 'high' : confluenceScore >= 50 ? 'medium' : 'low';
+                            
+                            return `
+                            <div class="day-trade-item" data-trade-id="${trade.id}">
+                                <div class="day-trade-info">
+                                    <div class="day-trade-pair">${trade.pair}</div>
+                                    <div class="day-trade-type ${trade.type.toLowerCase()}">${trade.type}</div>
+                                    <div class="day-trade-score ${scoreClass}">${confluenceScore}%</div>
+                                    <div class="day-trade-date">${formatDate(trade.entryTime)}</div>
+                                </div>
+                                <div class="day-trade-profit ${trade.status === 'closed' ? (trade.profitLoss >= 0 ? 'positive' : 'negative') : ''}">
+                                    ${trade.status === 'open' ? 'Open' : (trade.profitLoss >= 0 ? '+' : '') + '$' + trade.profitLoss.toFixed(2)}
+                                </div>
+                            </div>
+                            `;
+                        }).join('') : 
+                        '<p style="text-align: center; color: var(--neutral-color); padding: 20px;">No trades for this day</p>'
+                    }
+                </div>
+            </div>
+        `;
+        
+        // Add click event listeners to trade items
+        document.querySelectorAll('.day-trade-item[data-trade-id]').forEach(item => {
+            item.addEventListener('click', function() {
+                const tradeId = parseInt(this.getAttribute('data-trade-id'));
+                showTradeDetails(tradeId);
+            });
+        });
     }
 }
 
@@ -4910,7 +5021,21 @@ function formatDateTime(dateTimeStr) {
     return date.toLocaleString();
 }
 
+
 // Initialize with recent trades view
 showRecentTrades();</script>
+
+<!-- Day Summary Modal for Mobile -->
+<div class="modal day-summary-modal" id="day-summary-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="day-summary-modal-title">Day Summary</h2>
+            <button class="close-modal" id="close-day-summary">&times;</button>
+        </div>
+        <div class="mobile-day-summary" id="day-summary-modal-content">
+            <!-- Day summary content will be populated here -->
+        </div>
+    </div>
+</div>
 </body>
 </html>
